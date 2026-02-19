@@ -3,83 +3,99 @@
 @tailwind utilities;
 
 /* ======================================================
-   UTAMV ELITE MASTERCLASS — DESIGN SYSTEM
+   UTAMV ELITE MASTERCLASS — DESIGN SYSTEM 2026
    Universidad de Tecnología Avanzada, Marketing y Versatilidad
-   Palette: Deep Navy · Imperial Gold · Platinum White
+   Palette: Deep Navy · Imperial Platinum · Platinum White
+   Inspiration: MIT, Oxford, Stanford, Harvard, Cambridge
    ====================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    /* Core Brand */
-    --background: 220 30% 6%;
-    --foreground: 210 40% 96%;
+    /* Core Brand — Deep Navy */
+    --background: 222 35% 5%;
+    --foreground: 210 30% 94%;
 
-    --card: 220 25% 9%;
-    --card-foreground: 210 40% 94%;
+    --card: 222 30% 8%;
+    --card-foreground: 210 30% 92%;
 
-    --popover: 220 25% 9%;
-    --popover-foreground: 210 40% 94%;
+    --popover: 222 30% 8%;
+    --popover-foreground: 210 30% 92%;
 
-    /* Imperial Gold as primary */
-    --primary: 43 74% 49%;
-    --primary-foreground: 220 30% 6%;
+    /* Platinum as primary — silver elegance */
+    --primary: 210 25% 80%;
+    --primary-foreground: 222 35% 5%;
 
     /* Navy secondary */
-    --secondary: 220 50% 15%;
-    --secondary-foreground: 210 40% 94%;
+    --secondary: 222 45% 13%;
+    --secondary-foreground: 210 30% 92%;
 
-    --muted: 220 25% 12%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 222 28% 11%;
+    --muted-foreground: 215 18% 52%;
 
-    --accent: 43 74% 49%;
-    --accent-foreground: 220 30% 6%;
+    --accent: 210 25% 80%;
+    --accent-foreground: 222 35% 5%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 25% 14%;
-    --input: 220 25% 14%;
-    --ring: 43 74% 49%;
+    --border: 222 28% 13%;
+    --input: 222 28% 13%;
+    --ring: 210 25% 70%;
 
     --radius: 0.75rem;
 
     /* Sidebar */
-    --sidebar-background: 220 30% 6%;
-    --sidebar-foreground: 210 40% 90%;
-    --sidebar-primary: 43 74% 49%;
-    --sidebar-primary-foreground: 220 30% 6%;
-    --sidebar-accent: 220 25% 12%;
-    --sidebar-accent-foreground: 210 40% 90%;
-    --sidebar-border: 220 25% 14%;
-    --sidebar-ring: 43 74% 49%;
+    --sidebar-background: 222 35% 5%;
+    --sidebar-foreground: 210 30% 88%;
+    --sidebar-primary: 210 25% 80%;
+    --sidebar-primary-foreground: 222 35% 5%;
+    --sidebar-accent: 222 28% 11%;
+    --sidebar-accent-foreground: 210 30% 88%;
+    --sidebar-border: 222 28% 13%;
+    --sidebar-ring: 210 25% 70%;
 
-    /* Custom Brand Tokens */
-    --gold: 43 74% 49%;
-    --gold-light: 43 85% 65%;
-    --gold-dark: 43 65% 35%;
-    --navy: 220 50% 10%;
-    --navy-mid: 220 45% 15%;
-    --navy-light: 220 35% 22%;
-    --platinum: 210 30% 88%;
-    --platinum-dim: 210 20% 70%;
+    /* ── PLATINUM BRAND TOKENS ── */
+    /* Platinum scale — silver to bright */
+    --platinum: 210 22% 82%;
+    --platinum-bright: 210 28% 90%;
+    --platinum-light: 210 18% 72%;
+    --platinum-dim: 210 14% 60%;
+    --platinum-deep: 210 20% 45%;
 
-    /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(43 74% 49%), hsl(43 85% 65%), hsl(36 80% 55%));
-    --gradient-navy: linear-gradient(135deg, hsl(220 50% 8%), hsl(220 45% 14%), hsl(220 35% 18%));
-    --gradient-hero: linear-gradient(160deg, hsl(220 55% 7%) 0%, hsl(220 48% 12%) 50%, hsl(215 42% 16%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(220 28% 10%), hsl(220 22% 13%));
-    --gradient-overlay: linear-gradient(to bottom, transparent, hsl(220 30% 6%));
-    --gradient-gold-text: linear-gradient(135deg, hsl(43 85% 65%), hsl(43 74% 49%), hsl(36 80% 42%));
+    /* Navy scale */
+    --navy: 222 50% 8%;
+    --navy-mid: 222 42% 13%;
+    --navy-light: 222 35% 20%;
+    --navy-accent: 222 30% 26%;
 
-    /* Shadows */
-    --shadow-gold: 0 0 30px hsl(43 74% 49% / 0.25);
-    --shadow-gold-sm: 0 0 12px hsl(43 74% 49% / 0.2);
-    --shadow-card: 0 8px 32px hsl(220 50% 4% / 0.6);
-    --shadow-elevated: 0 20px 60px hsl(220 50% 4% / 0.8);
+    /* Subtle warm silver — for accents */
+    --silver: 210 22% 82%;
+    --silver-light: 210 28% 90%;
+    --silver-glow: 210 35% 95%;
 
-    /* Typography Scale */
+    /* Steel — cool dark silver */
+    --steel: 215 18% 55%;
+    --steel-dark: 215 22% 35%;
+
+    /* ── GRADIENTS ── */
+    --gradient-platinum: linear-gradient(135deg, hsl(210 22% 82%), hsl(210 28% 92%), hsl(210 18% 72%));
+    --gradient-platinum-text: linear-gradient(135deg, hsl(210 28% 90%), hsl(210 22% 78%), hsl(210 18% 65%));
+    --gradient-navy: linear-gradient(135deg, hsl(222 50% 6%), hsl(222 42% 11%), hsl(222 35% 17%));
+    --gradient-hero: linear-gradient(160deg, hsl(222 55% 5%) 0%, hsl(222 48% 9%) 50%, hsl(220 40% 13%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(222 30% 8%), hsl(222 25% 11%));
+    --gradient-overlay: linear-gradient(to bottom, transparent, hsl(222 35% 5%));
+    --gradient-steel: linear-gradient(135deg, hsl(215 22% 35%), hsl(215 18% 55%), hsl(210 22% 70%));
+
+    /* ── SHADOWS ── */
+    --shadow-platinum: 0 0 30px hsl(210 22% 82% / 0.15);
+    --shadow-platinum-sm: 0 0 12px hsl(210 22% 82% / 0.12);
+    --shadow-card: 0 8px 32px hsl(222 50% 3% / 0.7);
+    --shadow-elevated: 0 20px 60px hsl(222 50% 3% / 0.85);
+    --shadow-inner-platinum: inset 0 1px 0 hsl(210 28% 90% / 0.08);
+
+    /* ── TYPOGRAPHY ── */
     --font-display: 'Playfair Display', Georgia, serif;
     --font-body: 'Inter', system-ui, sans-serif;
     --font-ui: 'Space Grotesk', system-ui, sans-serif;
@@ -111,138 +127,189 @@
 }
 
 @layer utilities {
-  /* Gold text gradient */
-  .text-gold-gradient {
-    background: var(--gradient-gold-text);
+  /* ── PLATINUM TEXT GRADIENT ── */
+  .text-platinum-gradient {
+    background: var(--gradient-platinum-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Gold border glow */
-  .border-gold-glow {
-    border: 1px solid hsl(var(--gold) / 0.4);
-    box-shadow: var(--shadow-gold-sm);
+  /* Legacy gold references → platinum */
+  .text-gold-gradient {
+    background: var(--gradient-platinum-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Hero background */
+  /* ── PLATINUM BORDER GLOW ── */
+  .border-platinum-glow {
+    border: 1px solid hsl(var(--platinum) / 0.3);
+    box-shadow: var(--shadow-platinum-sm);
+  }
+
+  /* ── HERO BACKGROUND ── */
   .bg-hero {
     background: var(--gradient-hero);
   }
 
-  /* Card premium */
+  /* ── CARD PREMIUM ── */
   .bg-card-premium {
     background: var(--gradient-card);
-    border: 1px solid hsl(var(--gold) / 0.1);
+    border: 1px solid hsl(var(--platinum) / 0.07);
     box-shadow: var(--shadow-card);
   }
 
-  /* Animated gold shimmer */
-  .shimmer-gold {
+  /* ── PLATINUM SHIMMER ── */
+  .shimmer-platinum {
     background: linear-gradient(
       90deg,
-      hsl(var(--gold)) 0%,
-      hsl(var(--gold-light)) 50%,
-      hsl(var(--gold)) 100%
+      hsl(var(--platinum)) 0%,
+      hsl(var(--platinum-bright)) 50%,
+      hsl(var(--platinum)) 100%
     );
     background-size: 200% 100%;
     animation: shimmer 3s infinite;
   }
 
-  /* Glow pulse */
+  /* ── PLATINUM GLOW ── */
+  .glow-platinum {
+    box-shadow: var(--shadow-platinum);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .glow-platinum:hover {
+    box-shadow: 0 0 40px hsl(var(--platinum) / 0.25);
+  }
+
+  /* Legacy glow-gold → platinum */
   .glow-gold {
-    box-shadow: var(--shadow-gold);
+    box-shadow: var(--shadow-platinum);
     transition: box-shadow 0.3s ease;
   }
 
   .glow-gold:hover {
-    box-shadow: 0 0 40px hsl(var(--gold) / 0.45);
+    box-shadow: 0 0 40px hsl(var(--platinum) / 0.25);
   }
 
-  /* Font utilities */
-  .font-display {
-    font-family: var(--font-display);
+  /* ── FONT UTILITIES ── */
+  .font-display { font-family: var(--font-display); }
+  .font-ui { font-family: var(--font-ui); }
+
+  /* ── DIVIDER ── */
+  .divider-platinum {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--platinum) / 0.3), transparent);
   }
 
-  .font-ui {
-    font-family: var(--font-ui);
-  }
-
-  /* Divider gold */
+  /* Legacy */
   .divider-gold {
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.5), transparent);
+    background: linear-gradient(90deg, transparent, hsl(var(--platinum) / 0.3), transparent);
   }
 
-  /* Noise texture overlay */
+  /* ── NOISE TEXTURE ── */
   .noise-overlay::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
-    opacity: 0.03;
+    opacity: 0.025;
     z-index: 0;
   }
 
-  /* Tag/badge academic */
+  /* ── ACADEMIC BADGE ── */
   .badge-academic {
     font-family: var(--font-ui);
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    padding: 0.25rem 0.75rem;
+    padding: 0.22rem 0.7rem;
     border-radius: 9999px;
-    border: 1px solid hsl(var(--gold) / 0.4);
-    background: hsl(var(--gold) / 0.08);
-    color: hsl(var(--gold));
+    border: 1px solid hsl(var(--platinum) / 0.3);
+    background: hsl(var(--platinum) / 0.06);
+    color: hsl(var(--platinum));
   }
 
-  /* Stat card */
+  /* ── STAT NUMBER ── */
   .stat-number {
     font-family: var(--font-display);
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 700;
-    background: var(--gradient-gold-text);
+    background: var(--gradient-platinum-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1;
   }
 
-  /* Section pattern */
+  /* ── GRID PATTERNS ── */
   .bg-grid-pattern {
     background-image:
-      linear-gradient(hsl(var(--gold) / 0.04) 1px, transparent 1px),
-      linear-gradient(to right, hsl(var(--gold) / 0.04) 1px, transparent 1px);
+      linear-gradient(hsl(var(--platinum) / 0.03) 1px, transparent 1px),
+      linear-gradient(to right, hsl(var(--platinum) / 0.03) 1px, transparent 1px);
     background-size: 64px 64px;
   }
 
-  /* Section dot pattern */
   .bg-dot-pattern {
-    background-image: radial-gradient(hsl(var(--gold) / 0.08) 1px, transparent 1px);
+    background-image: radial-gradient(hsl(var(--platinum) / 0.06) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
-  /* Scroll line */
+  /* ── SCROLL LINE ── */
   .scroll-line {
     width: 1px;
     height: 60px;
-    background: linear-gradient(to bottom, hsl(var(--gold) / 0.6), transparent);
+    background: linear-gradient(to bottom, hsl(var(--platinum) / 0.5), transparent);
     margin: 0 auto;
     animation: pulse-line 2s ease-in-out infinite;
   }
+
+  /* ── PLATINUM CTA BUTTON ── */
+  .btn-platinum {
+    background: linear-gradient(135deg, hsl(var(--platinum)), hsl(var(--platinum-bright)), hsl(var(--platinum-light)));
+    color: hsl(var(--navy));
+    font-family: var(--font-ui);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px hsl(var(--platinum) / 0.2);
+  }
+
+  .btn-platinum:hover {
+    box-shadow: 0 8px 30px hsl(var(--platinum) / 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* ── ARTICLE QUOTE ── */
+  .quote-institutional {
+    border-left: 2px solid hsl(var(--platinum) / 0.4);
+    background: hsl(var(--platinum) / 0.04);
+    padding: 1rem 1.25rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+
+  /* ── GRADIENT BACKGROUNDS ── */
+  .bg-gradient-platinum {
+    background: var(--gradient-platinum);
+  }
+  .bg-gradient-navy {
+    background: var(--gradient-navy);
+  }
 }
 
+/* ── KEYFRAMES ── */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
 @keyframes pulse-line {
-  0%, 100% { opacity: 0.4; transform: scaleY(1); }
-  50% { opacity: 1; transform: scaleY(1.05); }
+  0%, 100% { opacity: 0.35; transform: scaleY(1); }
+  50% { opacity: 0.85; transform: scaleY(1.06); }
 }
 
 @keyframes float-up {
@@ -261,7 +328,7 @@
 }
 
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(28px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -271,33 +338,46 @@
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
 
-.animate-float { animation: float-up 4s ease-in-out infinite; }
-.animate-fade-in-up { animation: fade-in-up 0.7s ease forwards; }
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── ANIMATION CLASSES ── */
+.animate-float { animation: float-up 4.5s ease-in-out infinite; }
+.animate-fade-in-up { animation: fade-in-up 0.75s ease forwards; }
 .animate-fade-in { animation: fade-in 0.5s ease forwards; }
 .animate-scale-in { animation: scale-in 0.5s ease forwards; }
 .animate-accordion-down { animation: accordion-down 0.2s ease-out; }
 .animate-accordion-up { animation: accordion-up 0.2s ease-out; }
 
-/* Staggered animation delays */
+/* Staggered delays */
 .delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
 .delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: hsl(var(--background)); }
-::-webkit-scrollbar-thumb { background: hsl(var(--gold) / 0.3); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: hsl(var(--gold) / 0.5); }
+::-webkit-scrollbar-thumb { background: hsl(var(--platinum) / 0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--platinum) / 0.4); }
 
-/* Selection */
+/* ── TEXT SELECTION ── */
 ::selection {
-  background: hsl(var(--gold) / 0.2);
-  color: hsl(var(--gold-light));
+  background: hsl(var(--platinum) / 0.15);
+  color: hsl(var(--platinum-bright));
+}
+
+/* ── PRINT STYLES ── */
+@media print {
+  body { background: white; color: black; }
+  header, footer { display: none; }
 }
