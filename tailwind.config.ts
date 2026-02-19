@@ -60,20 +60,34 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // UTAMV Brand tokens
+        // UTAMV Platinum Brand Tokens
+        platinum: {
+          DEFAULT: "hsl(var(--platinum))",
+          bright: "hsl(var(--platinum-bright))",
+          light: "hsl(var(--platinum-light))",
+          dim: "hsl(var(--platinum-dim))",
+          deep: "hsl(var(--platinum-deep))",
+        },
+        // Legacy gold → maps to platinum for backward compat
         gold: {
-          DEFAULT: "hsl(var(--gold))",
-          light: "hsl(var(--gold-light))",
-          dark: "hsl(var(--gold-dark))",
+          DEFAULT: "hsl(var(--platinum))",
+          light: "hsl(var(--platinum-bright))",
+          dark: "hsl(var(--platinum-deep))",
         },
         navy: {
           DEFAULT: "hsl(var(--navy))",
           mid: "hsl(var(--navy-mid))",
           light: "hsl(var(--navy-light))",
+          accent: "hsl(var(--navy-accent))",
         },
-        platinum: {
-          DEFAULT: "hsl(var(--platinum))",
-          dim: "hsl(var(--platinum-dim))",
+        silver: {
+          DEFAULT: "hsl(var(--silver))",
+          light: "hsl(var(--silver-light))",
+          glow: "hsl(var(--silver-glow))",
+        },
+        steel: {
+          DEFAULT: "hsl(var(--steel))",
+          dark: "hsl(var(--steel-dark))",
         },
       },
       fontFamily: {
@@ -87,15 +101,20 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        "gradient-gold": "var(--gradient-gold)",
+        "gradient-platinum": "var(--gradient-platinum)",
+        "gradient-platinum-text": "var(--gradient-platinum-text)",
+        "gradient-gold": "var(--gradient-platinum)",
         "gradient-navy": "var(--gradient-navy)",
         "gradient-hero": "var(--gradient-hero)",
         "gradient-card": "var(--gradient-card)",
-        "gradient-gold-text": "var(--gradient-gold-text)",
+        "gradient-gold-text": "var(--gradient-platinum-text)",
+        "gradient-steel": "var(--gradient-steel)",
       },
       boxShadow: {
-        gold: "var(--shadow-gold)",
-        "gold-sm": "var(--shadow-gold-sm)",
+        platinum: "var(--shadow-platinum)",
+        "platinum-sm": "var(--shadow-platinum-sm)",
+        gold: "var(--shadow-platinum)",
+        "gold-sm": "var(--shadow-platinum-sm)",
         card: "var(--shadow-card)",
         elevated: "var(--shadow-elevated)",
       },
@@ -117,20 +136,20 @@ export default {
           "100%": { backgroundPosition: "200% 0" },
         },
         "fade-in-up": {
-          from: { opacity: "0", transform: "translateY(24px)" },
+          from: { opacity: "0", transform: "translateY(28px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "scale-in": {
-          from: { opacity: "0", transform: "scale(0.95)" },
+          from: { opacity: "0", transform: "scale(0.96)" },
           to: { opacity: "1", transform: "scale(1)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        float: "float-up 4s ease-in-out infinite",
+        float: "float-up 4.5s ease-in-out infinite",
         shimmer: "shimmer 3s infinite",
-        "fade-in-up": "fade-in-up 0.7s ease forwards",
+        "fade-in-up": "fade-in-up 0.75s ease forwards",
         "scale-in": "scale-in 0.5s ease forwards",
       },
     },
