@@ -8,7 +8,6 @@ import {
   ArrowRight, CheckCircle2, Medal, Scale, FileText,
   Star, Microscope, Layers
 } from 'lucide-react';
-import heroBg from '@/assets/hero-bg.jpg';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
 
 const stats = [
@@ -132,11 +131,8 @@ const Index = () => {
       <main>
         {/* ══ HERO ════════════════════════════════════════════════════════════════ */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${heroBg})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222_35%_5%/0.82)] via-[hsl(222_35%_5%/0.65)] to-[hsl(222_35%_5%)]" />
+          <div className="absolute inset-0 bg-hero" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222_35%_5%/0.3)] via-transparent to-[hsl(222_35%_5%)]" />
           <div className="absolute inset-0 bg-grid-pattern opacity-20" />
 
           {/* Atmospheric platinum orbs */}
