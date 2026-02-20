@@ -1,496 +1,374 @@
-import UTAMVHeader from '@/components/UTAMVHeader';
-import UTAMVFooter from '@/components/UTAMVFooter';
-import { Link } from 'react-router-dom';
-import {
-  Clock, ArrowRight, CheckCircle2, Star,
-  BookOpenCheck, TrendingUp, Award, Layers,
-  Target, Download, BookOpen
-} from 'lucide-react';
+// app/programas/modulosPage.tsx
+// UTAMV Campus – Academic Programs Page 2026
 
-const modules = [
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  BookOpen,
+  Clock,
+  Award,
+  Grid3X3,
+  ArrowRight,
+  Layers,
+  Target,
+} from "lucide-react";
+
+type ProgramType = "Curso" | "Diplomado" | "Licenciatura" | "Maestría";
+
+interface Program {
+  id: string;
+  nombre: string;
+  tipo: ProgramType;
+  area: string;
+  horasTotales: number;
+  duracion: string;
+  modalidad: string;
+  nivel: string;
+  descripcion: string;
+  destacado?: boolean;
+}
+
+const programs: Program[] = [
   {
-    id: 1, n: '01',
-    title: 'Fundamentos del Marketing Digital',
-    subtitle: 'Módulo 0 + 1 — Introducción y Ecosistema',
-    tag: 'Introductorio',
-    duration: '5 horas',
-    format: 'Texto · Audio · Video · AI',
-    description: 'Historia y evolución del marketing digital. Ecosistema latinoamericano. Rol del estratega digital. Embudo de conversión y customer journey.',
-    objectives: [
-      'Conocer la estructura del curso y metodología de aprendizaje basada en IA',
-      'Comprender la importancia del marketing digital en Latinoamérica',
-      'Entender el ecosistema digital: medios propios, pagados y ganados',
-      'Identificar los principales canales y su rol en el funnel de conversión',
-    ],
-    outline: [
-      'Historia y evolución del marketing digital (línea de tiempo LATAM)',
-      'Mapa del ecosistema digital: canales propios, pagados y ganados',
-      'Embudo de conversión (AIDA) y customer journey mapping',
-      'Particularidades de los mercados latinoamericanos: estadísticas por país',
-    ],
-    assets: [
-      'Mapa visual del ecosistema de canales (editable)',
-      'Plantilla de customer journey en Notion y Figma',
-      'Checklist de canales según mercado latinoamericano',
-    ],
+    id: "utamv-maestria-cmn",
+    nombre: "Maestría en Community Management NextGen 2.0",
+    tipo: "Maestría",
+    area: "Comunidades Digitales",
+    horasTotales: 240,
+    duracion: "8–10 meses",
+    modalidad: "100% online · Asincrónico · Campus UTAMV",
+    nivel: "Posgrado profesional",
+    descripcion:
+      "Programa insignia UTAMV orientado al diseño, gestión y escalamiento de comunidades digitales con enfoque ético, estratégico, de datos e IA.",
+    destacado: true,
   },
   {
-    id: 2, n: '02',
-    title: 'Estrategia Digital y Herramientas AI',
-    subtitle: 'Módulo 2 — Diseño Estratégico con IA',
-    tag: 'Estrategia + IA',
-    duration: '6 horas',
-    format: 'Texto · Video · Ejercicios prácticos',
-    description: 'Diseño de estrategias usando IA. Automatización, análisis y optimización de campañas. Copywriting, diseño y analítica con herramientas de IA.',
-    objectives: [
-      'Diseñar estrategias de marketing usando inteligencia artificial',
-      'Automatizar, analizar y optimizar campañas con herramientas IA',
-      'Dominar prompting estratégico para copy, diseño y análisis',
-    ],
-    outline: [
-      'Introducción a IA en marketing digital (copywriting, diseño, automatización)',
-      'Taller práctico: ChatGPT para copy y funnel de conversión',
-      'Canva AI para diseño de posts y creatividades',
-      'Analítica digital y métricas clave (GA4 + métricas LATAM)',
-      'Principios Inmutables UTAMV para uso ético de IA',
-    ],
-    assets: [
-      'Plantilla de plan de marketing digital con IA',
-      'Ejemplo de calendario de contenidos automatizado',
-      'Playbook de prompts UTAMV para marketers',
-    ],
+    id: "utamv-maestria-ia-aplicada",
+    nombre: "Maestría en Inteligencia Artificial Aplicada a Medios",
+    tipo: "Maestría",
+    area: "IA Aplicada",
+    horasTotales: 220,
+    duracion: "8 meses",
+    modalidad: "Online · Proyectos aplicados",
+    nivel: "Posgrado profesional",
+    descripcion:
+      "Formación avanzada en uso estratégico de IA para análisis, automatización, creación y gobernanza de ecosistemas digitales.",
   },
   {
-    id: 3, n: '03',
-    title: 'SEO, AEO y Optimización Web',
-    subtitle: 'Módulo 3 — Posicionamiento Orgánico',
-    tag: 'Técnico',
-    duration: '5 horas',
-    format: 'Texto · Checklists · Herramientas',
-    description: 'Posicionamiento orgánico para buscadores y motores de respuesta (AEO). Auditoría técnica, research de keywords e intención de búsqueda.',
-    objectives: [
-      'Dominar SEO técnico, on-page y off-page con enfoque LATAM',
-      'Aplicar Answer Engine Optimization (AEO) y snippet thinking',
-      'Ejecutar auditorías SEO y definir arquitecturas de información',
-    ],
-    outline: [
-      'Fundamentos de SEO técnico, on-page y off-page',
-      'Research de keywords e intención de búsqueda',
-      'Answer Engine Optimization (AEO) y snippet thinking',
-      'Core Web Vitals, indexación y sitemaps XML',
-    ],
-    assets: [
-      'Checklist técnico SEO para sitios web',
-      'Plantilla de arquitectura de información UTAMV',
-      'Template de auditoría SEO completa',
-    ],
+    id: "utamv-lic-estrategia-digital",
+    nombre: "Licenciatura en Estrategia Digital y Ecosistemas",
+    tipo: "Licenciatura",
+    area: "Estrategia Digital",
+    horasTotales: 1800,
+    duracion: "3 años",
+    modalidad: "Online · Modular",
+    nivel: "Grado",
+    descripcion:
+      "Carrera universitaria orientada al pensamiento estratégico, diseño de sistemas digitales y liderazgo en entornos complejos.",
   },
   {
-    id: 4, n: '04',
-    title: 'Publicidad Digital y Paid Media',
-    subtitle: 'Módulo 4 — Performance y Conversión',
-    tag: 'Performance',
-    duration: '6 horas',
-    format: 'Texto · Video · Dashboards',
-    description: 'Google Ads y Meta Ads. Segmentación efectiva, creatividades y remarketing. Métricas de performance y optimización de campañas LATAM.',
-    objectives: [
-      'Diseñar campañas de paid media orientadas a performance',
-      'Dominar Google y Meta Ads con segmentación efectiva',
-      'Optimizar presupuestos y medir atribución correctamente',
-    ],
-    outline: [
-      'Marco de campañas: awareness, consideración, conversión',
-      'Meta Ads y Google Ads: estructura de campañas avanzada',
-      'Segmentación, creatividades y test A/B',
-      'Métricas clave de performance y atribución básica',
-      'Remarketing y estrategias de retargeting en LATAM',
-    ],
-    assets: [
-      'Plantilla de briefing para campañas paid',
-      'Dashboard simple de métricas en Google Sheets',
-      'Guía de segmentación por mercado latinoamericano',
-    ],
+    id: "utamv-dip-marketing-etico",
+    nombre: "Diplomado en Marketing Ético y Marca con Propósito",
+    tipo: "Diplomado",
+    area: "Marketing Ético",
+    horasTotales: 120,
+    duracion: "4 meses",
+    modalidad: "Online",
+    nivel: "Especialización",
+    descripcion:
+      "Diplomado enfocado en estrategias de marca responsables, sostenibles y alineadas a valores sociales y culturales.",
   },
   {
-    id: 5, n: '05',
-    title: 'Social Media y Estrategia de Contenidos',
-    subtitle: 'Módulo 5 — Redes y Contenido Editorial',
-    tag: 'Editorial',
-    duration: '5 horas',
-    format: 'Texto · Plantillas · Casos LATAM',
-    description: 'Instagram, TikTok, LinkedIn y YouTube. Calendarios editoriales, pilares de contenido, social listening y gestión de comunidades en LATAM.',
-    objectives: [
-      'Diseñar estrategias de social media con enfoque editorial',
-      'Construir calendarios de contenido y pilares editoriales',
-      'Gestionar comunidades y manejar crisis de reputación',
-    ],
-    outline: [
-      'Rol de cada red: Instagram, TikTok, LinkedIn, YouTube en LATAM',
-      'Calendarios de contenido y pilares editoriales',
-      'Construcción de comunidad y social listening',
-      'Gestión de crisis y reputación online',
-    ],
-    assets: [
-      'Calendario editorial UTAMV (Google Sheets/Notion)',
-      'Guía de formatos por red social 2026',
-      'Plantilla de social listening y seguimiento de marca',
-    ],
+    id: "utamv-dip-ecosistemas",
+    nombre: "Diplomado en Diseño de Ecosistemas Digitales",
+    tipo: "Diplomado",
+    area: "Ecosistemas Digitales",
+    horasTotales: 140,
+    duracion: "5 meses",
+    modalidad: "Online · Proyecto final",
+    nivel: "Especialización",
+    descripcion:
+      "Programa centrado en arquitectura de plataformas, comunidades, productos y sistemas interconectados.",
   },
   {
-    id: 6, n: '06',
-    title: 'Email Marketing, Automatización y CRM',
-    subtitle: 'Módulo 6 — Relaciones a Largo Plazo',
-    tag: 'Automatización',
-    duration: '5 horas',
-    format: 'Texto · Diagramas · Flujos',
-    description: 'Flujos automatizados de email. Segmentación avanzada, personalización y CRM. Métricas clave: aperturas, clics, conversión y churn.',
-    objectives: [
-      'Diseñar flujos de automatización de email marketing efectivos',
-      'Segmentar y personalizar comunicaciones para maximizar conversión',
-      'Medir y optimizar KPIs de email: aperturas, clics, churn',
-    ],
-    outline: [
-      'Tipos de envíos: campañas, newsletters y flujos automatizados',
-      'Segmentación y personalización avanzada',
-      'Automatizaciones clave: bienvenida, onboarding, win-back',
-      'Métricas: aperturas, clics, conversión, churn',
-    ],
-    assets: [
-      'Diagramas de flujos de automatización',
-      'Plantillas de copy para emails clave',
-      'Dashboard de métricas de email marketing',
-    ],
+    id: "utamv-dip-analitica-social",
+    nombre: "Diplomado en Analítica Social y Toma de Decisiones",
+    tipo: "Diplomado",
+    area: "Datos y Estrategia",
+    horasTotales: 130,
+    duracion: "4–5 meses",
+    modalidad: "Online",
+    nivel: "Especialización",
+    descripcion:
+      "Análisis de datos sociales, métricas de comunidad y modelos de decisión aplicados a entornos digitales.",
   },
   {
-    id: 7, n: '07',
-    title: 'Analítica Digital, Data y Métricas',
-    subtitle: 'Módulo 7 — Data-Driven Decision Making',
-    tag: 'Data',
-    duration: '6 horas',
-    format: 'Texto · Video tutoriales · GA4',
-    description: 'GA4, dashboards ejecutivos y operativos. KPIs accionables, análisis de cohortes y funnels de conversión data-driven.',
-    objectives: [
-      'Implementar sistemas de medición con GA4 y herramientas LATAM',
-      'Definir KPIs accionables y diseñar dashboards ejecutivos',
-      'Leer cohortes y analizar funnels de conversión',
-    ],
-    outline: [
-      'Implementación básica de analítica (GA4 y herramientas alternativas)',
-      'Definición de KPIs y métricas accionables por área',
-      'Dashboards ejecutivos vs. dashboards operativos',
-      'Lectura de cohortes y análisis de funnels',
-    ],
-    assets: [
-      'Plantilla de cuadro de mando UTAMV',
-      'Guía de interpretación de métricas críticas',
-      'Template de reporte semanal de performance',
-    ],
+    id: "utamv-curso-gobernanza",
+    nombre: "Curso en Gobernanza Digital y Moderación de Comunidades",
+    tipo: "Curso",
+    area: "Comunidades Digitales",
+    horasTotales: 40,
+    duracion: "6 semanas",
+    modalidad: "Online",
+    nivel: "Formación continua",
+    descripcion:
+      "Curso práctico sobre normas, ética, toma de decisiones y gestión de conflictos en comunidades digitales.",
   },
   {
-    id: 8, n: '08',
-    title: 'UX, CRO y Experiencia de Usuario',
-    subtitle: 'Módulo 8 — Optimización de Conversión',
-    tag: 'Conversión',
-    duration: '5 horas',
-    format: 'Texto · Casos · Heurísticas',
-    description: 'Principios UX aplicados a landing pages. Heurísticas de usabilidad, CRO y test A/B para maximizar conversiones.',
-    objectives: [
-      'Aplicar principios de UX al diseño de landing pages de alto rendimiento',
-      'Implementar estrategias de CRO y tests A/B',
-      'Optimizar microcopys, formularios y señales de confianza',
-    ],
-    outline: [
-      'Principios de UX aplicados a landing pages',
-      'Heurísticas de usabilidad y patrones de diseño',
-      'Conversion Rate Optimization (CRO) y test A/B',
-      'Microcopys, formularios y trust signals',
-    ],
-    assets: [
-      'Checklist de UX para landing de captación',
-      'Guía de microcopy para conversiones',
-      'Template de hipótesis para test A/B',
-    ],
+    id: "utamv-curso-ia-creativa",
+    nombre: "Curso en IA Creativa y Automatización de Contenidos",
+    tipo: "Curso",
+    area: "IA Aplicada",
+    horasTotales: 45,
+    duracion: "6 semanas",
+    modalidad: "Online",
+    nivel: "Formación continua",
+    descripcion:
+      "Introducción aplicada al uso de IA generativa para producción de contenidos con criterio profesional.",
   },
   {
-    id: 9, n: '09',
-    title: 'Estrategia de Marca y Contenido Avanzado',
-    subtitle: 'Módulo 9 — Branding y Narrativa',
-    tag: 'Branding',
-    duration: '5 horas',
-    format: 'Texto · Frameworks · Brand guides',
-    description: 'Arquitectura de marca, storytelling y sistemas de contenido consistentes. Guías de estilo y documentación de marca para equipos.',
-    objectives: [
-      'Construir arquitecturas de marca con propuesta de valor clara',
-      'Diseñar sistemas de contenido evergreen y campañas integradas',
-      'Documentar guías de estilo y tono de voz de marca',
-    ],
-    outline: [
-      'Arquitectura de marca y propuesta de valor diferencial',
-      'Storytelling y frameworks narrativos (Hero, Before-After-Bridge)',
-      'Sistemas de contenido evergreen vs. campañas',
-      'Guías de estilo y documentación de marca',
-    ],
-    assets: [
-      'Plantilla de brand narrative canvas',
-      'Guía de tono y voz UTAMV',
-      'Mapa de contenido evergreen + campañas',
-    ],
-  },
-  {
-    id: 10, n: '10',
-    title: 'Inteligencia Artificial Aplicada al Marketing',
-    subtitle: 'Módulo 10 — IA Estratégica',
-    tag: 'IA Avanzada',
-    duration: '6 horas',
-    format: 'Texto · Talleres prácticos · IA',
-    description: 'IA generativa para investigación, creatividad y automatización a escala. Ética, riesgos y Principios Inmutables UTAMV para uso responsable.',
-    objectives: [
-      'Aplicar IA generativa en investigación, copy y diseño de campañas',
-      'Automatizar tareas repetitivas con prompting estratégico',
-      'Operar bajo Principios Inmutables UTAMV para uso ético de IA',
-    ],
-    outline: [
-      'IA generativa en marketing: ChatGPT, Gemini, MidJourney',
-      'Prompting estratégico para investigación y copy',
-      'Automatización de tareas repetitivas con IA',
-      'Principios Inmutables UTAMV: veracidad, no simulación, integridad',
-      'Riesgos, ética y límites del uso de IA en campañas',
-    ],
-    assets: [
-      'Playbook avanzado de prompts UTAMV para marketers',
-      'Checklist de riesgos y buenas prácticas con IA',
-      'Framework de auditoría IA para campañas',
-    ],
-  },
-  {
-    id: 11, n: 'PF',
-    title: 'Plan Maestro y Proyecto Final UTAMV',
-    subtitle: 'Módulo Final — Evaluación OBE',
-    tag: 'Proyecto OBE',
-    duration: '5 horas + proyecto',
-    format: 'Portafolio · Rúbrica · Defensa',
-    description: 'Integración de todos los módulos en un plan maestro de marketing digital. Proyecto final: plan omnicanal para un producto o empresa real.',
-    objectives: [
-      'Estructurar un Plan Maestro de Marketing Digital completo e integrado',
-      'Diseñar plan omnicanal con presupuesto, roadmap y OKRs',
-      'Defender el proyecto ante el Comité Evaluador OBE UTAMV',
-    ],
-    outline: [
-      'Estructura del plan maestro de marketing digital',
-      'Integración de canales: plan omnicanal completo',
-      'Presupuestos, roadmap y OKRs por trimestre',
-      'Presentación ejecutiva y defensa del proyecto final',
-    ],
-    assets: [
-      'Plantilla del Plan Maestro UTAMV (60+ slides)',
-      'Rúbrica de evaluación del proyecto final OBE',
-      'Repositorio de recursos libres de derechos para proyectos',
-    ],
+    id: "utamv-curso-etica-digital",
+    nombre: "Curso en Ética, Cultura y Tecnología",
+    tipo: "Curso",
+    area: "Humanidades Digitales",
+    horasTotales: 35,
+    duracion: "5 semanas",
+    modalidad: "Online",
+    nivel: "Formación continua",
+    descripcion:
+      "Curso transversal UTAMV que aborda ética, valores y responsabilidad en el desarrollo tecnológico.",
   },
 ];
 
-const tagColors: Record<string, string> = {
-  'Introductorio': 'border-[hsl(215_35%_35%/0.5)] bg-[hsl(215_35%_35%/0.08)] text-[hsl(215_30%_65%)]',
-  'Estrategia + IA': 'border-[hsl(var(--platinum)/0.3)] bg-[hsl(var(--platinum)/0.06)] text-platinum-dim',
-  'Técnico': 'border-[hsl(180_30%_35%/0.5)] bg-[hsl(180_30%_35%/0.08)] text-[hsl(180_30%_65%)]',
-  'Performance': 'border-[hsl(var(--platinum)/0.3)] bg-[hsl(var(--platinum)/0.06)] text-platinum-dim',
-  'Editorial': 'border-[hsl(220_35%_40%/0.5)] bg-[hsl(220_35%_40%/0.08)] text-[hsl(220_30%_70%)]',
-  'Automatización': 'border-[hsl(var(--platinum)/0.3)] bg-[hsl(var(--platinum)/0.06)] text-platinum-dim',
-  'Data': 'border-[hsl(200_35%_40%/0.5)] bg-[hsl(200_35%_40%/0.08)] text-[hsl(200_30%_70%)]',
-  'Conversión': 'border-[hsl(var(--platinum)/0.3)] bg-[hsl(var(--platinum)/0.06)] text-platinum-dim',
-  'Branding': 'border-[hsl(240_25%_40%/0.5)] bg-[hsl(240_25%_40%/0.08)] text-[hsl(240_25%_70%)]',
-  'IA Avanzada': 'border-[hsl(var(--platinum)/0.35)] bg-[hsl(var(--platinum)/0.08)] text-platinum',
-  'Proyecto OBE': 'border-[hsl(var(--platinum)/0.4)] bg-[hsl(var(--platinum)/0.1)] text-platinum',
+const typeColors: Record<ProgramType, string> = {
+  Maestría:
+    "border-[hsl(var(--platinum)/0.45)] bg-[hsl(var(--platinum)/0.12)] text-platinum",
+  Licenciatura:
+    "border-[hsl(215_40%_40%/0.5)] bg-[hsl(215_40%_40%/0.1)] text-[hsl(215_35%_80%)]",
+  Diplomado:
+    "border-[hsl(200_40%_40%/0.5)] bg-[hsl(200_40%_40%/0.1)] text-[hsl(200_35%_80%)]",
+  Curso:
+    "border-[hsl(150_40%_40%/0.5)] bg-[hsl(150_40%_40%/0.1)] text-[hsl(150_35%_80%)]",
 };
 
-const ModulosPage = () => {
+export default function ModulosPage() {
+  const masters = programs.filter((p) => p.tipo === "Maestría");
+  const licenciaturas = programs.filter((p) => p.tipo === "Licenciatura");
+  const diplomados = programs.filter((p) => p.tipo === "Diplomado");
+  const cursos = programs.filter((p) => p.tipo === "Curso");
+
   return (
-    <div className="min-h-screen bg-background">
-      <UTAMVHeader />
+    <main className="min-h-screen bg-[#050915] text-white">
+      <div className="max-w-7xl mx-auto px-6 py-20">
+        {/* Header institucional */}
+        <header className="mb-14 text-center md:text-left">
+          <span className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.25em] uppercase text-slate-400">
+            <Grid3X3 className="w-3 h-3" />
+            UTAMV · Catálogo Académico 2026
+          </span>
 
-      <main className="pt-28 pb-24">
-        {/* ── Header ── */}
-        <section className="container mx-auto px-4 mb-16">
-          <div className="max-w-4xl mx-auto text-center">
-            <span className="badge-academic mb-4 inline-block">Currículo Académico OBE</span>
-            <h1 className="font-display text-5xl md:text-6xl font-black text-platinum mb-4 leading-none">
-              Módulos Académicos
-            </h1>
-            <p className="font-display text-xl italic text-platinum-dim mb-6">
-              Máster Profesional · Marketing Digital 360° para Latinoamérica
-            </p>
-            <p className="font-body text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-3">
-              Formato híbrido completo: texto, audio, imágenes interactivas, videos e integración de IA.
-              Duración: 6 semanas (flexible). Diseñado para capacitar futuros estrategas digitales en el
-              ecosistema latinoamericano con herramientas prácticas y recursos descargables.
-            </p>
-            <p className="font-body text-xs text-muted-foreground/60 max-w-xl mx-auto leading-relaxed mb-8">
-              Todos los módulos operan bajo la metodología OBE (Outcome-Based Education) con Resultados
-              de Aprendizaje definidos, rúbricas estandarizadas y portafolio de evidencias verificables.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-5">
-              {[
-                { icon: BookOpen, label: '11 Módulos Curriculares' },
-                { icon: Clock, label: '60+ Horas de Contenido' },
-                { icon: Award, label: 'Portafolio de Evidencias OBE' },
-                { icon: Download, label: 'Activos Descargables Incluidos' },
-              ].map((s, i) => (
-                <div key={i} className="flex items-center gap-2 text-platinum-dim">
-                  <s.icon size={14} className="text-platinum-dim/70" />
-                  <span className="font-ui text-xs">{s.label}</span>
-                </div>
-              ))}
+          <div className="mt-4 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-display font-extrabold tracking-tight text-slate-50">
+                Programas Académicos UTAMV
+              </h1>
+              <p className="mt-4 max-w-3xl text-sm md:text-base text-slate-300 leading-relaxed">
+                Universidad Tecnológica Avanzada Mexicana Versátil (UTAMV). Ecosistema académico
+                modular basado en OBE: cursos, diplomados, licenciaturas y maestrías diseñados para
+                profesionales de Latinoamérica que lideran tecnología, comunidades e innovación.
+              </p>
             </div>
-          </div>
-        </section>
-
-        {/* ── Modules ── */}
-        <section className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto space-y-4">
-            {modules.map((mod) => (
-              <div
-                key={mod.id}
-                className="group p-6 md:p-8 rounded-2xl bg-card-premium border border-[hsl(var(--platinum)/0.07)] hover:border-[hsl(var(--platinum)/0.2)] transition-all duration-300"
-              >
-                <div className="flex flex-col md:flex-row gap-6">
-                  {/* Number */}
-                  <div className="flex-shrink-0">
-                    <div className="font-display text-5xl font-black text-platinum-deep/15 group-hover:text-platinum-deep/30 transition-colors leading-none w-14 text-center">
-                      {mod.n}
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span
-                        className={`font-ui text-[9px] font-semibold tracking-widest uppercase px-2.5 py-1 rounded-full border ${tagColors[mod.tag] || 'badge-academic'}`}
-                      >
-                        {mod.tag}
-                      </span>
-                      <span className="font-ui text-[10px] text-muted-foreground/60 flex items-center gap-1">
-                        <Clock size={10} /> {mod.duration}
-                      </span>
-                      <span className="font-ui text-[10px] text-muted-foreground/50 italic">{mod.format}</span>
-                    </div>
-
-                    <p className="font-ui text-[10px] text-platinum-deep/60 tracking-wide uppercase mb-1">{mod.subtitle}</p>
-                    <h3 className="font-display text-xl md:text-2xl font-bold text-platinum mb-2 group-hover:text-platinum-bright transition-colors leading-snug">
-                      {mod.title}
-                    </h3>
-                    <p className="font-body text-sm text-muted-foreground leading-relaxed mb-5">{mod.description}</p>
-
-                    <div className="grid md:grid-cols-3 gap-5">
-                      {/* Objetivos */}
-                      <div>
-                        <div className="font-ui text-[9px] font-bold tracking-widest uppercase text-platinum-deep/60 mb-2.5">
-                          Objetivos
-                        </div>
-                        <ul className="space-y-1.5">
-                          {mod.objectives.map((obj, j) => (
-                            <li key={j} className="flex items-start gap-1.5">
-                              <Target size={11} className="text-platinum-dim/50 mt-0.5 flex-shrink-0" />
-                              <span className="font-body text-[11px] text-muted-foreground leading-relaxed">{obj}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Contenidos */}
-                      <div>
-                        <div className="font-ui text-[9px] font-bold tracking-widest uppercase text-platinum-deep/60 mb-2.5">
-                          Contenidos
-                        </div>
-                        <ul className="space-y-1.5">
-                          {mod.outline.map((item, j) => (
-                            <li key={j} className="flex items-start gap-1.5">
-                              <CheckCircle2 size={11} className="text-platinum-dim/40 mt-0.5 flex-shrink-0" />
-                              <span className="font-body text-[11px] text-muted-foreground leading-relaxed">{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Activos Descargables */}
-                      <div>
-                        <div className="font-ui text-[9px] font-bold tracking-widest uppercase text-platinum-deep/60 mb-2.5">
-                          Activos Descargables
-                        </div>
-                        <ul className="space-y-1.5">
-                          {mod.assets.map((asset, j) => (
-                            <li key={j} className="flex items-start gap-1.5">
-                              <Download size={11} className="text-platinum-dim/40 mt-0.5 flex-shrink-0" />
-                              <span className="font-body text-[11px] text-platinum-dim leading-relaxed">{asset}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div className="flex flex-col items-start md:items-end gap-2 text-xs text-slate-400">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                <span>9 programas activos · Catálogo en expansión</span>
               </div>
-            ))}
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span>Formación 100% online · Campus UTAMV</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4" />
+                <span>Certificación profesional UTAMV</span>
+              </div>
+            </div>
           </div>
-        </section>
 
-        {/* ── Methodology Note ── */}
-        <section className="container mx-auto px-4 mt-12">
-          <div className="max-w-5xl mx-auto p-6 rounded-2xl bg-[hsl(var(--platinum)/0.03)] border border-[hsl(var(--platinum)/0.1)]">
-            <h4 className="font-ui text-xs font-bold text-platinum-dim uppercase tracking-widest mb-3">
-              Formatos Interactivos e Híbridos
-            </h4>
-            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-3">
-              {[
-                { label: 'Texto', desc: 'Módulos explicativos y PDF descargables' },
-                { label: 'Audio', desc: 'Guías resumidas y podcasts breves de repaso' },
-                { label: 'Imágenes', desc: 'Infografías, mapas interactivos y plantillas' },
-                { label: 'Video', desc: 'Clips animados, entrevistas y tutoriales prácticos' },
-                { label: 'IA', desc: 'Personalización del aprendizaje y ejercicios automáticos' },
-              ].map((f, i) => (
-                <div key={i} className="text-center p-3 rounded-xl border border-[hsl(var(--platinum)/0.08)]">
-                  <div className="font-ui text-xs font-bold text-platinum-dim mb-1">{f.label}</div>
-                  <p className="font-body text-[10px] text-muted-foreground leading-relaxed">{f.desc}</p>
+          <p className="mt-5 max-w-3xl text-[11px] text-slate-400 leading-relaxed">
+            Todos los programas se imparten en modalidad online, con acceso al campus 24/7,
+            materiales descargables y evaluación basada en evidencias. Estudios sin reconocimiento de
+            validez oficial ante la SEP. Institución privada en proceso Pre-RVOE.
+          </p>
+        </header>
+
+        {/* Sección destacada: Maestría Community Management NextGen */}
+        <section className="mb-14">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-semibold tracking-[0.25em] uppercase text-slate-400">
+                Programa Insignia · Comunidades Digitales
+              </h2>
+              <p className="text-xs text-slate-500">
+                Máster 2.0 Community Managers NextGen 2026 como ruta avanzada dentro del ecosistema UTAMV.
+              </p>
+            </div>
+            <Link
+              to="/programas/utamv-maestria-cmn"
+              className="hidden md:inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase text-sky-300 hover:text-sky-100"
+            >
+              Ver detalle del Máster
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+
+          {masters
+            .filter((m) => m.id === "utamv-maestria-cmn")
+            .map((program) => (
+              <article
+                key={program.id}
+                className="relative overflow-hidden rounded-2xl border border-sky-500/40 bg-gradient-to-br from-sky-950/70 via-slate-950/90 to-slate-950 p-6 md:p-8"
+              >
+                <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_top,_#38bdf8_0,_transparent_55%)]" />
+                <div className="relative flex flex-col md:flex-row gap-6 md:gap-10">
+                  <div className="flex-1">
+                    <div className="inline-flex items-center gap-2 mb-3">
+                      <span
+                        className={`text-[10px] font-semibold tracking-[0.25em] uppercase px-3 py-1 rounded-full border ${typeColors[program.tipo]}`}
+                      >
+                        {program.tipo} · {program.area}
+                      </span>
+                      <span className="text-[10px] text-slate-300/70">
+                        {program.nivel}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl md:text-3xl font-display font-bold text-slate-50 leading-snug mb-2">
+                      {program.nombre}
+                    </h3>
+                    <p className="text-sm text-slate-200/90 leading-relaxed mb-4">
+                      {program.descripcion}
+                    </p>
+                    <p className="text-[11px] text-slate-300/80 mb-4">
+                      Visión: empoderar y crear una nueva generación de Community Managers latinos capaces
+                      de diseñar, operar y escalar comunidades de producto en redes sociales, plataformas y
+                      entornos inmersivos. Misión: otorgar formación rigurosa, aplicada y alineada con las
+                      tendencias tecnológicas actuales.
+                    </p>
+                    <ul className="text-xs text-slate-300/90 space-y-1">
+                      <li>Horas totales: {program.horasTotales}</li>
+                      <li>Duración sugerida: {program.duracion}</li>
+                      <li>Modalidad: {program.modalidad}</li>
+                    </ul>
+                  </div>
+
+                  <div className="w-full md:w-72 flex flex-col justify-between gap-4">
+                    <div className="grid grid-cols-2 gap-3 text-[11px] text-slate-200">
+                      <div className="flex items-center gap-2">
+                        <Target className="w-4 h-4 text-sky-300" />
+                        <span>Enfoque estratégico</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-sky-300" />
+                        <span>8 módulos + capstone</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-sky-300" />
+                        <span>Ritmo flexible</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Award className="w-4 h-4 text-sky-300" />
+                        <span>Certificación UTAMV</span>
+                      </div>
+                    </div>
+                    <Link
+                      to="/programas/utamv-maestria-cmn"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-sky-400/70 bg-sky-500/10 px-5 py-3 text-[11px] font-semibold tracking-widest uppercase text-sky-100 hover:bg-sky-500/20 transition"
+                    >
+                      Ver plan de módulos del Máster
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </article>
+            ))}
         </section>
 
-        {/* ── CTA ── */}
-        <section className="container mx-auto px-4 mt-10">
-          <div className="max-w-3xl mx-auto text-center p-10 rounded-3xl bg-card-premium border border-[hsl(var(--platinum)/0.12)]">
-            <h3 className="font-display text-3xl font-bold text-platinum mb-3">
-              ¿Listo para el Máster?
-            </h3>
-            <p className="font-body text-sm text-platinum-dim mb-8 max-w-lg mx-auto">
-              Accede a todos los módulos del Máster Profesional en Marketing Digital 360° para Latinoamérica
-              bajo metodología OBE con activos descargables, IA integrada y evaluación por evidencias.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/admisiones"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold btn-platinum"
-              >
-                Solicitar Admisión <ArrowRight size={17} />
-              </Link>
-              <Link
-                to="/programas"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold text-platinum-dim border border-[hsl(var(--platinum)/0.22)] hover:border-[hsl(var(--platinum)/0.45)] hover:text-platinum transition-all"
-              >
-                Ver Todos los Programas
-              </Link>
-            </div>
-            <p className="font-ui text-[10px] text-muted-foreground/50 mt-6">
-              Estudios sin reconocimiento de validez oficial ante la SEP. Institución privada en proceso Pre-RVOE.
-            </p>
-          </div>
-        </section>
-      </main>
+        {/* Resto de maestrías y programas */}
+        <section className="space-y-10">
+          {/* Maestrías adicionales */}
+          {masters.length > 1 && (
+            <ProgramSection title="Otras Maestrías UTAMV" programs={masters.filter((m) => m.id !== "utamv-maestria-cmn")} />
+          )}
 
-      <UTAMVFooter />
-    </div>
+          {/* Licenciaturas */}
+          {licenciaturas.length > 0 && (
+            <ProgramSection title="Licenciaturas" programs={licenciaturas} />
+          )}
+
+          {/* Diplomados */}
+          {diplomados.length > 0 && (
+            <ProgramSection title="Diplomados" programs={diplomados} />
+          )}
+
+          {/* Cursos */}
+          {cursos.length > 0 && (
+            <ProgramSection title="Cursos de Formación Continua" programs={cursos} />
+          )}
+        </section>
+      </div>
+    </main>
   );
-};
+}
 
-export default ModulosPage;
+interface ProgramSectionProps {
+  title: string;
+  programs: Program[];
+}
+
+function ProgramSection({ title, programs }: ProgramSectionProps) {
+  return (
+    <section>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold tracking-[0.25em] uppercase text-slate-400">
+          {title}
+        </h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {programs.map((program) => (
+          <article
+            key={program.id}
+            className="rounded-xl border border-slate-700/70 bg-slate-900/60 p-5 hover:border-slate-400/80 hover:bg-slate-900 transition-colors"
+          >
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <span
+                className={`text-[10px] font-semibold tracking-[0.25em] uppercase px-3 py-1 rounded-full border ${typeColors[program.tipo]}`}
+              >
+                {program.tipo} · {program.area}
+              </span>
+              <span className="text-[10px] text-slate-400">{program.nivel}</span>
+            </div>
+            <h4 className="text-lg font-semibold text-slate-50 leading-snug">
+              {program.nombre}
+            </h4>
+            <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+              {program.descripcion}
+            </p>
+            <ul className="mt-4 text-[11px] text-slate-400 space-y-1.5">
+              <li>Horas totales: {program.horasTotales}</li>
+              <li>Duración: {program.duracion}</li>
+              <li>Modalidad: {program.modalidad}</li>
+            </ul>
+            <div className="mt-5">
+              <Link
+                to={`/programas/${program.id}`}
+                className="inline-flex items-center gap-2 text-[11px] tracking-widest uppercase text-slate-200 border-b border-slate-500 hover:border-slate-200"
+              >
+                Ver ficha académica
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
