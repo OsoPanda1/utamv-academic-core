@@ -166,7 +166,7 @@ const Index = () => {
                 UTAMV
               </h1>
               <h2 className="font-display text-xl md:text-3xl font-light italic text-platinum-dim mb-3 animate-fade-in-up delay-200 tracking-wide">
-                Elite Masterclass
+                Campus Online
               </h2>
               <p className="font-ui text-[10px] tracking-[0.28em] uppercase text-platinum-deep mb-8 animate-fade-in-up delay-300">
                 Universidad de Tecnología Avanzada, Marketing y Versatilidad

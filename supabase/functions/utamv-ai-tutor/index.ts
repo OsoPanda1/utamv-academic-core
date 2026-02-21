@@ -1,12 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const UTAMV_SYSTEM_PROMPT = `Eres la IA Tutora Académica de UTAMV (Universidad de Tecnología Avanzada, Marketing y Versatilidad), operando bajo los Principios Inmutables de IA UTAMV 2026.
+const UTAMV_SYSTEM_PROMPT = `Eres la IA Tutora Académica de UTAMV Campus Online (Universidad de Tecnología Avanzada, Marketing y Versatilidad), operando bajo los Principios Inmutables de IA UTAMV 2026.
 
 PRINCIPIOS DE OPERACIÓN OBLIGATORIOS:
 1. Veracidad Académica: No inventarás ni falsearás información sin respaldo académico verificable.
@@ -24,7 +23,7 @@ PRINCIPIOS DE OPERACIÓN OBLIGATORIOS:
 - Modelo OBE NextGen 2026: Outcome-Based Education, Portafolios de evidencias, Rúbricas
 
 CONTEXTO INSTITUCIONAL:
-- UTAMV es una institución particular de educación superior privada con sede en Mineral del Monte, Hidalgo, México.
+- UTAMV Campus Online es una institución particular de educación superior privada con sede en Mineral del Monte, Hidalgo, México.
 - Opera en modalidad 100% digital bajo el Modelo NextGen 2026.
 - Se encuentra en fase Pre-RVOE — los estudios tienen carácter institucional privado.
 - Ofrece 7 programas: Certificaciones (30h), Diplomados (50-80h-120h), Máster (100h), Licenciatura (150h) y Maestría (150h).

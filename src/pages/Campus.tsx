@@ -33,8 +33,8 @@ const Campus = () => {
             <img src={utamvLogo} alt="UTAMV" className="w-7 h-7 object-contain" />
           </div>
           <div>
-            <div className="font-display text-sm font-bold text-platinum">UTAMV Campus</div>
-            <div className="font-ui text-[8px] text-platinum-dim tracking-[0.14em] uppercase">Elite Masterclass</div>
+            <div className="font-display text-sm font-bold text-platinum">UTAMV</div>
+            <div className="font-ui text-[8px] text-platinum-dim tracking-[0.14em] uppercase">Campus Online</div>
           </div>
         </div>
 

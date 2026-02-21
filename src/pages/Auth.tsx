@@ -59,7 +59,7 @@ const Auth = () => {
             <img src={utamvLogo} alt="UTAMV" className="w-20 h-20 object-contain" />
           </div>
           <h1 className="font-display text-4xl font-black text-platinum mb-3">UTAMV</h1>
-          <p className="font-ui text-xs text-platinum-dim tracking-[0.2em] uppercase mb-8">Elite Masterclass Campus</p>
+          <p className="font-ui text-xs text-platinum-dim tracking-[0.2em] uppercase mb-8">Campus Online</p>
           <div className="space-y-4 text-left">
             {[
               '7 programas desde Certificación hasta Maestría',
@@ -99,7 +99,7 @@ const Auth = () => {
             </div>
             <div>
               <div className="font-display text-lg font-bold text-platinum">UTAMV</div>
-              <div className="font-ui text-[9px] text-platinum-dim tracking-[0.16em] uppercase">Elite Masterclass</div>
+              <div className="font-ui text-[9px] text-platinum-dim tracking-[0.16em] uppercase">Campus Online</div>
             </div>
           </div>
 

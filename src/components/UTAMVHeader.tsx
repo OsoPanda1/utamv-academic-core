@@ -89,7 +89,7 @@ const UTAMVHeader = () => {
                 UTAMV
               </div>
               <div className="font-ui text-[9px] text-platinum-dim tracking-[0.18em] uppercase leading-none mt-0.5">
-                Elite Masterclass
+                Campus Online
               </div>
             </div>
           </Link>
@@ -207,6 +207,12 @@ const UTAMVHeader = () => {
                 <span>Iniciar Sesión</span>
               </Link>
             )}
+            <Link
+              to="/auth/login"
+              className="px-4 py-2 rounded-lg font-ui text-[0.8rem] font-medium text-platinum-dim hover:text-platinum transition-colors"
+            >
+              Iniciar Sesión
+            </Link>
             <Link
               to="/admisiones"
               className="px-5 py-2.5 rounded-xl font-ui text-[0.8rem] font-semibold tracking-wide btn-platinum"

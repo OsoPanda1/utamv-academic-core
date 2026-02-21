@@ -48,7 +48,7 @@ const UTAMVFooter: React.FC = () => {
                   UTAMV
                 </div>
                 <div className="font-ui text-[9px] text-platinum-dim tracking-[0.18em] uppercase">
-                  Universidad Tecnológica Avanzada
+                  Campus Online
                 </div>
               </div>
             </div>

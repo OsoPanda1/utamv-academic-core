@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
-import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,11 +25,10 @@ serve(async (req) => {
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId = customers.data.length > 0 ? customers.data[0].id : undefined;
 
-    // Create a dynamic price if no stripe price ID available
-    const lineItems = stripePriceId && stripePriceId !== `price_${courseSlug}` ? [{ price: stripePriceId, quantity: 1 }] : [{
+    const lineItems = stripePriceId && !stripePriceId.startsWith('price_') === false && stripePriceId.length > 20 ? [{ price: stripePriceId, quantity: 1 }] : [{
       price_data: {
         currency: 'mxn',
-        product_data: { name: courseName, description: `UTAMV Elite Masterclass — ${courseName}` },
+        product_data: { name: courseName, description: `UTAMV Campus Online — ${courseName}` },
         unit_amount: Math.round(priceMXN * 100),
       },
       quantity: 1,
@@ -46,7 +45,7 @@ serve(async (req) => {
       payment_intent_data: { metadata: { user_id: user.id, course_slug: courseSlug } },
     });
 
-    // After successful payment (optimistic enrollment for demo)
+    // Optimistic enrollment
     const serviceClient = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
     const { data: course } = await serviceClient.from('courses').select('id').eq('slug', courseSlug).single();
     if (course) {
