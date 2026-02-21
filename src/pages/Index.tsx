@@ -6,9 +6,10 @@ import {
   BarChart3, GraduationCap, ChevronRight, Zap, Clock,
   TrendingUp, Briefcase, BookOpenCheck, Building2,
   ArrowRight, CheckCircle2, Medal, Scale, FileText,
-  Star, Microscope, Layers
+  Star, Microscope, Layers, Play
 } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
+import heroBg from '@/assets/hero-bg.jpg';
 
 const stats = [
   { value: '10', unit: 'Módulos', label: 'Curriculares OBE' },
@@ -131,9 +132,16 @@ const Index = () => {
       <main>
         {/* ══ HERO ════════════════════════════════════════════════════════════════ */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-          <div className="absolute inset-0 bg-hero" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222_35%_5%/0.3)] via-transparent to-[hsl(222_35%_5%)]" />
-          <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+          {/* Background Image/Video */}
+          <div className="absolute inset-0 overflow-hidden">
+            <img 
+              src={heroBg} 
+              alt="UTAMV Campus Digital" 
+              className="w-full h-full object-cover opacity-30"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222_35%_5%/0.8)] via-[hsl(222_35%_5%/0.6)] to-[hsl(222_35%_5%)]" />
+          <div className="absolute inset-0 bg-grid-pattern opacity-10" />
 
           {/* Atmospheric platinum orbs */}
           <div className="absolute top-1/4 left-1/5 w-80 h-80 rounded-full bg-[hsl(var(--platinum)/0.03)] blur-3xl pointer-events-none" />
@@ -176,14 +184,17 @@ const Index = () => {
                   to="/programas"
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide btn-platinum"
                 >
-                  Explorar Programas <ArrowRight size={17} />
+                  Conoce nuestros Programas <ArrowRight size={17} />
                 </Link>
                 <Link
-                  to="/modelo-educativo"
+                  to="/admisiones"
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide text-platinum-dim border border-[hsl(var(--platinum)/0.2)] hover:border-[hsl(var(--platinum)/0.4)] hover:text-platinum hover:bg-[hsl(var(--platinum)/0.04)] transition-all"
                 >
-                  Modelo NextGen 2026
+                  Inscríbete Ahora
                 </Link>
+                <button className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide text-platinum-dim border border-[hsl(var(--platinum)/0.2)] hover:border-[hsl(var(--platinum)/0.4)] hover:text-platinum hover:bg-[hsl(var(--platinum)/0.04)] transition-all">
+                  <Play size={17} /> Ver Video
+                </button>
               </div>
 
               <div className="animate-fade-in-up delay-500">

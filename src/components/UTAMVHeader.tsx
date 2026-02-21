@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, GraduationCap } from 'lucide-react';
+import { Menu, X, ChevronDown, GraduationCap, Search, User, LogIn } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navItems = [
   { label: 'Inicio', path: '/' },
@@ -9,14 +10,30 @@ const navItems = [
     label: 'Programas',
     path: '/programas',
     children: [
-      { label: 'Maestrías y Posgrado', path: '/programas?nivel=maestria' },
-      { label: 'Máster Profesional', path: '/programas?nivel=master' },
-      { label: 'Diplomados', path: '/programas?nivel=diplomado' },
-      { label: 'Certificaciones', path: '/programas?nivel=certificacion' },
+      { 
+        category: 'Nivel Académico',
+        items: [
+          { label: 'Maestrías y Posgrado', path: '/programas?nivel=maestria', description: 'Programas de posgrado avanzado' },
+          { label: 'Máster Profesional', path: '/programas?nivel=master', description: 'Formación estratégica para líderes' },
+          { label: 'Diplomados', path: '/programas?nivel=diplomado', description: 'Actualización profesional intensiva' },
+          { label: 'Certificaciones', path: '/programas?nivel=certificacion', description: 'Competencias específicas' }
+        ]
+      },
+      {
+        category: 'Áreas de Especialización',
+        items: [
+          { label: 'Marketing Digital', path: '/programas?area=marketing', description: 'SEO, SEM, Social Media' },
+          { label: 'Inteligencia Artificial', path: '/programas?area=ia', description: 'IA aplicada y automatización' },
+          { label: 'Analítica y Data', path: '/programas?area=data', description: 'Analytics y toma de decisiones' },
+          { label: 'Comunicación Digital', path: '/programas?area=comunicacion', description: 'Marca y storytelling' }
+        ]
+      }
     ],
   },
   { label: 'Módulos Académicos', path: '/modulos' },
   { label: 'Modelo Educativo', path: '/modelo-educativo' },
+  { label: 'Docentes', path: '/docentes' },
+  { label: 'Foro UTAMV', path: '/foro' },
   { label: 'Marco Institucional', path: '/institucional' },
   { label: 'Admisiones', path: '/admisiones' },
 ];
@@ -25,7 +42,10 @@ const UTAMVHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
@@ -37,6 +57,13 @@ const UTAMVHeader = () => {
     setMobileOpen(false);
     setOpenDropdown(null);
   }, [location.pathname]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      console.log('Searching for:', searchQuery);
+    }
+  };
 
   return (
     <header
@@ -66,6 +93,25 @@ const UTAMVHeader = () => {
               </div>
             </div>
           </Link>
+
+          {/* ── Search Bar ── */}
+          <div className="hidden md:flex flex-1 max-w-md mx-8">
+            <form onSubmit={handleSearch} className="relative w-full">
+              <div className="relative group">
+                <input
+                  type="text"
+                  placeholder="Buscar programas, cursos, docentes..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 pr-10 rounded-lg bg-[hsl(var(--platinum)/0.06)] border border-[hsl(var(--platinum)/0.1)] text-platinum placeholder:text-platinum-dim text-sm font-ui focus:outline-none focus:border-[hsl(var(--platinum)/0.3)] focus:ring-1 focus:ring-[hsl(var(--platinum)/0.3)] transition-all duration-200"
+                />
+                <Search 
+                  size={16} 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-platinum-dim group-focus-within:text-platinum transition-colors"
+                />
+              </div>
+            </form>
+          </div>
 
           {/* ── Desktop Nav ── */}
           <nav className="hidden lg:flex items-center gap-0.5">
@@ -100,31 +146,67 @@ const UTAMVHeader = () => {
                   </Link>
                 )}
 
-                {/* Dropdown */}
                 {item.children && openDropdown === item.label && (
                   <div
                     onMouseEnter={() => setOpenDropdown(item.label)}
                     onMouseLeave={() => setOpenDropdown(null)}
-                    className="absolute top-full left-0 mt-1 w-60 bg-[hsl(222_30%_8%)] border border-[hsl(var(--platinum)/0.12)] rounded-xl shadow-elevated overflow-hidden animate-scale-in"
+                    className="absolute top-full left-0 mt-1 w-80 bg-[hsl(222_38%_4%)] border border-[hsl(var(--platinum)/0.1)] rounded-xl shadow-xl overflow-hidden animate-scale-in"
                   >
-                    {item.children.map((child) => (
-                      <Link
-                        key={child.path}
-                        to={child.path}
-                        className="flex items-center gap-2.5 px-4 py-3.5 font-ui text-[0.78rem] text-platinum-dim hover:text-platinum hover:bg-[hsl(var(--platinum)/0.05)] transition-all border-b border-[hsl(var(--platinum)/0.05)] last:border-0"
-                      >
-                        <span className="w-1 h-1 rounded-full bg-platinum-deep flex-shrink-0" />
-                        {child.label}
-                      </Link>
-                    ))}
+                    <div className="p-4">
+                      {item.children.map((category, categoryIndex) => (
+                        <div key={categoryIndex} className="mb-4 last:mb-0">
+                          <h4 className="font-ui text-xs font-semibold text-platinum-dim uppercase tracking-wide mb-2">
+                            {category.category}
+                          </h4>
+                          <div className="space-y-1">
+                            {category.items.map((child) => (
+                              <Link
+                                key={child.path}
+                                to={child.path}
+                                className="flex flex-col gap-1 px-3 py-2 rounded-lg text-[0.8rem] text-platinum-dim hover:text-platinum hover:bg-[hsl(var(--platinum)/0.04)] transition-colors"
+                              >
+                                <span className="font-medium">{child.label}</span>
+                                <span className="text-xs text-platinum-dim">{child.description}</span>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             ))}
           </nav>
 
-          {/* ── CTA ── */}
+          {/* ── CTA and User Actions ── */}
           <div className="hidden lg:flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Link
+                  to="/perfil"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-platinum-dim hover:text-platinum transition-colors"
+                >
+                  <User size={18} />
+                  <span>Mi Perfil</span>
+                </Link>
+                <button
+                  onClick={signOut}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-platinum-dim hover:text-platinum transition-colors"
+                >
+                  <LogIn size={18} />
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/auth/login"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-platinum-dim hover:text-platinum transition-colors"
+              >
+                <LogIn size={18} />
+                <span>Iniciar Sesión</span>
+              </Link>
+            )}
             <Link
               to="/admisiones"
               className="px-5 py-2.5 rounded-xl font-ui text-[0.8rem] font-semibold tracking-wide btn-platinum"
@@ -148,6 +230,23 @@ const UTAMVHeader = () => {
       {mobileOpen && (
         <div className="lg:hidden bg-[hsl(var(--background))] border-t border-[hsl(var(--platinum)/0.08)] animate-fade-in-up">
           <div className="container mx-auto px-4 py-4 space-y-1">
+            {/* Mobile Search */}
+            <div className="mb-4">
+              <form onSubmit={handleSearch} className="relative">
+                <input
+                  type="text"
+                  placeholder="Buscar..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 pr-10 rounded-lg bg-[hsl(var(--platinum)/0.06)] border border-[hsl(var(--platinum)/0.1)] text-platinum placeholder:text-platinum-dim text-sm"
+                />
+                <Search 
+                  size={16} 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-platinum-dim"
+                />
+              </form>
+            </div>
+            
             {navItems.map((item) => (
               <div key={item.path}>
                 <Link
@@ -162,23 +261,57 @@ const UTAMVHeader = () => {
                 </Link>
                 {item.children && (
                   <div className="pl-5 mt-1 space-y-0.5">
-                    {item.children.map((child) => (
-                      <Link
-                        key={child.path}
-                        to={child.path}
-                        className="block px-4 py-2.5 rounded-lg font-ui text-xs text-muted-foreground hover:text-platinum-dim transition-all"
-                      >
-                        {child.label}
-                      </Link>
+                    {item.children.map((category) => (
+                      <div key={category.category} className="mb-3">
+                        <h4 className="font-ui text-xs font-semibold text-platinum-dim uppercase tracking-wide mb-2">
+                          {category.category}
+                        </h4>
+                        {category.items.map((child) => (
+                          <Link
+                            key={child.path}
+                            to={child.path}
+                            className="block px-4 py-2.5 rounded-lg font-ui text-xs text-muted-foreground hover:text-platinum-dim transition-all"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
                     ))}
                   </div>
                 )}
               </div>
             ))}
+            
             <div className="pt-3 border-t border-[hsl(var(--platinum)/0.08)]">
+              {user ? (
+                <div className="space-y-3">
+                  <Link
+                    to="/perfil"
+                    className="flex items-center gap-2 block px-4 py-3 rounded-xl font-ui text-sm text-platinum-dim hover:text-platinum hover:bg-[hsl(var(--platinum)/0.04)] transition-all"
+                  >
+                    <User size={18} />
+                    <span>Mi Perfil</span>
+                  </Link>
+                  <button
+                    onClick={signOut}
+                    className="flex items-center gap-2 w-full px-4 py-3 rounded-xl font-ui text-sm text-platinum-dim hover:text-platinum hover:bg-[hsl(var(--platinum)/0.04)] transition-all"
+                  >
+                    <LogIn size={18} />
+                    <span>Cerrar Sesión</span>
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/auth/login"
+                  className="flex items-center gap-2 block px-4 py-3 rounded-xl font-ui text-sm text-platinum-dim hover:text-platinum hover:bg-[hsl(var(--platinum)/0.04)] transition-all"
+                >
+                  <LogIn size={18} />
+                  <span>Iniciar Sesión</span>
+                </Link>
+              )}
               <Link
                 to="/admisiones"
-                className="block text-center px-5 py-3 rounded-xl font-ui text-sm font-semibold tracking-wide btn-platinum"
+                className="block text-center px-5 py-3 rounded-xl font-ui text-sm font-semibold tracking-wide btn-platinum mt-3"
               >
                 Solicitar Admisión
               </Link>

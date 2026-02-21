@@ -14,6 +14,9 @@ import AdmisionesPage from "./pages/AdmisionesPage";
 import Auth from "./pages/Auth";
 import Campus from "./pages/Campus";
 import Pricing from "./pages/Pricing";
+import DocentesPage from "./pages/DocentesPage";
+import ForoPage from "./pages/ForoPage";
+import CertificadosPage from "./pages/CertificadosPage";
 
 const queryClient = new QueryClient();
 
@@ -34,12 +37,15 @@ const AppRoutes = () => (
     <Route path="/programas" element={<ProgramasPage />} />
     <Route path="/modulos" element={<ModulosPage />} />
     <Route path="/modelo-educativo" element={<ModeloEducativoPage />} />
+    <Route path="/docentes" element={<DocentesPage />} />
+    <Route path="/foro" element={<ForoPage />} />
     <Route path="/institucional" element={<InstitucionalPage />} />
     <Route path="/admisiones" element={<AdmisionesPage />} />
     <Route path="/precios" element={<Pricing />} />
     <Route path="/auth/login" element={<Auth />} />
     <Route path="/auth/register" element={<Auth />} />
     <Route path="/campus" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
+    <Route path="/certificados" element={<ProtectedRoute><CertificadosPage /></ProtectedRoute>} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
