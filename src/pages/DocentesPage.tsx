@@ -9,100 +9,36 @@ import { useState } from 'react';
 const teachers = [
   {
     id: 1,
-    name: 'Dra. Mariana Rodríguez',
-    title: 'Directora Académica & CEO',
-    bio: 'Especialista en marketing digital y educación superior. PhD en Educación Tecnológica. 15 años de experiencia en instituciones educativas de renombre.',
-    image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop',
-    area: 'Marketing Digital',
-    rating: 4.9,
+    name: 'Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)',
+    title: 'CEO Fundador de TAMV ONLINE, TAMV ONLINE METAVERSO, THE SOF, UTAMV',
+    bio: 'Expertise Autodidacta de Alto Nivel. Un perfil forjado en la experimentación directa, la creación de ecosistemas digitales complejos y el liderazgo de proyectos tecnológicos a gran escala, superando las mallas curriculares tradicionales mediante la aplicación empírica y el desarrollo de arquitecturas web disruptivas.',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    area: 'Inteligencia Artificial',
+    rating: 5.0,
     courses: 5,
-    students: 1200,
-    location: 'Ciudad de México',
+    students: 2000,
+    location: 'Real del Monte, Hidalgo',
     socialLinks: {
       linkedin: '#',
       twitter: '#',
       website: '#'
-    }
+    },
+    orcid: 'Edwin Oswaldo Castillo Trejo',
+    slogan: 'NO IMITAMOS EL FUTURO. NOSOTROS SOMOS EL FUTURO. LO SOÑAMOS, LO CREAMOS, LO SENTIMOS Y DEFINITIVAMENTE LO VIVIMOS.',
+    inspiration: 'DEJAR MI NOMBRE, ESCRITO EN LA HISTORIA MODERNA DE LA WEB.',
+    limitation: 'SOLO MI MENTE, TIENE LA CAPACIDAD PARA DETENERME.'
   },
   {
     id: 2,
-    name: 'Ing. Carlos Mendoza',
-    title: 'Director de Tecnología',
-    bio: 'Especialista en inteligencia artificial y automatización. Master en Data Science. Experiencia en Google y Microsoft.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
-    area: 'Inteligencia Artificial',
-    rating: 4.8,
-    courses: 3,
-    students: 850,
-    location: 'Monterrey',
-    socialLinks: {
-      linkedin: '#',
-      twitter: '#',
-      website: '#'
-    }
-  },
-  {
-    id: 3,
-    name: 'Lic. Andrea García',
-    title: 'Jefa de Comunicación',
-    bio: 'Especialista en branding y comunicación digital. Certificada en Google Analytics. 10 años de experiencia en agencias de publicidad.',
+    name: 'RENATA JAZMIN',
+    title: 'CEO Fundadora de ORBITA DIGITAL',
+    bio: 'Expertise como Community Manager en comunidades latinas a gran escala. Desarrolladora de Estrategias y Métodos comprobados para visionarios y emprendedores que no se conforman con una respuesta negativa. Liderazgo en expansión de mercados transatlánticos.',
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop',
-    area: 'Comunicación Digital',
-    rating: 4.7,
-    courses: 4,
-    students: 950,
-    location: 'Guadalajara',
-    socialLinks: {
-      linkedin: '#',
-      twitter: '#',
-      website: '#'
-    }
-  },
-  {
-    id: 4,
-    name: 'Dr. José Pérez',
-    title: 'Director de Análisis',
-    bio: 'Especialista en analítica de datos y business intelligence. PhD en Estadística. Experiencia en consultorías internacionales.',
-    image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=400&h=400&fit=crop',
-    area: 'Analítica y Data',
-    rating: 4.9,
-    courses: 6,
-    students: 1500,
-    location: 'Puebla',
-    socialLinks: {
-      linkedin: '#',
-      twitter: '#',
-      website: '#'
-    }
-  },
-  {
-    id: 5,
-    name: 'Lic. Sofia Martínez',
-    title: 'Jefa de Marketing Digital',
-    bio: 'Especialista en SEO y SEM. Certificada en Google Ads y HubSpot. 8 años de experiencia en e-commerce.',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop',
     area: 'Marketing Digital',
-    rating: 4.8,
-    courses: 3,
-    students: 700,
-    location: 'Ciudad de México',
-    socialLinks: {
-      linkedin: '#',
-      twitter: '#',
-      website: '#'
-    }
-  },
-  {
-    id: 6,
-    name: 'Ing. David Torres',
-    title: 'Especialista en IA',
-    bio: 'Especialista en machine learning y deep learning. Master en Inteligencia Artificial. Experiencia en startups de tecnología.',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop',
-    area: 'Inteligencia Artificial',
     rating: 4.9,
     courses: 4,
-    students: 1100,
-    location: 'Tijuana',
+    students: 1500,
+    location: 'Argentina',
     socialLinks: {
       linkedin: '#',
       twitter: '#',
@@ -111,7 +47,7 @@ const teachers = [
   }
 ];
 
-const areas = ['Todas las áreas', 'Marketing Digital', 'Inteligencia Artificial', 'Comunicación Digital', 'Analítica y Data'];
+const areas = ['Todas las áreas', 'Marketing Digital', 'Inteligencia Artificial'];
 
 const DocentesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -182,7 +118,7 @@ const DocentesPage = () => {
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="max-w-7xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {filteredTeachers.map(teacher => (
                   <div 
                     key={teacher.id}
@@ -213,6 +149,32 @@ const DocentesPage = () => {
                       <p className="font-body text-sm text-platinum/65 mb-4 line-clamp-3">
                         {teacher.bio}
                       </p>
+
+                      {teacher.orcid && (
+                        <div className="mb-4 p-3 bg-[hsl(var(--platinum)/0.06)] border border-[hsl(var(--platinum)/0.1)] rounded-lg">
+                          <p className="text-xs text-platinum-dim mb-1">ORCID: {teacher.orcid}</p>
+                        </div>
+                      )}
+
+                      {teacher.slogan && (
+                        <div className="mb-4 p-3 bg-[hsl(var(--platinum)/0.06)] border border-[hsl(var(--platinum)/0.1)] rounded-lg">
+                          <p className="text-sm font-semibold text-platinum italic mb-1">"{teacher.slogan}"</p>
+                        </div>
+                      )}
+
+                      {teacher.inspiration && (
+                        <div className="mb-4 p-3 bg-[hsl(var(--platinum)/0.06)] border border-[hsl(var(--platinum)/0.1)] rounded-lg">
+                          <p className="text-xs text-platinum-dim mb-1">Inspiración:</p>
+                          <p className="text-sm text-platinum italic">"{teacher.inspiration}"</p>
+                        </div>
+                      )}
+
+                      {teacher.limitation && (
+                        <div className="mb-4 p-3 bg-[hsl(var(--platinum)/0.06)] border border-[hsl(var(--platinum)/0.1)] rounded-lg">
+                          <p className="text-xs text-platinum-dim mb-1">Limitación:</p>
+                          <p className="text-sm text-platinum italic">"{teacher.limitation}"</p>
+                        </div>
+                      )}
 
                       <div className="grid grid-cols-3 gap-4 mb-4">
                         <div className="text-center">

@@ -1,5 +1,6 @@
 // Market Pricing Analysis for UTAMV Campus Online
 // Based on comprehensive research of Latin American educational market
+// Prices are 15% more accessible than competitors (Platzi, Coderhouse, Crehana)
 
 export interface PricingTier {
   id: string;
@@ -40,33 +41,6 @@ export interface RegionStats {
 // Latin America Market Competitors Analysis
 export const MARKET_COMPETITORS: MarketCompetitor[] = [
   {
-    id: 'coursera',
-    name: 'Coursera',
-    country: 'Global',
-    averageCoursePrice: 89,
-    priceRange: { min: 39, max: 129 },
-    coursesCount: 30000,
-    marketPosition: 'Premium',
-    mainFeatures: [
-      'Universidad certificado',
-      'Certificados de empresas',
-      'Acceso limitado',
-      'Sin tutorización personalizada'
-    ],
-    strengths: [
-      'Marca global reconocida',
-      'Contenido de calidad',
-      'Certificaciones reconocidas',
-      'Amplio catálogo'
-    ],
-    weaknesses: [
-      'Alto costo',
-      'Poco soporte personalizado',
-      'Contenido genérico',
-      'Sin certificaciones específicas LATAM'
-    ]
-  },
-  {
     id: 'platzi',
     name: 'Platzi',
     country: 'Colombia',
@@ -94,84 +68,57 @@ export const MARKET_COMPETITORS: MarketCompetitor[] = [
     ]
   },
   {
-    id: 'udemy',
-    name: 'Udemy',
-    country: 'Global',
-    averageCoursePrice: 15,
-    priceRange: { min: 9.99, max: 89 },
-    coursesCount: 155000,
-    marketPosition: 'Budget',
-    mainFeatures: [
-      'Contenido variado',
-      'Descuentos frecuentes',
-      'Acceso perpetuo',
-      'Comunidad global'
-    ],
-    strengths: [
-      'Variedad de cursos',
-      'Precio bajo',
-      'Acceso perpetuo',
-      'Retorno de dinero'
-    ],
-    weaknesses: [
-      'Calidad variable',
-      'Certificaciones no oficiales',
-      'Sin seguimiento académico',
-      'Contenido menos estructurado'
-    ]
-  },
-  {
-    id: 'edX',
-    name: 'edX',
-    country: 'Global',
-    averageCoursePrice: 50,
-    priceRange: { min: 20, max: 250 },
-    coursesCount: 3500,
+    id: 'coderhouse',
+    name: 'Coderhouse',
+    country: 'Argentina',
+    averageCoursePrice: 32,
+    priceRange: { min: 25, max: 45 },
+    coursesCount: 300,
     marketPosition: 'Premium',
     mainFeatures: [
-      'Universidad certificado',
-      'Microcredentials',
-      'Cursos de calidad',
-      'Certificaciones reconocidas'
+      'Mentorías individuales',
+      'Proyectos reales',
+      'Certificaciones reconocidas',
+      'Red de empresas'
     ],
     strengths: [
-      'Marca académica',
-      'Contenido de universidades',
-      'Certificaciones reconocidas',
-      'Soporte global'
+      'Contenido práctico',
+      'Soporte personalizado',
+      'Red de empleo',
+      'Certificaciones valoradas'
     ],
     weaknesses: [
-      'Precio variable',
-      'Acceso limitado',
-      'Poco personalización',
-      'Contenido menos práctico'
+      'Precio alto',
+      'Plazo fijo de cursos',
+      'Contenido menos actualizado',
+      'Plataforma menos intuitiva'
     ]
   },
   {
-    id: 'duolingo',
-    name: 'Duolingo',
-    country: 'Global',
-    averageCoursePrice: 12,
-    priceRange: { min: 6, max: 24 },
-    coursesCount: 40,
-    marketPosition: 'Budget',
+    id: 'crehana',
+    name: 'Crehana',
+    country: 'Perú',
+    averageCoursePrice: 28,
+    priceRange: { min: 18, max: 40 },
+    coursesCount: 400,
+    marketPosition: 'Mid',
     mainFeatures: [
-      'Gamificación',
-      'Lecciones cortas',
-      'Acceso gratis',
-      'Certificaciones opcionales'
+      'Acceso ilimitado',
+      'Cursos de diseño',
+      'Certificaciones digitales',
+      'App móvil'
     ],
     strengths: [
-      'Precio muy bajo',
-      'Fácil de usar',
-      'Gamificación',
-      'Acceso desde cualquier lugar'
+      'Contenido de diseño',
+      'Precio accesible',
+      'App móvil',
+      'Interfaz bonita'
     ],
     weaknesses: [
-      'Contenido básico',
-      'Certificaciones limitadas',
-      'Sin tutorización',
-      'Menos profundidad'
+      'Contenido menos técnico',
+      'Poco soporte',
+      'Menos variedad',
+      'Certificaciones menos reconocidas'
     ]
   }
 ];
@@ -222,28 +169,19 @@ export const REGION_STATS: RegionStats[] = [
     coursesCount: 11000,
     growthRate: 21.4,
     topCategories: ['Programación', 'Mercadotecnia', 'Finanzas', 'Emprendimiento']
-  },
-  {
-    id: 'venezuela',
-    country: 'Venezuela',
-    avgPrice: 18,
-    maxPrice: 69,
-    coursesCount: 8000,
-    growthRate: 25.8,
-    topCategories: ['Tecnología', 'Idiomas', 'Diseño', 'Mercadotecnia']
   }
 ];
 
-// UTAMV Competitive Pricing Strategy
+// UTAMV Competitive Pricing Strategy - 15% lower than average
 export const UTAMV_PRICING_TIERS: PricingTier[] = [
   {
     id: 'basic',
     name: 'Básico',
     description: 'Acceso a contenido esencial y cursos gratuitos con certificación básica.',
-    monthlyPrice: 8,
-    yearlyPrice: 69,
+    monthlyPrice: 7,
+    yearlyPrice: 60,
     yearlyDiscount: 30,
-    pricePerMonth: 5.75,
+    pricePerMonth: 5,
     features: [
       '100+ cursos gratuitos',
       'Certificados digitales básicos',
@@ -257,10 +195,10 @@ export const UTAMV_PRICING_TIERS: PricingTier[] = [
     id: 'professional',
     name: 'Profesional',
     description: 'Formación profesional completa con certificaciones oficiales UTAMV.',
-    monthlyPrice: 19,
-    yearlyPrice: 149,
+    monthlyPrice: 16,
+    yearlyPrice: 129,
     yearlyDiscount: 40,
-    pricePerMonth: 12.42,
+    pricePerMonth: 10.75,
     isPopular: true,
     features: [
       'Acceso ilimitado a todo el catálogo',
@@ -276,10 +214,10 @@ export const UTAMV_PRICING_TIERS: PricingTier[] = [
     id: 'enterprise',
     name: 'Empresarial',
     description: 'Soluciones completas para empresas y equipos con personalización.',
-    monthlyPrice: 49,
-    yearlyPrice: 399,
+    monthlyPrice: 42,
+    yearlyPrice: 340,
     yearlyDiscount: 50,
-    pricePerMonth: 33.25,
+    pricePerMonth: 28.33,
     features: [
       'Todo lo del Plan Profesional',
       'Cursos personalizados para equipos',
@@ -292,7 +230,7 @@ export const UTAMV_PRICING_TIERS: PricingTier[] = [
   }
 ];
 
-// UTAMV Program Pricing Structure
+// UTAMV Program Pricing Structure - 15% lower than competitors
 export interface ProgramPricing {
   id: string;
   programName: string;
@@ -312,8 +250,8 @@ export const PROGRAM_PRICING: ProgramPricing[] = [
     id: 'marketing-digital',
     programName: 'Marketing Digital Profesional',
     description: 'Estrategias completas de marketing digital para LATAM',
-    price: 450,
-    marketPrice: 529,
+    price: 383,
+    marketPrice: 450,
     discountPercentage: 15,
     durationMonths: 6,
     hoursPerWeek: 10,
@@ -325,8 +263,8 @@ export const PROGRAM_PRICING: ProgramPricing[] = [
     id: 'programacion-fullstack',
     programName: 'Programación Full Stack',
     description: 'Desarrollo web completo con MERN/MEAN stack',
-    price: 520,
-    marketPrice: 612,
+    price: 442,
+    marketPrice: 520,
     discountPercentage: 15,
     durationMonths: 8,
     hoursPerWeek: 12,
@@ -338,8 +276,8 @@ export const PROGRAM_PRICING: ProgramPricing[] = [
     id: 'data-science',
     programName: 'Data Science & Analytics',
     description: 'Análisis de datos y machine learning',
-    price: 480,
-    marketPrice: 565,
+    price: 408,
+    marketPrice: 480,
     discountPercentage: 15,
     durationMonths: 7,
     hoursPerWeek: 11,
@@ -351,8 +289,8 @@ export const PROGRAM_PRICING: ProgramPricing[] = [
     id: 'business-management',
     programName: 'Gestión de Negocios y Emprendimiento',
     description: 'Emprendimiento y gestión empresarial para la región',
-    price: 400,
-    marketPrice: 470,
+    price: 340,
+    marketPrice: 400,
     discountPercentage: 15,
     durationMonths: 5,
     hoursPerWeek: 9,
@@ -364,8 +302,8 @@ export const PROGRAM_PRICING: ProgramPricing[] = [
     id: 'ux-ui-design',
     programName: 'UX/UI Design Profesional',
     description: 'Diseño de interfaces y experiencia de usuario',
-    price: 420,
-    marketPrice: 494,
+    price: 357,
+    marketPrice: 420,
     discountPercentage: 15,
     durationMonths: 6,
     hoursPerWeek: 10,
@@ -377,8 +315,8 @@ export const PROGRAM_PRICING: ProgramPricing[] = [
     id: 'ai-deep-learning',
     programName: 'Inteligencia Artificial & Deep Learning',
     description: 'IA avanzada y algoritmos de aprendizaje profundo',
-    price: 550,
-    marketPrice: 647,
+    price: 468,
+    marketPrice: 550,
     discountPercentage: 15,
     durationMonths: 9,
     hoursPerWeek: 13,
@@ -390,8 +328,8 @@ export const PROGRAM_PRICING: ProgramPricing[] = [
 
 // Key Market Insights
 export const MARKET_INSIGHTS = {
-  averageMarketPrice: 48,
-  ourAveragePrice: 41,
+  averageMarketPrice: 28,
+  ourAveragePrice: 23.8,
   discountPercentage: 15,
   marketPenetrationRate: 8.5,
   projectedGrowth2024: 22.4,
