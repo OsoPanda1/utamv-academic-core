@@ -381,3 +381,91 @@
   body { background: white; color: black; }
   header, footer { display: none; }
 }
+
+/* ── UTAMV 7 FEDERACIONES — COMPONENTS ── */
+
+/* Glass Panel Effect */
+.glass-panel {
+  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.glass-panel-deep {
+  background: linear-gradient(145deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* UTAMV Primary Button */
+.btn-utamv-primary {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(210 28% 90%), hsl(210 18% 72%));
+  color: hsl(222 35% 5%);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px hsl(var(--primary) / 0.25);
+}
+
+.btn-utamv-primary:hover {
+  box-shadow: 0 8px 30px hsl(var(--primary) / 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-utamv-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Petroleo Glow Effect */
+.text-petroleo-glow {
+  color: hsl(185 80% 55%);
+  text-shadow: 0 0 20px hsl(185 80% 55% / 0.5), 0 0 40px hsl(185 80% 55% / 0.3);
+}
+
+/* Platinum Text Color */
+.text-platinum {
+  color: hsl(var(--platinum));
+}
+
+/* Animate In Classes */
+.animate-in {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+.zoom-in {
+  animation-name: zoom-in-keyframes;
+}
+
+.slide-in-from-bottom-10 {
+  animation-name: slide-in-from-bottom-keyframes;
+}
+
+@keyframes zoom-in-keyframes {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-from-bottom-keyframes {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
