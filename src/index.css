@@ -14,14 +14,14 @@
 @layer base {
   :root {
     /* Core Brand — Deep Navy */
-    --background: 222 35% 5%;
-    --foreground: 210 30% 94%;
+    --background: 222 50% 4%;
+    --foreground: 195 30% 92%;
 
-    --card: 222 30% 8%;
-    --card-foreground: 210 30% 92%;
+    --card: 222 45% 6%;
+    --card-foreground: 195 28% 90%;
 
-    --popover: 222 30% 8%;
-    --popover-foreground: 210 30% 92%;
+    --popover: 222 45% 6%;
+    --popover-foreground: 195 28% 90%;
 
     /* Platinum as primary — silver elegance */
     --primary: 210 25% 80%;
@@ -47,8 +47,8 @@
     --radius: 0.75rem;
 
     /* Sidebar */
-    --sidebar-background: 222 35% 5%;
-    --sidebar-foreground: 210 30% 88%;
+    --sidebar-background: 222 50% 4%;
+    --sidebar-foreground: 195 28% 88%;
     --sidebar-primary: 210 25% 80%;
     --sidebar-primary-foreground: 222 35% 5%;
     --sidebar-accent: 222 28% 11%;
@@ -65,10 +65,10 @@
     --platinum-deep: 210 20% 45%;
 
     /* Navy scale */
-    --navy: 222 50% 8%;
-    --navy-mid: 222 42% 13%;
-    --navy-light: 222 35% 20%;
-    --navy-accent: 222 30% 26%;
+    --navy: 222 50% 4%;
+    --navy-mid: 220 45% 9%;
+    --navy-light: 200 40% 14%;
+    --navy-accent: 195 35% 18%;
 
     /* Subtle warm silver — for accents */
     --silver: 210 22% 82%;
@@ -82,11 +82,11 @@
     /* ── GRADIENTS ── */
     --gradient-platinum: linear-gradient(135deg, hsl(210 22% 82%), hsl(210 28% 92%), hsl(210 18% 72%));
     --gradient-platinum-text: linear-gradient(135deg, hsl(210 28% 90%), hsl(210 22% 78%), hsl(210 18% 65%));
-    --gradient-navy: linear-gradient(135deg, hsl(222 50% 6%), hsl(222 42% 11%), hsl(222 35% 17%));
-    --gradient-hero: linear-gradient(160deg, hsl(222 55% 5%) 0%, hsl(222 48% 9%) 50%, hsl(220 40% 13%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(222 30% 8%), hsl(222 25% 11%));
-    --gradient-overlay: linear-gradient(to bottom, transparent, hsl(222 35% 5%));
-    --gradient-steel: linear-gradient(135deg, hsl(215 22% 35%), hsl(215 18% 55%), hsl(210 22% 70%));
+    --gradient-navy: linear-gradient(135deg, hsl(222 50% 4%), hsl(200 45% 8%), hsl(195 40% 12%));
+    --gradient-hero: linear-gradient(160deg, hsl(222 55% 3%) 0%, hsl(200 48% 7%) 50%, hsl(195 42% 10%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(222 45% 6%), hsl(200 40% 9%));
+    --gradient-overlay: linear-gradient(to bottom, transparent, hsl(222 50% 4%));
+    --gradient-steel: linear-gradient(135deg, hsl(200 30% 25%), hsl(195 25% 40%), hsl(190 22% 55%));
 
     /* ── SHADOWS ── */
     --shadow-platinum: 0 0 30px hsl(210 22% 82% / 0.15);
