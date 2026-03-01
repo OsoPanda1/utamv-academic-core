@@ -184,11 +184,11 @@ const UTAMVHeader = () => {
             {user ? (
               <div className="flex items-center gap-3">
                 <Link
-                  to="/perfil"
+                  to="/campus"
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-platinum-dim hover:text-platinum transition-colors"
                 >
                   <User size={18} />
-                  <span>Mi Perfil</span>
+                  <span>Mi Campus</span>
                 </Link>
                 <button
                   onClick={signOut}
@@ -201,18 +201,12 @@ const UTAMVHeader = () => {
             ) : (
               <Link
                 to="/auth/login"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-platinum-dim hover:text-platinum transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg font-ui text-[0.8rem] font-medium text-platinum-dim hover:text-platinum transition-colors"
               >
                 <LogIn size={18} />
                 <span>Iniciar Sesión</span>
               </Link>
             )}
-            <Link
-              to="/auth/login"
-              className="px-4 py-2 rounded-lg font-ui text-[0.8rem] font-medium text-platinum-dim hover:text-platinum transition-colors"
-            >
-              Iniciar Sesión
-            </Link>
             <Link
               to="/admisiones"
               className="px-5 py-2.5 rounded-xl font-ui text-[0.8rem] font-semibold tracking-wide btn-platinum"
