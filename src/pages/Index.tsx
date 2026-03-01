@@ -9,7 +9,7 @@ import {
   Star, Microscope, Layers, Play
 } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
-import heroBg from '@/assets/hero-bg.jpg';
+// hero-bg removed — using CSS gradient
 
 const stats = [
   { value: '10', unit: 'Módulos', label: 'Curriculares OBE' },
@@ -132,20 +132,15 @@ const Index = () => {
       <main>
         {/* ══ HERO ════════════════════════════════════════════════════════════════ */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-          {/* Background Image/Video */}
-          <div className="absolute inset-0 overflow-hidden">
-            <img 
-              src={heroBg} 
-              alt="UTAMV Campus Digital" 
-              className="w-full h-full object-cover opacity-30"
-            />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222_35%_5%/0.8)] via-[hsl(222_35%_5%/0.6)] to-[hsl(222_35%_5%)]" />
-          <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+          {/* Petrol Blue + Dark Navy gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[hsl(222,50%,4%)] via-[hsl(200,45%,8%)] to-[hsl(195,40%,6%)]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[hsl(222,50%,4%)] via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-grid-pattern opacity-[0.04]" />
 
-          {/* Atmospheric platinum orbs */}
-          <div className="absolute top-1/4 left-1/5 w-80 h-80 rounded-full bg-[hsl(var(--platinum)/0.03)] blur-3xl pointer-events-none" />
-          <div className="absolute bottom-1/3 right-1/5 w-60 h-60 rounded-full bg-[hsl(var(--platinum)/0.025)] blur-3xl pointer-events-none" />
+          {/* Atmospheric petrol-blue orbs */}
+          <div className="absolute top-1/4 left-1/5 w-96 h-96 rounded-full bg-[hsl(195,60%,15%/0.15)] blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-1/3 right-1/5 w-72 h-72 rounded-full bg-[hsl(200,50%,12%/0.12)] blur-[100px] pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[hsl(195,45%,10%/0.08)] blur-[150px] pointer-events-none" />
 
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-5xl mx-auto text-center">
