@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Campus from "./pages/Campus";
+import CourseViewer from "./pages/CourseViewer";
 import Pricing from "./pages/Pricing";
 import ProgramasPage from "./pages/ProgramasPage";
 import ModulosPage from "./pages/ModulosPage";
@@ -83,6 +84,7 @@ const App = () => (
 
               {/* Protected */}
               <Route path="/campus" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
+              <Route path="/campus/curso/:slug" element={<ProtectedRoute><CourseViewer /></ProtectedRoute>} />
               <Route path="/campus/:slug" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
 
               {/* Fallback */}

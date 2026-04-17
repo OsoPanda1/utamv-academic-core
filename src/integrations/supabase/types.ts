@@ -44,6 +44,48 @@ export type Database = {
         }
         Relationships: []
       }
+      block_utamv_chain: {
+        Row: {
+          block_hash: string
+          block_index: number
+          certificate_id: string
+          certificate_number: string
+          course_id: string
+          created_at: string
+          data_hash: string
+          id: number
+          nonce: string
+          previous_hash: string
+          user_id: string
+        }
+        Insert: {
+          block_hash: string
+          block_index: number
+          certificate_id: string
+          certificate_number: string
+          course_id: string
+          created_at?: string
+          data_hash: string
+          id?: number
+          nonce: string
+          previous_hash: string
+          user_id: string
+        }
+        Update: {
+          block_hash?: string
+          block_index?: number
+          certificate_id?: string
+          certificate_number?: string
+          course_id?: string
+          created_at?: string
+          data_hash?: string
+          id?: number
+          nonce?: string
+          previous_hash?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           blockchain_hash: string | null
@@ -657,6 +699,13 @@ export type Database = {
     }
     Functions: {
       generate_certificate_number: { Args: never; Returns: string }
+      get_last_block: {
+        Args: never
+        Returns: {
+          block_hash: string
+          block_index: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
