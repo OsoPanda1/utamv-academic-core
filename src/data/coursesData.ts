@@ -627,8 +627,11 @@ export const COURSES: Course[] = [
     hours: 160,
     priceMXN: 18900,
     priceUSD: 1099,
-    isFeatured: true,
-    instructor: { name: 'Dr. Eduardo Salgado Ramírez', bio: 'Arquitecto de plataformas, ex-CTO de marketplace LATAM con 15 años diseñando ecosistemas multi-actor.', avatar: '' },
+    stripePriceId: '',
+    instructorName: 'Dr. Eduardo Salgado Ramírez',
+    instructorTitle: 'Arquitecto de Plataformas Digitales',
+    instructorBio: 'Ex-CTO de marketplace LATAM con 15 años diseñando ecosistemas multi-actor.',
+    thumbnail: '',
     learningOutcomes: [
       'Diseñar mapas de sistema y estrategia de ecosistemas multi-actor',
       'Definir arquitectura técnica escalable con APIs y microservicios',
@@ -637,7 +640,11 @@ export const COURSES: Course[] = [
       'Operar y escalar con KPIs, dashboards y modelos de monetización ética',
     ],
     prerequisites: ['Conocimientos básicos de tecnología digital', 'Experiencia en proyectos digitales (deseable)'],
-    obeFramework: { methodology: 'Outcome-Based Education', evaluationType: 'Proyecto integrador + exámenes por módulo + rúbricas OBE', certification: 'Diplomado UTAMV con verificación BlockUTAMV' },
+    obeFramework: {
+      competencies: ['Estrategia ecosistémica', 'Arquitectura escalable', 'Gobernanza comunitaria', 'Operación data-driven'],
+      evidences: ['Mapa de sistema', 'API contract', 'Prototipo funcional', 'Dashboard KPI', 'Pitch deck final'],
+      rubrics: ['Visión estratégica 25%', 'Calidad técnica 25%', 'Comunidad 15%', 'Validación 15%', 'Defensa 20%'],
+    },
     modules: [
       {
         id: 'm8-1', title: 'Módulo 1 — Fundamentos y Estrategia', orderIndex: 1,
