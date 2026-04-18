@@ -22,6 +22,8 @@ import AdmisionesPage from "./pages/AdmisionesPage";
 import DocentesPage from "./pages/DocentesPage";
 import ForoPage from "./pages/ForoPage";
 import CertificadosPage from "./pages/CertificadosPage";
+import VerifyCertificate from "./pages/VerifyCertificate";
+import ControlEscolar from "./pages/ControlEscolar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -77,6 +79,7 @@ const App = () => (
               <Route path="/docentes" element={<DocentesPage />} />
               <Route path="/foro" element={<ForoPage />} />
               <Route path="/certificados" element={<CertificadosPage />} />
+              <Route path="/verificar/:certNumber" element={<VerifyCertificate />} />
               <Route path="/precios" element={<Pricing />} />
 
               {/* Auth */}
@@ -87,6 +90,7 @@ const App = () => (
               <Route path="/campus" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
               <Route path="/campus/curso/:slug" element={<ProtectedRoute><CourseViewer /></ProtectedRoute>} />
               <Route path="/campus/:slug" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
+              <Route path="/admin/control-escolar" element={<ProtectedRoute><ControlEscolar /></ProtectedRoute>} />
 
               {/* Fallback */}
               <Route path="*" element={<NotFound />} />
