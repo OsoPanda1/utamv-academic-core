@@ -647,7 +647,7 @@ export const COURSES: Course[] = [
     },
     modules: [
       {
-        id: 'm8-1', title: 'Módulo 1 — Fundamentos y Estrategia', orderIndex: 1,
+        id: 'm8-1', title: 'Módulo 1 — Fundamentos y Estrategia',
         learningObjectives: ['Definir propósito y actores de un ecosistema', 'Aplicar pensamiento sistémico', 'Establecer estrategia y OKRs'],
         lessons: [
           { id: 'l8-1-1', title: 'Introducción a los ecosistemas digitales', type: 'video', duration: 12 },
@@ -661,7 +661,7 @@ export const COURSES: Course[] = [
         ],
       },
       {
-        id: 'm8-2', title: 'Módulo 2 — Arquitectura de Ecosistemas', orderIndex: 2,
+        id: 'm8-2', title: 'Módulo 2 — Arquitectura de Ecosistemas',
         learningObjectives: ['Diseñar arquitectura técnica modular', 'Definir contratos de API', 'Aplicar gobernanza de datos y seguridad'],
         lessons: [
           { id: 'l8-2-1', title: 'Principios de arquitectura: modularidad y resiliencia', type: 'video', duration: 15 },
@@ -675,7 +675,7 @@ export const COURSES: Course[] = [
         ],
       },
       {
-        id: 'm8-3', title: 'Módulo 3 — Plataformas y Productos', orderIndex: 3,
+        id: 'm8-3', title: 'Módulo 3 — Plataformas y Productos',
         learningObjectives: ['Diseñar productos multi-actor', 'Construir MVP ecosistémico', 'Validar con experimentos'],
         lessons: [
           { id: 'l8-3-1', title: 'Diseño de productos para múltiples actores', type: 'video', duration: 13 },
@@ -689,7 +689,7 @@ export const COURSES: Course[] = [
         ],
       },
       {
-        id: 'm8-4', title: 'Módulo 4 — Comunidades y Gobernanza', orderIndex: 4,
+        id: 'm8-4', title: 'Módulo 4 — Comunidades y Gobernanza',
         learningObjectives: ['Diseñar dinámicas e incentivos comunitarios', 'Construir políticas de moderación', 'Medir salud comunitaria'],
         lessons: [
           { id: 'l8-4-1', title: 'Dinámicas de comunidades digitales', type: 'video', duration: 11 },
@@ -703,7 +703,7 @@ export const COURSES: Course[] = [
         ],
       },
       {
-        id: 'm8-5', title: 'Módulo 5 — Operación, Métricas y Escalamiento', orderIndex: 5,
+        id: 'm8-5', title: 'Módulo 5 — Operación, Métricas y Escalamiento',
         learningObjectives: ['Definir KPIs y dashboards', 'Tomar decisiones data-driven', 'Escalar técnica y organizacionalmente'],
         lessons: [
           { id: 'l8-5-1', title: 'KPIs y métricas de ecosistemas', type: 'video', duration: 13 },
