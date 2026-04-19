@@ -268,10 +268,38 @@ const CourseCard = ({ course, enrolled }: { course: any; enrolled: boolean }) =>
     if (!user) return;
     setLoading(true);
     try {
+      // 1) Resolver el course_id real en DB por slug
+      const { data: dbCourse } = await supabase
+        .from('courses').select('id, price_mxn, stripe_price_id')
+        .eq('slug', course.slug).maybeSingle();
+
+      const isFree = !course.priceMXN || course.priceMXN === 0 || !course.stripePriceId;
+
+      if (isFree && dbCourse) {
+        // Inscripción directa sin pago
+        const { error } = await supabase.from('enrollments').insert({
+          user_id: user.id,
+          course_id: dbCourse.id,
+          status: 'active',
+          amount_paid_mxn: 0,
+        });
+        if (error && !error.message.includes('duplicate')) {
+          throw error;
+        }
+        // Refrescar la página para mostrar acceso
+        window.location.href = `/campus/curso/${course.slug}`;
+        return;
+      }
+
+      // 2) Pago vía Stripe checkout
       const { data, error } = await supabase.functions.invoke('create-course-checkout', {
         body: { courseSlug: course.slug, courseName: course.title, priceMXN: course.priceMXN, stripePriceId: course.stripePriceId },
       });
+      if (error) throw error;
       if (data?.url) window.open(data.url, '_blank');
+    } catch (e: any) {
+      console.error('enroll error:', e?.message || e);
+      alert('No se pudo iniciar la inscripción. Intenta de nuevo.');
     } finally {
       setLoading(false);
     }
