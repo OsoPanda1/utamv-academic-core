@@ -3,9 +3,20 @@ kind: ConfigMap
 metadata:
   name: tamv-protocol-webhook-config
 data:
+  # Concurrencia y ejecución
   WORKER_CONCURRENCY: "4"
   DELIVERY_TIMEOUT_MS: "5000"
   RETRY_MAX_ATTEMPTS: "5"
+  RETRY_BACKOFF_MS: "1000"
+
+  # TAMV CORE FLAGS
+  TAMV_MSR_REQUIRED: "true"
+  VERIFY_EVENT_HASH: "true"
+  EVENT_SOURCE: "MSR"
+
+  # Observabilidad básica
+  LOG_LEVEL: "info"
+  ENABLE_EVENT_LOGGING: "true"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,10 +38,13 @@ spec:
         - name: worker
           image: ghcr.io/utamv/protocol-webhook-worker:latest
           imagePullPolicy: IfNotPresent
+
           envFrom:
             - configMapRef:
                 name: tamv-protocol-webhook-config
+
           env:
+            # 🔐 Supabase (temporal, mover a MSR en futuro)
             - name: SUPABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -41,6 +55,21 @@ spec:
                 secretKeyRef:
                   name: tamv-supabase-secrets
                   key: service_role_key
+
+            # 🧠 Identidad del nodo TAMV
+            - name: TAMV_NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+
+            # 🔗 Endpoint MSR (cuando se externalice)
+            - name: MSR_ENDPOINT
+              value: "http://tamv-msr:8080"
+
+            # 🔐 Seguridad adicional
+            - name: REQUIRE_SIGNATURE_VALIDATION
+              value: "false" # activar cuando tengas firmas reales
+
           resources:
             requests:
               cpu: "100m"
@@ -48,3 +77,29 @@ spec:
             limits:
               cpu: "500m"
               memory: "512Mi"
+
+          # 🩺 Health checks (CRÍTICO para producción)
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+
+          # 🔄 Estrategia de reinicio
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 5"]
+
+      restartPolicy: Always
+
+      # ⚙️ Tolerancia a fallos
+      terminationGracePeriodSeconds: 30
