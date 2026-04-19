@@ -1,25 +1,70 @@
+import crypto from "crypto";
+
 import { AcademicStandardsService } from "./academic.standards.service";
 import { validateAgainstConstitution } from "./protocol.constitution";
-import type { AcademicStandardsSnapshot, ProtocolDecision, ProtocolDecisionPath, ProtocolExecution, ProtocolInput } from "./protocol.types";
+import { recordEvent } from "./msr.engine";
 
-function scorePath(input: ProtocolInput, label: string, boost = 0): ProtocolDecisionPath {
-  const signalSum = Object.values(input.signals).reduce((acc, value) => acc + value, 0);
-  const base = Math.max(0, Math.min(100, signalSum / Math.max(1, Object.values(input.signals).length)));
+import type {
+  AcademicStandardsSnapshot,
+  ProtocolDecision,
+  ProtocolDecisionPath,
+  ProtocolExecution,
+  ProtocolInput,
+} from "./protocol.types";
+
+/**
+ * Weighted scoring (más robusto que promedio simple)
+ */
+function scorePath(
+  input: ProtocolInput,
+  label: string,
+  boost = 0
+): ProtocolDecisionPath {
+  const weights = {
+    ethical: 0.4,
+    viability: 0.4,
+    stability: 0.2,
+  };
+
+  const weightedScore =
+    (input.signals.ethical || 0) * weights.ethical +
+    (input.signals.viability || 0) * weights.viability +
+    (input.signals.stability || 0) * weights.stability;
+
   return {
     pathId: `${input.protocolKey}:${label}`,
     description: label,
-    ethicalScore: Math.min(100, base + 10 + boost),
-    viabilityScore: Math.min(100, base + boost),
-    confidence: Math.min(100, base + 5 + boost),
+    ethicalScore: Math.min(100, weightedScore + 10 + boost),
+    viabilityScore: Math.min(100, weightedScore + boost),
+    confidence: Math.min(100, weightedScore + 5 + boost),
   };
 }
 
-function deriveRisk(decision: ProtocolDecision): ProtocolDecision["riskLevel"] {
-  const score = (decision.selectedPath.ethicalScore + decision.selectedPath.viabilityScore) / 2;
+/**
+ * Derivación de riesgo
+ */
+function deriveRisk(
+  decision: ProtocolDecision
+): ProtocolDecision["riskLevel"] {
+  const score =
+    (decision.selectedPath.ethicalScore +
+      decision.selectedPath.viabilityScore) /
+    2;
+
   if (score >= 80) return "low";
   if (score >= 60) return "medium";
   if (score >= 40) return "high";
   return "critical";
+}
+
+/**
+ * Hash de decisiones (trazabilidad verificable)
+ */
+function hashDecision(decision: ProtocolDecision): string {
+  return crypto
+    .createHash("sha256")
+    .update(JSON.stringify(decision))
+    .digest("hex");
 }
 
 export interface ProtocolValidationResult {
@@ -29,34 +74,65 @@ export interface ProtocolValidationResult {
 }
 
 export class ProtocolEngine {
-  constructor(private readonly academicStandards = new AcademicStandardsService()) {}
+  constructor(
+    private readonly academicStandards = new AcademicStandardsService()
+  ) {}
 
+  /**
+   * Crear ejecución del protocolo
+   */
   createRun(input: ProtocolInput): ProtocolExecution {
-    return {
+    const run: ProtocolExecution = {
       runId: crypto.randomUUID(),
+      traceId: crypto.randomUUID(),
       input,
       stage: "draft",
       startedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+
+    recordEvent({
+      eventType: "PROTOCOL_RUN_CREATED",
+      entityId: run.runId,
+      payload: {
+        traceId: run.traceId,
+        input,
+      },
+    });
+
+    return run;
   }
 
+  /**
+   * Validación constitucional + académica
+   */
   validate(input: ProtocolInput): ProtocolValidationResult {
     const constitutional = validateAgainstConstitution(input);
     const academic = this.academicStandards.evaluate(input);
 
-    return {
+    const result: ProtocolValidationResult = {
       valid: constitutional.passed && academic.passed,
       violations: [
-        ...constitutional.violations.map((violation) => violation.message),
+        ...constitutional.violations.map((v) => v.message),
         ...academic.violations,
       ],
       academic,
     };
+
+    recordEvent({
+      eventType: "PROTOCOL_VALIDATED",
+      entityId: input.protocolKey,
+      payload: result,
+    });
+
+    return result;
   }
 
+  /**
+   * Toma de decisión multi-path
+   */
   decide(input: ProtocolInput): ProtocolDecision {
-    const alternatives = [
+    const alternatives: ProtocolDecisionPath[] = [
       scorePath(input, "baseline", 0),
       scorePath(input, "ethical_guarded", 7),
       scorePath(input, "high_throughput", -5),
@@ -64,15 +140,36 @@ export class ProtocolEngine {
 
     const selectedPath = alternatives
       .slice()
-      .sort((a, b) => b.ethicalScore + b.viabilityScore - (a.ethicalScore + a.viabilityScore))[0];
+      .sort(
+        (a, b) =>
+          b.ethicalScore +
+          b.viabilityScore -
+          (a.ethicalScore + a.viabilityScore)
+      )[0];
 
-    const decision: ProtocolDecision = {
+    const decisionBase: ProtocolDecision = {
       selectedPath,
       alternatives,
       rationale: `Selección por balance ético/viabilidad para ${input.objective}`,
       riskLevel: "medium",
     };
 
-    return { ...decision, riskLevel: deriveRisk(decision) };
+    const finalDecision: ProtocolDecision = {
+      ...decisionBase,
+      riskLevel: deriveRisk(decisionBase),
+    };
+
+    const decisionHash = hashDecision(finalDecision);
+
+    recordEvent({
+      eventType: "PROTOCOL_DECISION_MADE",
+      entityId: input.protocolKey,
+      payload: {
+        decision: finalDecision,
+        hash: decisionHash,
+      },
+    });
+
+    return finalDecision;
   }
 }
