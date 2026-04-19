@@ -23,6 +23,13 @@ export interface ProtocolInput {
   signals: Record<string, number>;
 }
 
+export interface AcademicStandardsSnapshot {
+  passed: boolean;
+  qualityScore: number;
+  violations: string[];
+  requiredActions: string[];
+}
+
 export interface ProtocolDecisionPath {
   pathId: string;
   description: string;
@@ -43,6 +50,7 @@ export interface ProtocolExecution {
   stage: ProtocolStage;
   input: ProtocolInput;
   decision?: ProtocolDecision;
+  academicStandards?: AcademicStandardsSnapshot;
   startedAt: string;
   updatedAt: string;
 }
@@ -52,6 +60,7 @@ export interface ProtocolEvent {
     | "protocol.run.created"
     | "protocol.run.validated"
     | "protocol.decision.selected"
+    | "protocol.academic.flagged"
     | "protocol.run.completed"
     | "protocol.run.rejected";
   runId: string;

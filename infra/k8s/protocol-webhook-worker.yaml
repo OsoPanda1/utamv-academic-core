@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tamv-protocol-webhook-config
+data:
+  WORKER_CONCURRENCY: "4"
+  DELIVERY_TIMEOUT_MS: "5000"
+  RETRY_MAX_ATTEMPTS: "5"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tamv-protocol-webhook-worker
+  labels:
+    app: tamv-protocol-webhook-worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tamv-protocol-webhook-worker
+  template:
+    metadata:
+      labels:
+        app: tamv-protocol-webhook-worker
+    spec:
+      containers:
+        - name: worker
+          image: ghcr.io/utamv/protocol-webhook-worker:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: tamv-protocol-webhook-config
+          env:
+            - name: SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: tamv-supabase-secrets
+                  key: url
+            - name: SUPABASE_SERVICE_ROLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tamv-supabase-secrets
+                  key: service_role_key
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

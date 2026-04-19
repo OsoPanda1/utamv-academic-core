@@ -1,5 +1,6 @@
+import { AcademicStandardsService } from "./academic.standards.service";
 import { validateAgainstConstitution } from "./protocol.constitution";
-import type { ProtocolDecision, ProtocolDecisionPath, ProtocolExecution, ProtocolInput } from "./protocol.types";
+import type { AcademicStandardsSnapshot, ProtocolDecision, ProtocolDecisionPath, ProtocolExecution, ProtocolInput } from "./protocol.types";
 
 function scorePath(input: ProtocolInput, label: string, boost = 0): ProtocolDecisionPath {
   const signalSum = Object.values(input.signals).reduce((acc, value) => acc + value, 0);
@@ -21,7 +22,15 @@ function deriveRisk(decision: ProtocolDecision): ProtocolDecision["riskLevel"] {
   return "critical";
 }
 
+export interface ProtocolValidationResult {
+  valid: boolean;
+  violations: string[];
+  academic: AcademicStandardsSnapshot;
+}
+
 export class ProtocolEngine {
+  constructor(private readonly academicStandards = new AcademicStandardsService()) {}
+
   createRun(input: ProtocolInput): ProtocolExecution {
     return {
       runId: crypto.randomUUID(),
@@ -32,11 +41,17 @@ export class ProtocolEngine {
     };
   }
 
-  validate(input: ProtocolInput): { valid: boolean; violations: string[] } {
-    const validation = validateAgainstConstitution(input);
+  validate(input: ProtocolInput): ProtocolValidationResult {
+    const constitutional = validateAgainstConstitution(input);
+    const academic = this.academicStandards.evaluate(input);
+
     return {
-      valid: validation.passed,
-      violations: validation.violations.map((violation) => violation.message),
+      valid: constitutional.passed && academic.passed,
+      violations: [
+        ...constitutional.violations.map((violation) => violation.message),
+        ...academic.violations,
+      ],
+      academic,
     };
   }
 

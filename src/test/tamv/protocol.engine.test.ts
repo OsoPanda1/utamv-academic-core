@@ -4,7 +4,7 @@ import { ProtocolEngine } from "@/core/tamv/protocol.engine";
 const baseInput = {
   protocolKey: "civil-protocol",
   objective: "Coordinar respuesta ética para evento comunitario",
-  context: { actorUserId: "u1", actorRole: "guardian" as const, metadata: { trace_id: "t-1" } },
+  context: { actorUserId: "u1", actorRole: "guardian" as const, metadata: { trace_id: "t-1", competency_evidence_count: 2, ai_usage_mode: "declared" } },
   constraints: [],
   signals: { trust: 80, relevance: 75, safety: 85 },
 };
@@ -14,6 +14,7 @@ describe("ProtocolEngine", () => {
     const engine = new ProtocolEngine();
     const result = engine.validate(baseInput);
     expect(result.valid).toBe(true);
+    expect(result.academic.passed).toBe(true);
   });
 
   it("debe generar una decisión con alternativa seleccionada", () => {
