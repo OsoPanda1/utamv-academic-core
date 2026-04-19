@@ -130,66 +130,122 @@ const Index = () => {
       <UTAMVHeader />
 
       <main>
-        {/* ══ HERO ════════════════════════════════════════════════════════════════ */}
+        {/* ══ HERO ELITE NEXT-GEN ══════════════════════════════════════════════════ */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-          {/* Petrol Blue + Dark Navy gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[hsl(222,50%,4%)] via-[hsl(200,45%,8%)] to-[hsl(195,40%,6%)]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[hsl(222,50%,4%)] via-transparent to-transparent" />
-          <div className="absolute inset-0 bg-grid-pattern opacity-[0.04]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[hsl(222,55%,3%)] via-[hsl(205,45%,7%)] to-[hsl(195,40%,5%)]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[hsl(222,55%,3%)] via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-grid-pattern opacity-[0.05]" />
 
-          {/* Atmospheric petrol-blue orbs */}
-          <div className="absolute top-1/4 left-1/5 w-96 h-96 rounded-full bg-[hsl(195,60%,15%/0.15)] blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-1/3 right-1/5 w-72 h-72 rounded-full bg-[hsl(200,50%,12%/0.12)] blur-[100px] pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[hsl(195,45%,10%/0.08)] blur-[150px] pointer-events-none" />
+          <svg
+            className="absolute inset-0 w-full h-full opacity-[0.07] pointer-events-none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+            viewBox="0 0 1200 800"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="line-grad" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--platinum))" stopOpacity="0" />
+                <stop offset="50%" stopColor="hsl(var(--platinum))" stopOpacity="1" />
+                <stop offset="100%" stopColor="hsl(var(--platinum))" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M0,200 Q300,150 600,250 T1200,200" stroke="url(#line-grad)" strokeWidth="1" fill="none" />
+            <path d="M0,500 Q400,420 800,520 T1200,480" stroke="url(#line-grad)" strokeWidth="1" fill="none" />
+            <path d="M0,650 Q300,700 600,600 T1200,680" stroke="url(#line-grad)" strokeWidth="1" fill="none" />
+          </svg>
+
+          <div className="absolute top-1/4 left-[12%] w-[420px] h-[420px] rounded-full bg-[hsl(195,60%,18%/0.18)] blur-[130px] pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
+          <div className="absolute bottom-1/4 right-[10%] w-[340px] h-[340px] rounded-full bg-[hsl(200,50%,14%/0.14)] blur-[110px] pointer-events-none animate-pulse" style={{ animationDuration: '10s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[hsl(195,45%,12%/0.10)] blur-[160px] pointer-events-none" />
+
+          <div className="absolute inset-0 pointer-events-none">
+            {[
+              { top: '18%', left: '22%' }, { top: '32%', left: '78%' },
+              { top: '64%', left: '14%' }, { top: '22%', left: '60%' },
+              { top: '78%', left: '72%' }, { top: '48%', left: '38%' },
+              { top: '12%', left: '45%' }, { top: '70%', left: '88%' },
+            ].map((p, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 rounded-full bg-platinum/40 animate-pulse"
+                style={{ top: p.top, left: p.left, animationDelay: `${i * 0.4}s`, animationDuration: '3s' }}
+              />
+            ))}
+          </div>
 
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-5xl mx-auto text-center">
-              {/* Official Logo — platinum shield */}
-              <div className="w-28 h-28 mx-auto mb-8 rounded-2xl overflow-hidden bg-[hsl(var(--platinum)/0.05)] border border-[hsl(var(--platinum)/0.2)] flex items-center justify-center animate-float shadow-platinum">
-                <img src={utamvLogoOfficial} alt="UTAMV" className="w-24 h-24 object-contain" />
+              <div className="relative w-32 h-32 mx-auto mb-8 animate-fade-in-up">
+                <div className="absolute inset-0 rounded-3xl bg-[hsl(var(--platinum)/0.08)] blur-2xl" />
+                <div className="relative w-32 h-32 rounded-3xl overflow-hidden bg-[hsl(var(--platinum)/0.04)] border border-[hsl(var(--platinum)/0.22)] flex items-center justify-center animate-float shadow-platinum">
+                  <img src={utamvLogoOfficial} alt="UTAMV" className="w-24 h-24 object-contain" />
+                </div>
+                <div className="absolute inset-[-12px] rounded-[28px] border border-[hsl(var(--platinum)/0.08)] animate-pulse" style={{ animationDuration: '4s' }} />
               </div>
 
-              {/* Legal Notice */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[hsl(var(--platinum)/0.06)] border border-[hsl(var(--platinum)/0.18)] mb-6 animate-fade-in-up">
-                <ShieldCheck size={12} className="text-platinum-dim" />
-                <span className="font-ui text-[10px] text-platinum-dim tracking-[0.14em] uppercase font-medium">
-                  Institución Privada · Proceso Pre-RVOE · Campus 100% Digital · Mineral del Monte, Hgo.
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[hsl(var(--platinum)/0.06)] border border-[hsl(var(--platinum)/0.18)] mb-6 backdrop-blur-sm animate-fade-in-up delay-100">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-platinum-dim opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-platinum-dim" />
+                </span>
+                <ShieldCheck size={11} className="text-platinum-dim" />
+                <span className="font-ui text-[10px] text-platinum-dim tracking-[0.16em] uppercase font-medium">
+                  Institución Privada · Pre-RVOE en proceso · Mineral del Monte, Hgo.
                 </span>
               </div>
 
-              <h1 className="font-display text-6xl md:text-8xl lg:text-9xl font-black tracking-tight text-platinum mb-3 leading-none animate-fade-in-up delay-100">
+              <h1 className="font-display text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tighter text-platinum-gradient mb-3 leading-[0.9] animate-fade-in-up delay-200">
                 UTAMV
               </h1>
-              <h2 className="font-display text-xl md:text-3xl font-light italic text-platinum-dim mb-3 animate-fade-in-up delay-200 tracking-wide">
-                Campus Online
+              <h2 className="font-display text-xl md:text-3xl font-light italic text-platinum-dim mb-3 animate-fade-in-up delay-300 tracking-wide">
+                Campus Online · NextGen 2026
               </h2>
-              <p className="font-ui text-[10px] tracking-[0.28em] uppercase text-platinum-deep mb-8 animate-fade-in-up delay-300">
+              <p className="font-ui text-[10px] tracking-[0.32em] uppercase text-platinum-deep mb-8 animate-fade-in-up delay-300">
                 Universidad de Tecnología Avanzada, Marketing y Versatilidad
               </p>
 
-              <p className="font-body text-lg md:text-xl text-platinum/65 max-w-3xl mx-auto mb-10 leading-relaxed animate-fade-in-up delay-300">
-                Campus online de formación superior bajo el{' '}
-                <strong className="text-platinum/85">Modelo NextGen 2026</strong> — educación basada
-                en competencias, evidencias verificables y resultados de aprendizaje medibles (OBE)
-                para profesionales del ecosistema digital latinoamericano.
+              <p className="font-body text-lg md:text-xl text-platinum/65 max-w-3xl mx-auto mb-10 leading-relaxed animate-fade-in-up delay-400">
+                Formación superior bajo el{' '}
+                <strong className="text-platinum/90">Modelo OBE NextGen 2026</strong> — educación basada
+                en competencias, evidencias verificables y certificación con respaldo{' '}
+                <span className="text-platinum-gradient font-semibold">BlockUTAMV</span> para profesionales del ecosistema digital LATAM.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14 animate-fade-in-up delay-400">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10 animate-fade-in-up delay-500">
                 <Link
                   to="/programas"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide btn-platinum"
+                  className="group inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide btn-platinum hover-scale"
                 >
-                  Conoce nuestros Programas <ArrowRight size={17} />
+                  Conoce nuestros Programas
+                  <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
                   to="/admisiones"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide text-platinum-dim border border-[hsl(var(--platinum)/0.2)] hover:border-[hsl(var(--platinum)/0.4)] hover:text-platinum hover:bg-[hsl(var(--platinum)/0.04)] transition-all"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide text-platinum-dim border border-[hsl(var(--platinum)/0.2)] hover:border-[hsl(var(--platinum)/0.45)] hover:text-platinum hover:bg-[hsl(var(--platinum)/0.05)] transition-all backdrop-blur-sm"
                 >
                   Inscríbete Ahora
                 </Link>
-                <button className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide text-platinum-dim border border-[hsl(var(--platinum)/0.2)] hover:border-[hsl(var(--platinum)/0.4)] hover:text-platinum hover:bg-[hsl(var(--platinum)/0.04)] transition-all">
-                  <Play size={17} /> Ver Video
-                </button>
+                <Link
+                  to="/campus"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide text-platinum-dim border border-[hsl(var(--platinum)/0.2)] hover:border-[hsl(var(--platinum)/0.45)] hover:text-platinum hover:bg-[hsl(var(--platinum)/0.05)] transition-all backdrop-blur-sm"
+                >
+                  <Play size={15} /> Acceder al Campus
+                </Link>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mb-10 animate-fade-in-up delay-500">
+                {[
+                  { icon: ShieldCheck, label: 'BlockUTAMV verificable' },
+                  { icon: BookOpenCheck, label: 'Metodología OBE' },
+                  { icon: Globe, label: 'LATAM · 100% online' },
+                  { icon: Award, label: 'QR institucional' },
+                ].map(({ icon: Icon, label }, i) => (
+                  <div key={i} className="flex items-center gap-2 text-platinum-dim/80">
+                    <Icon size={12} />
+                    <span className="font-ui text-[10px] tracking-wider uppercase">{label}</span>
+                  </div>
+                ))}
               </div>
 
               <div className="animate-fade-in-up delay-500">
