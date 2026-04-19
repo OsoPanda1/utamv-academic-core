@@ -628,6 +628,7 @@ export const COURSES: Course[] = [
     priceMXN: 18900,
     priceUSD: 1099,
     stripePriceId: '',
+    isFeatured: true,
     instructorName: 'Dr. Eduardo Salgado Ramírez',
     instructorTitle: 'Arquitecto de Plataformas Digitales',
     instructorBio: 'Ex-CTO de marketplace LATAM con 15 años diseñando ecosistemas multi-actor.',
