@@ -1,16 +1,20 @@
 import crypto from "crypto";
 
+import { supabase } from "@/integrations/supabase/client";
+
 import { AcademicStandardsService } from "./academic.standards.service";
 import { validateAgainstConstitution } from "./protocol.constitution";
 import { recordEvent } from "./msr.engine";
 
 import type {
   AcademicStandardsSnapshot,
+  EoctEvaluation,
   ProtocolDecision,
   ProtocolDecisionPath,
   ProtocolExecution,
   ProtocolInput,
 } from "./protocol.types";
+import { evaluateEoct } from "./eoct.service";
 
 /**
  * Weighted scoring (más robusto que promedio simple)
@@ -27,9 +31,9 @@ function scorePath(
   };
 
   const weightedScore =
-    (input.signals.ethical || 0) * weights.ethical +
-    (input.signals.viability || 0) * weights.viability +
-    (input.signals.stability || 0) * weights.stability;
+    (input.signals?.ethical || 0) * weights.ethical +
+    (input.signals?.viability || 0) * weights.viability +
+    (input.signals?.stability || 0) * weights.stability;
 
   return {
     pathId: `${input.protocolKey}:${label}`,
@@ -46,9 +50,10 @@ function scorePath(
 function deriveRisk(
   decision: ProtocolDecision
 ): ProtocolDecision["riskLevel"] {
+  const selectedPath = decision.selectedPath as ProtocolDecisionPath;
   const score =
-    (decision.selectedPath.ethicalScore +
-      decision.selectedPath.viabilityScore) /
+    ((selectedPath.ethicalScore ?? 0) +
+      (selectedPath.viabilityScore ?? 0)) /
     2;
 
   if (score >= 80) return "low";
@@ -172,4 +177,35 @@ export class ProtocolEngine {
 
     return finalDecision;
   }
+}
+
+
+export interface ExecutionResult {
+  executed: boolean;
+  eoct: EoctEvaluation;
+}
+
+/**
+ * Ejecuta EOCT sobre una decisión + contexto,
+ * registra en tamv_kernel_events y devuelve resultado.
+ */
+export async function executeWithEoct(
+  decision: ProtocolDecision,
+  input: ProtocolInput
+): Promise<ExecutionResult> {
+  const eoct = evaluateEoct(decision, input);
+
+  await supabase.from("tamv_kernel_events").insert({
+    type: "EOCT_EVALUATED",
+    payload: {
+      decision,
+      input,
+      eoct,
+    },
+  });
+
+  return {
+    executed: eoct.status === "approved",
+    eoct,
+  };
 }

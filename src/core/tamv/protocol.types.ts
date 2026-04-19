@@ -1,4 +1,5 @@
-export type ProtocolRiskLevel = "low" | "medium" | "high" | "critical";
+export type RiskLevel = "low" | "medium" | "high" | "critical";
+export type ProtocolRiskLevel = RiskLevel;
 
 export type ProtocolStage =
   | "draft"
@@ -8,19 +9,28 @@ export type ProtocolStage =
   | "completed"
   | "rejected";
 
+export interface ProtocolContextMetadata {
+  sensitive?: boolean;
+  academicValidated?: boolean;
+  federation_id?: number | string;
+  entityType?: string;
+  entityId?: string | number;
+  [key: string]: unknown;
+}
+
 export interface ProtocolContext {
-  actorUserId: string;
-  actorRole: "student" | "creator" | "guardian" | "institutional" | "system";
+  actorUserId?: string;
+  actorRole?: "student" | "creator" | "guardian" | "institutional" | "system";
   locale?: string;
-  metadata?: Record<string, string | number | boolean>;
+  metadata?: ProtocolContextMetadata;
 }
 
 export interface ProtocolInput {
-  protocolKey: string;
-  objective: string;
-  context: ProtocolContext;
-  constraints: string[];
-  signals: Record<string, number>;
+  protocolKey?: string;
+  objective?: string;
+  context?: ProtocolContext;
+  constraints?: string[];
+  signals?: Record<string, number>;
 }
 
 export interface AcademicStandardsSnapshot {
@@ -28,6 +38,11 @@ export interface AcademicStandardsSnapshot {
   qualityScore: number;
   violations: string[];
   requiredActions: string[];
+}
+
+export interface ProtocolPath {
+  pathId: string;
+  label: string;
 }
 
 export interface ProtocolDecisionPath {
@@ -39,14 +54,28 @@ export interface ProtocolDecisionPath {
 }
 
 export interface ProtocolDecision {
-  selectedPath: ProtocolDecisionPath;
-  alternatives: ProtocolDecisionPath[];
-  rationale: string;
-  riskLevel: ProtocolRiskLevel;
+  decisionId?: string;
+  selectedPath: ProtocolPath | ProtocolDecisionPath;
+  alternatives?: ProtocolDecisionPath[];
+  rationale?: string;
+  riskLevel: RiskLevel;
+  description?: string;
+}
+
+export type EoctStatus = "approved" | "rejected" | "escalated";
+
+export interface EoctEvaluation {
+  status: EoctStatus;
+  passed: boolean;
+  reason: string;
+  severity: RiskLevel;
+  requiredActions: string[];
+  evaluationHash: string;
 }
 
 export interface ProtocolExecution {
   runId: string;
+  traceId?: string;
   stage: ProtocolStage;
   input: ProtocolInput;
   decision?: ProtocolDecision;
