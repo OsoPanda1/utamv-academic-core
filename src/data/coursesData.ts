@@ -628,6 +628,7 @@ export const COURSES: Course[] = [
     priceMXN: 18900,
     priceUSD: 1099,
     stripePriceId: '',
+    isFeatured: true,
     instructorName: 'Dr. Eduardo Salgado Ramírez',
     instructorTitle: 'Arquitecto de Plataformas Digitales',
     instructorBio: 'Ex-CTO de marketplace LATAM con 15 años diseñando ecosistemas multi-actor.',
@@ -647,7 +648,7 @@ export const COURSES: Course[] = [
     },
     modules: [
       {
-        id: 'm8-1', title: 'Módulo 1 — Fundamentos y Estrategia',
+        id: 'm8-1', title: 'Módulo 1 — Fundamentos y Estrategia', description: 'Define propósito, actores y estrategia del ecosistema con pensamiento sistémico, OKRs y matriz de stakeholders.',
         learningObjectives: ['Definir propósito y actores de un ecosistema', 'Aplicar pensamiento sistémico', 'Establecer estrategia y OKRs'],
         lessons: [
           { id: 'l8-1-1', title: 'Introducción a los ecosistemas digitales', type: 'video', duration: 12 },
@@ -661,7 +662,7 @@ export const COURSES: Course[] = [
         ],
       },
       {
-        id: 'm8-2', title: 'Módulo 2 — Arquitectura de Ecosistemas',
+        id: 'm8-2', title: 'Módulo 2 — Arquitectura de Ecosistemas', description: 'Diseña arquitectura modular, contratos de API, gobernanza de datos, seguridad STRIDE y observabilidad SRE.',
         learningObjectives: ['Diseñar arquitectura técnica modular', 'Definir contratos de API', 'Aplicar gobernanza de datos y seguridad'],
         lessons: [
           { id: 'l8-2-1', title: 'Principios de arquitectura: modularidad y resiliencia', type: 'video', duration: 15 },
@@ -675,7 +676,7 @@ export const COURSES: Course[] = [
         ],
       },
       {
-        id: 'm8-3', title: 'Módulo 3 — Plataformas y Productos',
+        id: 'm8-3', title: 'Módulo 3 — Plataformas y Productos', description: 'Construye productos multi-actor, MVP ecosistémico, APIs y monetización validada con experimentación A/B.',
         learningObjectives: ['Diseñar productos multi-actor', 'Construir MVP ecosistémico', 'Validar con experimentos'],
         lessons: [
           { id: 'l8-3-1', title: 'Diseño de productos para múltiples actores', type: 'video', duration: 13 },
@@ -689,7 +690,7 @@ export const COURSES: Course[] = [
         ],
       },
       {
-        id: 'm8-4', title: 'Módulo 4 — Comunidades y Gobernanza',
+        id: 'm8-4', title: 'Módulo 4 — Comunidades y Gobernanza', description: 'Diseña incentivos, moderación escalable, crecimiento orgánico, métricas de salud y gestión de crisis comunitaria.',
         learningObjectives: ['Diseñar dinámicas e incentivos comunitarios', 'Construir políticas de moderación', 'Medir salud comunitaria'],
         lessons: [
           { id: 'l8-4-1', title: 'Dinámicas de comunidades digitales', type: 'video', duration: 11 },
@@ -703,7 +704,7 @@ export const COURSES: Course[] = [
         ],
       },
       {
-        id: 'm8-5', title: 'Módulo 5 — Operación, Métricas y Escalamiento',
+        id: 'm8-5', title: 'Módulo 5 — Operación, Métricas y Escalamiento', description: 'Opera con KPIs, dashboards, decisiones data-driven, automatización CI/CD, ESG y due diligence para inversión.',
         learningObjectives: ['Definir KPIs y dashboards', 'Tomar decisiones data-driven', 'Escalar técnica y organizacionalmente'],
         lessons: [
           { id: 'l8-5-1', title: 'KPIs y métricas de ecosistemas', type: 'video', duration: 13 },
