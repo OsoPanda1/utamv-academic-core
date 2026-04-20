@@ -1,4 +1,5 @@
 import UTAMVHeader from '@/components/UTAMVHeader';
+import EliteBackground from '@/components/EliteBackground';
 import UTAMVFooter from '@/components/UTAMVFooter';
 import {
   Download, QrCode, Share2, ShieldCheck, FileText,
@@ -79,8 +80,9 @@ const CertificadosPage = () => {
 
       <main className="pt-20">
         {/* Hero */}
-        <section className="relative py-16 bg-gradient-to-b from-[hsl(222_35%_5%)] to-[hsl(222_35%_5%/0.9)]">
-          <div className="container mx-auto px-4 max-w-6xl">
+        <section className="relative py-20 bg-gradient-to-b from-[hsl(222_35%_5%)] to-[hsl(222_35%_5%/0.9)] overflow-hidden">
+          <EliteBackground variant="navy" />
+          <div className="container mx-auto px-4 max-w-6xl relative z-10">
             <div className="flex items-center gap-2 text-platinum-dim mb-4">
               <ShieldCheck size={14} />
               <span className="font-ui text-[10px] uppercase tracking-[0.18em]">BlockUTAMV · Verificación inmutable</span>

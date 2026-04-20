@@ -1,5 +1,6 @@
 import UTAMVHeader from '@/components/UTAMVHeader';
 import UTAMVFooter from '@/components/UTAMVFooter';
+import EliteBackground from '@/components/EliteBackground';
 import { Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, Clock, Mail, Globe, AlertTriangle, BookOpen, Award, Users } from 'lucide-react';
 
@@ -21,9 +22,10 @@ const AdmisionesPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <UTAMVHeader />
-      <main className="pt-28 pb-24">
-        <section className="container mx-auto px-4 mb-16">
-          <div className="max-w-4xl mx-auto text-center">
+      <main className="pt-28 pb-24 relative">
+        <section className="relative container mx-auto px-4 mb-16 py-12 overflow-hidden">
+          <EliteBackground variant="petrol" />
+          <div className="max-w-4xl mx-auto text-center relative z-10">
             <span className="badge-academic mb-4 inline-block">Proceso de Ingreso 2026 · Art. 13 Reglamento UTAMV</span>
             <h1 className="font-display text-5xl md:text-6xl font-black text-platinum mb-4">Admisiones UTAMV</h1>
             <p className="font-body text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
