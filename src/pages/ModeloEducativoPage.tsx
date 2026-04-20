@@ -1,5 +1,6 @@
 import UTAMVHeader from '@/components/UTAMVHeader';
 import UTAMVFooter from '@/components/UTAMVFooter';
+import EliteBackground from '@/components/EliteBackground';
 import { Link } from 'react-router-dom';
 import {
   BookOpenCheck, Users, Zap, ShieldCheck, Target, BarChart3,
@@ -52,9 +53,10 @@ const obeProcess = [
 
 const ModeloEducativoPage = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      <EliteBackground variant="navy" />
       <UTAMVHeader />
-      <main className="pt-28 pb-24">
+      <main className="relative z-10 pt-28 pb-24">
         <section className="container mx-auto px-4 mb-20">
           <div className="max-w-4xl mx-auto text-center">
             <span className="badge-academic mb-4 inline-block">Fundamentación Pedagógica · Art. 9-11 Estatuto UTAMV</span>

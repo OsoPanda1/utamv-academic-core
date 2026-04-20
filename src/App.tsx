@@ -24,6 +24,7 @@ import ForoPage from "./pages/ForoPage";
 import CertificadosPage from "./pages/CertificadosPage";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import ControlEscolar from "./pages/ControlEscolar";
+import TelemetriaIsabella from "./pages/TelemetriaIsabella";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -91,6 +92,7 @@ const App = () => (
               <Route path="/campus/curso/:slug" element={<ProtectedRoute><CourseViewer /></ProtectedRoute>} />
               <Route path="/campus/:slug" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
               <Route path="/admin/control-escolar" element={<ProtectedRoute><ControlEscolar /></ProtectedRoute>} />
+              <Route path="/admin/telemetria-isabella" element={<ProtectedRoute><TelemetriaIsabella /></ProtectedRoute>} />
 
               {/* Fallback */}
               <Route path="*" element={<NotFound />} />

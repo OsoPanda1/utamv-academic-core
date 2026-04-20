@@ -1,5 +1,6 @@
 import UTAMVHeader from '@/components/UTAMVHeader';
 import UTAMVFooter from '@/components/UTAMVFooter';
+import EliteBackground from '@/components/EliteBackground';
 import { 
   Search, Filter, Star, Users, Briefcase, GraduationCap, 
   MapPin, Globe, Mail, Phone, Share2, ChevronRight, ExternalLink
@@ -62,7 +63,9 @@ const DocentesPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      <EliteBackground variant="platinum" />
+      <div className="relative z-10">
       <UTAMVHeader />
       
       <main className="pt-20">
@@ -270,6 +273,7 @@ const DocentesPage = () => {
       </main>
 
       <UTAMVFooter />
+      </div>
     </div>
   );
 };

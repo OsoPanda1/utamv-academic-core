@@ -1,5 +1,6 @@
 import UTAMVHeader from '@/components/UTAMVHeader';
 import UTAMVFooter from '@/components/UTAMVFooter';
+import EliteBackground from '@/components/EliteBackground';
 import { Link } from 'react-router-dom';
 import {
   Scale, ShieldCheck, FileText, GraduationCap, BookOpen,
@@ -90,9 +91,10 @@ const sections = [
 
 const InstitucionalPage = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      <EliteBackground variant="petrol" />
       <UTAMVHeader />
-      <main className="pt-28 pb-24">
+      <main className="relative z-10 pt-28 pb-24">
         <section className="container mx-auto px-4 mb-14">
           <div className="max-w-4xl mx-auto text-center">
             <span className="badge-academic mb-4 inline-block">Bloque Normativo Unificado · Pre-RVOE · Versión Blindada</span>

@@ -1,5 +1,6 @@
 import UTAMVHeader from '@/components/UTAMVHeader';
 import UTAMVFooter from '@/components/UTAMVFooter';
+import EliteBackground from '@/components/EliteBackground';
 import { 
   Search, Filter, MessageSquare, Users, Calendar, Star, 
   ChevronRight, ChevronDown, Plus, Share2, ThumbsUp, 
@@ -109,7 +110,9 @@ const ForoPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      <EliteBackground variant="navy" />
+      <div className="relative z-10">
       <UTAMVHeader />
       
       <main className="pt-20">
@@ -391,6 +394,7 @@ const ForoPage = () => {
       </main>
 
       <UTAMVFooter />
+      </div>
     </div>
   );
 };
