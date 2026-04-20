@@ -657,10 +657,11 @@ const ProgramasPage: React.FC = () => {
     <div className="min-h-screen bg-navy-deep text-white">
       <UTAMVHeader />
 
-      <main className="pt-32 pb-24">
+      <main className="pt-32 pb-24 relative">
         {/* Hero + discurso precios/elite */}
-        <section className="container mx-auto px-8 max-w-7xl mb-24">
-          <header className="max-w-4xl mb-20 text-left">
+        <section className="relative container mx-auto px-8 max-w-7xl mb-24 overflow-hidden py-12">
+          <EliteBackground variant="platinum" />
+          <header className="max-w-4xl mb-20 text-left relative z-10">
             <div className="inline-flex items-center gap-3 px-5 py-2 bg-platinum/5 border border-platinum/10 rounded-full mb-8">
               <Landmark className="w-4 h-4 text-platinum" />
               <span className="text-platinum font-black text-[10px] uppercase tracking-[0.5em] block">
