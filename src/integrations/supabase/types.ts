@@ -675,6 +675,84 @@ export type Database = {
           },
         ]
       }
+      tamv_federation_ring: {
+        Row: {
+          created_at: string
+          ecg_rhythm: number | null
+          id: string
+          metadata: Json | null
+          node_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          ecg_rhythm?: number | null
+          id?: string
+          metadata?: Json | null
+          node_name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          ecg_rhythm?: number | null
+          id?: string
+          metadata?: Json | null
+          node_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tamv_kernel_events: {
+        Row: {
+          created_at: string
+          id: string
+          payload: Json | null
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          payload?: Json | null
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payload?: Json | null
+          type?: string
+        }
+        Relationships: []
+      }
+      tamvcrums_logs: {
+        Row: {
+          created_at: string
+          ecg_rhythm: number | null
+          emotional_state: Json | null
+          federation_id: string | null
+          id: string
+          impact_score: number | null
+        }
+        Insert: {
+          created_at?: string
+          ecg_rhythm?: number | null
+          emotional_state?: Json | null
+          federation_id?: string | null
+          id?: string
+          impact_score?: number | null
+        }
+        Update: {
+          created_at?: string
+          ecg_rhythm?: number | null
+          emotional_state?: Json | null
+          federation_id?: string | null
+          id?: string
+          impact_score?: number | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
