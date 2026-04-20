@@ -273,6 +273,7 @@ const DocentesPage = () => {
       </main>
 
       <UTAMVFooter />
+      </div>
     </div>
   );
 };

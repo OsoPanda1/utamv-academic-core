@@ -394,6 +394,7 @@ const ForoPage = () => {
       </main>
 
       <UTAMVFooter />
+      </div>
     </div>
   );
 };
