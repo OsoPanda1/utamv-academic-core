@@ -5,6 +5,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import UTAMVHeader from '@/components/UTAMVHeader';
 import UTAMVFooter from '@/components/UTAMVFooter';
+import EliteBackground from '@/components/EliteBackground';
 import {
   Award,
   Clock,
