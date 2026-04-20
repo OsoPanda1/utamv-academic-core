@@ -3,6 +3,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import EliteBackground from "@/components/EliteBackground";
 import {
   BookOpen,
   Clock,
@@ -424,8 +425,9 @@ export default function ModulosPage() {
   const cursos = programs.filter((p) => p.tipo === "Curso");
 
   return (
-    <main className="min-h-screen bg-[#050915] text-white">
-      <div className="max-w-7xl mx-auto px-6 py-20">
+    <main className="relative min-h-screen bg-[#050915] text-white overflow-hidden">
+      <EliteBackground variant="petrol" />
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-20">
         {/* Header institucional */}
         <header className="mb-14 text-center md:text-left">
           <span className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.25em] uppercase text-slate-400">
