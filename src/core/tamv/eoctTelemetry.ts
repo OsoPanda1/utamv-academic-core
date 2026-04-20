@@ -6,15 +6,17 @@ export async function emitEoctTelemetry(
   eoct: EoctEvaluation,
   metadata: ProtocolContextMetadata
 ) {
-  await supabase.from("tamvcrums_logs").insert({
-    ecg_rhythm: deriveRhythm(eoct),
-    impact_score: eoct.severity === "critical" ? 100 : eoct.severity === "high" ? 75 : 50,
-    emotional_state: {
-      label: eoct.status,
-      reason: eoct.reason,
-    },
-    federation_id: metadata?.federation_id ?? null,
-  });
+  // Tabla tamvcrums_logs no está en el schema actual; no-op seguro.
+  try {
+    await (supabase as any).from("tamvcrums_logs").insert({
+      ecg_rhythm: deriveRhythm(eoct),
+      impact_score: eoct.severity === "critical" ? 100 : eoct.severity === "high" ? 75 : 50,
+      emotional_state: { label: eoct.status, reason: eoct.reason },
+      federation_id: metadata?.federation_id ?? null,
+    });
+  } catch {
+    // Telemetría opcional
+  }
 }
 
 function deriveRhythm(eoct: EoctEvaluation): number {

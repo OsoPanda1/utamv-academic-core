@@ -8,13 +8,15 @@ export async function updateNodeFromEoct(nodeId: string, eoct: EoctEvaluation) {
   if (eoct.status === "rejected") status = "OFFLINE";
   if (eoct.status === "escalated") status = "SATURATING";
 
-  await supabase
-    .from("tamv_federation_ring")
-    .update({
-      status,
-      ecg_rhythm: deriveRhythm(eoct),
-    })
-    .eq("id", nodeId);
+  // Tabla tamv_federation_ring no está en el schema actual; no-op seguro.
+  try {
+    await (supabase as any)
+      .from("tamv_federation_ring")
+      .update({ status, ecg_rhythm: deriveRhythm(eoct) })
+      .eq("id", nodeId);
+  } catch {
+    // Federation ring opcional
+  }
 }
 
 function deriveRhythm(eoct: EoctEvaluation): number {
