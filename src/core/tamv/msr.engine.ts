@@ -38,7 +38,7 @@ const _defaultEngine = new MsrEngine(_defaultRepo);
 export interface RecordEventInput {
   eventType: string;
   entityId?: string;
-  payload: Record<string, unknown>;
+  payload: unknown;
   severity?: MsrSeverity;
 }
 
@@ -49,7 +49,7 @@ export interface RecordEventInput {
 export function recordEvent(input: RecordEventInput): void {
   void _defaultEngine.emit(
     input.eventType,
-    { ...input.payload, entityId: input.entityId },
+    { payload: input.payload, entityId: input.entityId } as Record<string, unknown>,
     input.severity ?? "info"
   );
 }
