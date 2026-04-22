@@ -44,6 +44,45 @@ export type Database = {
         }
         Relationships: []
       }
+      badges: {
+        Row: {
+          code: string
+          color: string
+          created_at: string
+          criteria: Json
+          description: string
+          icon: string
+          id: string
+          name: string
+          tier: string
+          tokens_reward: number
+        }
+        Insert: {
+          code: string
+          color?: string
+          created_at?: string
+          criteria?: Json
+          description: string
+          icon?: string
+          id?: string
+          name: string
+          tier?: string
+          tokens_reward?: number
+        }
+        Update: {
+          code?: string
+          color?: string
+          created_at?: string
+          criteria?: Json
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          tier?: string
+          tokens_reward?: number
+        }
+        Relationships: []
+      }
       block_utamv_chain: {
         Row: {
           block_hash: string
@@ -753,6 +792,38 @@ export type Database = {
         }
         Relationships: []
       }
+      user_badges: {
+        Row: {
+          badge_id: string
+          context: Json | null
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          context?: Json | null
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          context?: Json | null
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -771,9 +842,44 @@ export type Database = {
         }
         Relationships: []
       }
+      user_tokens: {
+        Row: {
+          balance: number
+          level: number
+          total_earned: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          level?: number
+          total_earned?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          level?: number
+          total_earned?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      leaderboard_view: {
+        Row: {
+          avatar_url: string | null
+          badges_count: number | null
+          display_name: string | null
+          lessons_completed: number | null
+          level: number | null
+          tokens: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       generate_certificate_number: { Args: never; Returns: string }
@@ -783,6 +889,10 @@ export type Database = {
           block_hash: string
           block_index: number
         }[]
+      }
+      grant_badge: {
+        Args: { _badge_code: string; _user_id: string }
+        Returns: Json
       }
       has_role: {
         Args: {
