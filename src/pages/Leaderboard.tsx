@@ -4,9 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { EliteBackground } from "@/components/EliteBackground";
-import { UTAMVHeader } from "@/components/UTAMVHeader";
-import { UTAMVFooter } from "@/components/UTAMVFooter";
+import EliteBackground from "@/components/EliteBackground";
+import UTAMVHeader from "@/components/UTAMVHeader";
+import UTAMVFooter from "@/components/UTAMVFooter";
 import { Trophy, Medal, Award, Coins, BookOpen, Sparkles } from "lucide-react";
 
 interface LeaderRow {
