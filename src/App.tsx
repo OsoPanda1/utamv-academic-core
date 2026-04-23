@@ -25,6 +25,7 @@ import CertificadosPage from "./pages/CertificadosPage";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import ControlEscolar from "./pages/ControlEscolar";
 import TelemetriaIsabella from "./pages/TelemetriaIsabella";
+import TTSAdmin from "./pages/TTSAdmin";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 
@@ -95,6 +96,7 @@ const App = () => (
               <Route path="/campus/:slug" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
               <Route path="/admin/control-escolar" element={<ProtectedRoute><ControlEscolar /></ProtectedRoute>} />
               <Route path="/admin/telemetria-isabella" element={<ProtectedRoute><TelemetriaIsabella /></ProtectedRoute>} />
+              <Route path="/admin/tts-narraciones" element={<ProtectedRoute><TTSAdmin /></ProtectedRoute>} />
 
               {/* Fallback */}
               <Route path="*" element={<NotFound />} />
