@@ -164,14 +164,14 @@ Deno.serve(async (req) => {
           }
         }
 
-        // 2) Fallback Lovable AI (Gemini TTS)
-        if (!bytes && tryLovable) {
+        // 2) Fallback Google TTS público (sin API key)
+        if (!bytes) {
           try {
-            const out = await ttsLovableGemini(text, LOVABLE_KEY!);
+            const out = await ttsGoogleFree(text);
             bytes = out.bytes;
             contentType = out.contentType;
-            provider = "lovable";
-            usedFallback = tryEleven; // sólo es fallback si ElevenLabs estaba habilitado
+            provider = "google-free" as typeof provider;
+            usedFallback = tryEleven;
           } catch (e) {
             lastError = `${lastError ?? ""} | ${(e as Error).message}`.trim();
           }
