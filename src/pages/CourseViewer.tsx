@@ -7,11 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MediaPlayer } from "@/components/MediaPlayer";
 import { toast } from "sonner";
 import {
-  ArrowLeft, Play, Pause, CheckCircle2, Circle, Lock, FileText,
+  ArrowLeft, CheckCircle2, Circle, Lock, FileText,
   Headphones, Video, ListChecks, Download, Award, ChevronRight, BookOpen,
 } from "lucide-react";
+
+interface DbLessonMedia {
+  video_url: string | null;
+  audio_url: string | null;
+  transcript: string | null;
+}
 
 interface LessonProgressRow {
   lesson_id: string;
