@@ -89,4 +89,3 @@ Este proyecto opera bajo el protocolo **Dignity-by-Design**. Queda prohibido:
 © 2026 TAMV Online. Gestión soberana bajo la dirección de Anubis Villaseñor.
 
 ```
-```
