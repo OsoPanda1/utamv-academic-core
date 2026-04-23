@@ -25,6 +25,7 @@ import CertificadosPage from "./pages/CertificadosPage";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import ControlEscolar from "./pages/ControlEscolar";
 import TelemetriaIsabella from "./pages/TelemetriaIsabella";
+import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -82,6 +83,7 @@ const App = () => (
               <Route path="/certificados" element={<CertificadosPage />} />
               <Route path="/verificar/:certNumber" element={<VerifyCertificate />} />
               <Route path="/precios" element={<Pricing />} />
+              <Route path="/ranking" element={<Leaderboard />} />
 
               {/* Auth */}
               <Route path="/auth/login" element={<Auth />} />

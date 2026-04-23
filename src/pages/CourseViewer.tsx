@@ -91,6 +91,26 @@ export default function CourseViewer() {
     load();
   }, [user, course]);
 
+  // Cargar media (video/audio/transcript) de la lección activa desde DB
+  useEffect(() => {
+    const loadMedia = async () => {
+      if (!course || !activeLessonId) { setActiveMedia(null); return; }
+      const lessonTitle = allLessons.find((l) => l.id === activeLessonId)?.title;
+      if (!lessonTitle) { setActiveMedia(null); return; }
+      const { data: dbCourse } = await supabase
+        .from("courses").select("id").eq("slug", course.slug).maybeSingle();
+      if (!dbCourse) { setActiveMedia(null); return; }
+      const { data } = await supabase
+        .from("lessons")
+        .select("video_url,audio_url,transcript")
+        .eq("course_id", dbCourse.id)
+        .eq("title", lessonTitle)
+        .maybeSingle();
+      setActiveMedia((data as DbLessonMedia) ?? null);
+    };
+    loadMedia();
+  }, [activeLessonId, course, allLessons]);
+
   if (!course) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -150,6 +170,28 @@ export default function CourseViewer() {
       [lessonId]: { lesson_id: lessonId, completed: true, progress_percent: 100, last_position_seconds: 0 },
     }));
     toast.success("✓ Lección completada");
+
+    // Otorgar insignia "first_step" en la primera lección completada
+    const wasFirst = Object.values(progress).filter((p) => p.completed).length === 0;
+    if (wasFirst) {
+      const { data: badgeRes } = await supabase.rpc("grant_badge", {
+        _user_id: user.id, _badge_code: "first_step",
+      });
+      if (badgeRes && (badgeRes as { ok?: boolean; already?: boolean }).ok && !(badgeRes as { already?: boolean }).already) {
+        toast.success("🏆 Insignia desbloqueada: Primer Paso (+10 tokens)");
+      }
+    }
+
+    // Otorgar "diplomado_champion" si completó todo
+    const newCompleted = Object.values(progress).filter((p) => p.completed).length + 1;
+    if (newCompleted === totalLessons && totalLessons > 0 && course.slug === "diplomado-ecosistemas-digitales") {
+      const { data: champRes } = await supabase.rpc("grant_badge", {
+        _user_id: user.id, _badge_code: "diplomado_champion",
+      });
+      if (champRes && (champRes as { ok?: boolean; already?: boolean }).ok && !(champRes as { already?: boolean }).already) {
+        toast.success("🏆 ¡Diplomado completado! +200 tokens UTAMV");
+      }
+    }
   };
 
   const handleGenerateCertificate = async () => {
