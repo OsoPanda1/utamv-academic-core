@@ -792,6 +792,45 @@ export type Database = {
         }
         Relationships: []
       }
+      tts_jobs: {
+        Row: {
+          attempts: number
+          audio_url: string | null
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          lesson_id: string
+          provider: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          audio_url?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          lesson_id: string
+          provider?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          audio_url?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          lesson_id?: string
+          provider?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_badges: {
         Row: {
           badge_id: string
