@@ -1,7 +1,7 @@
-// Edge function: generate-lesson-narration (v2 con fallback)
+// Edge function: generate-lesson-narration (v3)
 // 1) Intenta ElevenLabs (voz Sarah).
-// 2) Si falla por permisos, falla a Lovable AI Gateway TTS (gemini-2.5-flash-preview-tts).
-// 3) Registra estado completo en tts_jobs.
+// 2) Si falla, usa fallback Google TTS público (sin API key).
+// 3) Registra estado en tts_jobs.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -19,13 +19,6 @@ interface LessonRow {
 }
 
 // --- Helpers ----------------------------------------------------------------
-
-function base64ToBytes(b64: string): Uint8Array {
-  const bin = atob(b64);
-  const out = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-  return out;
-}
 
 async function ttsElevenLabs(text: string, key: string): Promise<{ bytes: Uint8Array; contentType: string }> {
   const res = await fetch(
