@@ -1,115 +1,231 @@
-// Edge function: generate-lesson-narration
-// Genera audio narrado real con ElevenLabs (voz Sarah) para una lección
-// y lo sube al bucket lessons-media, actualizando lessons.audio_url.
+// Edge function: generate-lesson-narration (v2 con fallback)
+// 1) Intenta ElevenLabs (voz Sarah).
+// 2) Si falla por permisos, falla a Lovable AI Gateway TTS (gemini-2.5-flash-preview-tts).
+// 3) Registra estado completo en tts_jobs.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 const SARAH_VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
+
+interface LessonRow {
+  id: string;
+  title: string;
+  transcript: string | null;
+  audio_url: string | null;
+}
+
+// --- Helpers ----------------------------------------------------------------
+
+function base64ToBytes(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+async function ttsElevenLabs(text: string, key: string): Promise<{ bytes: Uint8Array; contentType: string }> {
+  const res = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-speech/${SARAH_VOICE_ID}?output_format=mp3_44100_128`,
+    {
+      method: "POST",
+      headers: { "xi-api-key": key, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text,
+        model_id: "eleven_multilingual_v2",
+        voice_settings: { stability: 0.55, similarity_boost: 0.78, style: 0.25, use_speaker_boost: true },
+      }),
+    },
+  );
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`elevenlabs:${res.status}:${err.slice(0, 200)}`);
+  }
+  return { bytes: new Uint8Array(await res.arrayBuffer()), contentType: "audio/mpeg" };
+}
+
+async function ttsLovableGemini(text: string, key: string): Promise<{ bytes: Uint8Array; contentType: string }> {
+  // Lovable AI Gateway con google/gemini-2.5-flash-preview-tts (modalities=audio).
+  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "google/gemini-2.5-flash-preview-tts",
+      modalities: ["audio"],
+      audio: { voice: "alloy", format: "wav" },
+      messages: [{ role: "user", content: text }],
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`lovable-tts:${res.status}:${err.slice(0, 200)}`);
+  }
+  const json = await res.json();
+  const audioB64: string | undefined = json?.choices?.[0]?.message?.audio?.data;
+  if (!audioB64) throw new Error("lovable-tts:no_audio_in_response");
+  return { bytes: base64ToBytes(audioB64), contentType: "audio/wav" };
+}
+
+// --- Handler ----------------------------------------------------------------
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const ELEVEN_KEY = Deno.env.get("ELEVENLABS_API_KEY");
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    if (!ELEVEN_KEY) {
-      return new Response(JSON.stringify({ error: "ELEVENLABS_API_KEY not configured" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const ELEVEN_KEY = Deno.env.get("ELEVENLABS_API_KEY");
+    const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY");
 
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
     const body = await req.json().catch(() => ({}));
-    const { lessonId, batchAll = false, courseSlug } = body as {
-      lessonId?: string; batchAll?: boolean; courseSlug?: string;
+    const {
+      lessonId, batchAll = false, courseSlug, lessonIds, forceProvider,
+    } = body as {
+      lessonId?: string;
+      batchAll?: boolean;
+      courseSlug?: string;
+      lessonIds?: string[];
+      forceProvider?: "elevenlabs" | "lovable";
     };
 
-    // Resolver lecciones a procesar
-    let lessons: Array<{ id: string; title: string; transcript: string | null; audio_url: string | null }> = [];
-    if (batchAll) {
+    // Resolver lecciones
+    let lessons: LessonRow[] = [];
+    if (Array.isArray(lessonIds) && lessonIds.length > 0) {
+      const { data, error } = await admin.from("lessons")
+        .select("id,title,transcript,audio_url").in("id", lessonIds);
+      if (error) throw error;
+      lessons = (data ?? []) as LessonRow[];
+    } else if (batchAll) {
       const { data: course } = await admin.from("courses").select("id")
         .eq("slug", courseSlug ?? "diplomado-ecosistemas-digitales").maybeSingle();
       if (!course) throw new Error("Curso no encontrado");
       const { data, error } = await admin.from("lessons")
-        .select("id,title,transcript,audio_url").eq("course_id", course.id).order("order_index");
+        .select("id,title,transcript,audio_url")
+        .eq("course_id", course.id).order("order_index");
       if (error) throw error;
-      lessons = data ?? [];
+      lessons = (data ?? []) as LessonRow[];
     } else if (lessonId) {
       const { data, error } = await admin.from("lessons")
         .select("id,title,transcript,audio_url").eq("id", lessonId).maybeSingle();
       if (error) throw error;
-      if (data) lessons = [data];
+      if (data) lessons = [data as LessonRow];
     } else {
-      throw new Error("Provide lessonId or batchAll=true");
+      throw new Error("Provide lessonId, lessonIds[] or batchAll=true");
     }
 
-    const results: Array<{ lessonId: string; audio_url?: string; status: string; error?: string }> = [];
+    const results: Array<Record<string, unknown>> = [];
 
     for (const lesson of lessons) {
+      const startedAt = Date.now();
+
+      // Marca processing
+      await admin.from("tts_jobs").upsert({
+        lesson_id: lesson.id,
+        status: "processing",
+        attempts: 1,
+        error_message: null,
+      }, { onConflict: "lesson_id" });
+
       try {
-        // Saltar si ya tiene audio
-        if (lesson.audio_url && lesson.audio_url.includes("lessons-media")) {
-          results.push({ lessonId: lesson.id, audio_url: lesson.audio_url, status: "skipped_existing" });
-          continue;
+        const text = (lesson.transcript || lesson.title || "Lección UTAMV NextGen.").slice(0, 2500);
+
+        let bytes: Uint8Array | null = null;
+        let contentType = "audio/mpeg";
+        let provider: "elevenlabs" | "lovable" = "elevenlabs";
+        let usedFallback = false;
+        let lastError: string | null = null;
+
+        const tryEleven = forceProvider !== "lovable" && !!ELEVEN_KEY;
+        const tryLovable = forceProvider !== "elevenlabs" && !!LOVABLE_KEY;
+
+        // 1) ElevenLabs
+        if (tryEleven) {
+          try {
+            const out = await ttsElevenLabs(text, ELEVEN_KEY!);
+            bytes = out.bytes;
+            contentType = out.contentType;
+            provider = "elevenlabs";
+          } catch (e) {
+            lastError = (e as Error).message;
+          }
         }
 
-        const text = (lesson.transcript || lesson.title || "Lección UTAMV.").slice(0, 2500);
+        // 2) Fallback Lovable AI (Gemini TTS)
+        if (!bytes && tryLovable) {
+          try {
+            const out = await ttsLovableGemini(text, LOVABLE_KEY!);
+            bytes = out.bytes;
+            contentType = out.contentType;
+            provider = "lovable";
+            usedFallback = tryEleven; // sólo es fallback si ElevenLabs estaba habilitado
+          } catch (e) {
+            lastError = `${lastError ?? ""} | ${(e as Error).message}`.trim();
+          }
+        }
 
-        // ElevenLabs TTS
-        const ttsRes = await fetch(
-          `https://api.elevenlabs.io/v1/text-to-speech/${SARAH_VOICE_ID}?output_format=mp3_44100_128`,
-          {
-            method: "POST",
-            headers: {
-              "xi-api-key": ELEVEN_KEY,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              text,
-              model_id: "eleven_multilingual_v2",
-              voice_settings: { stability: 0.55, similarity_boost: 0.78, style: 0.25, use_speaker_boost: true },
-            }),
-          },
-        );
-        if (!ttsRes.ok) {
-          const err = await ttsRes.text();
-          results.push({ lessonId: lesson.id, status: "tts_failed", error: err.slice(0, 200) });
+        if (!bytes) {
+          await admin.from("tts_jobs").update({
+            status: "failed",
+            provider: null,
+            error_message: lastError ?? "No provider available",
+            duration_ms: Date.now() - startedAt,
+          }).eq("lesson_id", lesson.id);
+          results.push({ lessonId: lesson.id, status: "failed", error: lastError });
           continue;
         }
-        const audioBuffer = new Uint8Array(await ttsRes.arrayBuffer());
 
         // Subir al bucket
-        const path = `audio/lesson-${lesson.id}.mp3`;
-        const { error: upErr } = await admin.storage.from("lessons-media").upload(path, audioBuffer, {
-          contentType: "audio/mpeg", upsert: true,
+        const ext = contentType === "audio/wav" ? "wav" : "mp3";
+        const path = `audio/lesson-${lesson.id}.${ext}`;
+        const { error: upErr } = await admin.storage.from("lessons-media").upload(path, bytes, {
+          contentType, upsert: true,
         });
-        if (upErr) {
-          results.push({ lessonId: lesson.id, status: "upload_failed", error: upErr.message });
-          continue;
-        }
+        if (upErr) throw upErr;
         const { data: pub } = admin.storage.from("lessons-media").getPublicUrl(path);
         const audio_url = pub.publicUrl;
 
-        // Actualizar lección
+        // Actualizar lección + job
         await admin.from("lessons").update({ audio_url }).eq("id", lesson.id);
-        results.push({ lessonId: lesson.id, audio_url, status: "ok" });
+        await admin.from("tts_jobs").update({
+          status: usedFallback ? "fallback" : "success",
+          provider,
+          audio_url,
+          error_message: usedFallback ? `ElevenLabs falló: ${lastError}` : null,
+          duration_ms: Date.now() - startedAt,
+        }).eq("lesson_id", lesson.id);
+
+        results.push({
+          lessonId: lesson.id,
+          status: usedFallback ? "fallback" : "success",
+          provider,
+          audio_url,
+        });
       } catch (e) {
-        results.push({ lessonId: lesson.id, status: "error", error: (e as Error).message });
+        await admin.from("tts_jobs").update({
+          status: "failed",
+          error_message: (e as Error).message,
+          duration_ms: Date.now() - startedAt,
+        }).eq("lesson_id", lesson.id);
+        results.push({ lessonId: lesson.id, status: "failed", error: (e as Error).message });
       }
     }
 
-    return new Response(
-      JSON.stringify({ ok: true, processed: results.length, results }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+    const summary = {
+      total: results.length,
+      success: results.filter((r) => r.status === "success").length,
+      fallback: results.filter((r) => r.status === "fallback").length,
+      failed: results.filter((r) => r.status === "failed").length,
+    };
+
+    return new Response(JSON.stringify({ ok: true, summary, results }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (e) {
-    return new Response(JSON.stringify({ error: (e as Error).message }), {
+    return new Response(JSON.stringify({ ok: false, error: (e as Error).message }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
