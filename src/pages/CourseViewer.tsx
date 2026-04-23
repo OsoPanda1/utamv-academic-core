@@ -7,11 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MediaPlayer } from "@/components/MediaPlayer";
 import { toast } from "sonner";
 import {
-  ArrowLeft, Play, Pause, CheckCircle2, Circle, Lock, FileText,
+  ArrowLeft, CheckCircle2, Circle, Lock, FileText,
   Headphones, Video, ListChecks, Download, Award, ChevronRight, BookOpen,
 } from "lucide-react";
+
+interface DbLessonMedia {
+  video_url: string | null;
+  audio_url: string | null;
+  transcript: string | null;
+}
 
 interface LessonProgressRow {
   lesson_id: string;
@@ -38,6 +45,7 @@ export default function CourseViewer() {
   const [enrolled, setEnrolled] = useState<boolean>(false);
   const [progress, setProgress] = useState<Record<string, LessonProgressRow>>({});
   const [activeLessonId, setActiveLessonId] = useState<string>(allLessons[0]?.id || "");
+  const [activeMedia, setActiveMedia] = useState<DbLessonMedia | null>(null);
   const [loading, setLoading] = useState(true);
   const [generatingCert, setGeneratingCert] = useState(false);
 
@@ -82,6 +90,26 @@ export default function CourseViewer() {
     };
     load();
   }, [user, course]);
+
+  // Cargar media (video/audio/transcript) de la lección activa desde DB
+  useEffect(() => {
+    const loadMedia = async () => {
+      if (!course || !activeLessonId) { setActiveMedia(null); return; }
+      const lessonTitle = allLessons.find((l) => l.id === activeLessonId)?.title;
+      if (!lessonTitle) { setActiveMedia(null); return; }
+      const { data: dbCourse } = await supabase
+        .from("courses").select("id").eq("slug", course.slug).maybeSingle();
+      if (!dbCourse) { setActiveMedia(null); return; }
+      const { data } = await supabase
+        .from("lessons")
+        .select("video_url,audio_url,transcript")
+        .eq("course_id", dbCourse.id)
+        .eq("title", lessonTitle)
+        .maybeSingle();
+      setActiveMedia((data as DbLessonMedia) ?? null);
+    };
+    loadMedia();
+  }, [activeLessonId, course, allLessons]);
 
   if (!course) {
     return (
@@ -142,6 +170,28 @@ export default function CourseViewer() {
       [lessonId]: { lesson_id: lessonId, completed: true, progress_percent: 100, last_position_seconds: 0 },
     }));
     toast.success("✓ Lección completada");
+
+    // Otorgar insignia "first_step" en la primera lección completada
+    const wasFirst = Object.values(progress).filter((p) => p.completed).length === 0;
+    if (wasFirst) {
+      const { data: badgeRes } = await supabase.rpc("grant_badge", {
+        _user_id: user.id, _badge_code: "first_step",
+      });
+      if (badgeRes && (badgeRes as { ok?: boolean; already?: boolean }).ok && !(badgeRes as { already?: boolean }).already) {
+        toast.success("🏆 Insignia desbloqueada: Primer Paso (+10 tokens)");
+      }
+    }
+
+    // Otorgar "diplomado_champion" si completó todo
+    const newCompleted = Object.values(progress).filter((p) => p.completed).length + 1;
+    if (newCompleted === totalLessons && totalLessons > 0 && course.slug === "diplomado-ecosistemas-digitales") {
+      const { data: champRes } = await supabase.rpc("grant_badge", {
+        _user_id: user.id, _badge_code: "diplomado_champion",
+      });
+      if (champRes && (champRes as { ok?: boolean; already?: boolean }).ok && !(champRes as { already?: boolean }).already) {
+        toast.success("🏆 ¡Diplomado completado! +200 tokens UTAMV");
+      }
+    }
   };
 
   const handleGenerateCertificate = async () => {
@@ -218,29 +268,16 @@ export default function CourseViewer() {
 
           {/* Lesson player */}
           <Card className="overflow-hidden bg-[hsl(222_38%_5%)] border-[hsl(var(--platinum)/0.08)]">
-            <div className="aspect-video bg-gradient-to-br from-[hsl(222_38%_8%)] to-[hsl(222_38%_3%)] flex items-center justify-center relative">
-              {activeLesson?.type === "video" && (
-                <div className="text-center space-y-3">
-                  <div className="w-20 h-20 rounded-full bg-platinum/10 border border-platinum/20 flex items-center justify-center mx-auto">
-                    <Play size={32} className="text-platinum ml-1" />
-                  </div>
-                  <p className="font-ui text-xs text-platinum-dim">Video lección · {activeLesson.duration} min</p>
-                </div>
-              )}
-              {activeLesson?.type === "audio" && (
-                <div className="text-center space-y-3">
-                  <div className="w-20 h-20 rounded-full bg-platinum/10 border border-platinum/20 flex items-center justify-center mx-auto">
-                    <Headphones size={32} className="text-platinum" />
-                  </div>
-                  <p className="font-ui text-xs text-platinum-dim">Audio lección · {activeLesson.duration} min</p>
-                </div>
-              )}
-              {(activeLesson?.type === "text" || activeLesson?.type === "exercise") && (
-                <div className="text-center space-y-3 px-6">
-                  <FileText size={48} className="text-platinum/60 mx-auto" />
-                  <p className="font-ui text-xs text-platinum-dim">Lectura · {activeLesson.duration} min</p>
-                </div>
-              )}
+            <div className="p-4">
+              <MediaPlayer
+                videoUrl={activeMedia?.video_url}
+                audioUrl={activeMedia?.audio_url}
+                transcript={activeMedia?.transcript || activeLesson?.content}
+                title={activeLesson?.title}
+                onComplete={() => {
+                  if (!progress[activeLessonId]?.completed) markComplete(activeLessonId);
+                }}
+              />
             </div>
             <CardContent className="p-5 space-y-4">
               <div className="flex items-start justify-between gap-3">
