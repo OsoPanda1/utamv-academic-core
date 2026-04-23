@@ -45,6 +45,7 @@ export default function CourseViewer() {
   const [enrolled, setEnrolled] = useState<boolean>(false);
   const [progress, setProgress] = useState<Record<string, LessonProgressRow>>({});
   const [activeLessonId, setActiveLessonId] = useState<string>(allLessons[0]?.id || "");
+  const [activeMedia, setActiveMedia] = useState<DbLessonMedia | null>(null);
   const [loading, setLoading] = useState(true);
   const [generatingCert, setGeneratingCert] = useState(false);
 
@@ -225,29 +226,16 @@ export default function CourseViewer() {
 
           {/* Lesson player */}
           <Card className="overflow-hidden bg-[hsl(222_38%_5%)] border-[hsl(var(--platinum)/0.08)]">
-            <div className="aspect-video bg-gradient-to-br from-[hsl(222_38%_8%)] to-[hsl(222_38%_3%)] flex items-center justify-center relative">
-              {activeLesson?.type === "video" && (
-                <div className="text-center space-y-3">
-                  <div className="w-20 h-20 rounded-full bg-platinum/10 border border-platinum/20 flex items-center justify-center mx-auto">
-                    <Play size={32} className="text-platinum ml-1" />
-                  </div>
-                  <p className="font-ui text-xs text-platinum-dim">Video lección · {activeLesson.duration} min</p>
-                </div>
-              )}
-              {activeLesson?.type === "audio" && (
-                <div className="text-center space-y-3">
-                  <div className="w-20 h-20 rounded-full bg-platinum/10 border border-platinum/20 flex items-center justify-center mx-auto">
-                    <Headphones size={32} className="text-platinum" />
-                  </div>
-                  <p className="font-ui text-xs text-platinum-dim">Audio lección · {activeLesson.duration} min</p>
-                </div>
-              )}
-              {(activeLesson?.type === "text" || activeLesson?.type === "exercise") && (
-                <div className="text-center space-y-3 px-6">
-                  <FileText size={48} className="text-platinum/60 mx-auto" />
-                  <p className="font-ui text-xs text-platinum-dim">Lectura · {activeLesson.duration} min</p>
-                </div>
-              )}
+            <div className="p-4">
+              <MediaPlayer
+                videoUrl={activeMedia?.video_url}
+                audioUrl={activeMedia?.audio_url}
+                transcript={activeMedia?.transcript || activeLesson?.content}
+                title={activeLesson?.title}
+                onComplete={() => {
+                  if (!progress[activeLessonId]?.completed) markComplete(activeLessonId);
+                }}
+              />
             </div>
             <CardContent className="p-5 space-y-4">
               <div className="flex items-start justify-between gap-3">
