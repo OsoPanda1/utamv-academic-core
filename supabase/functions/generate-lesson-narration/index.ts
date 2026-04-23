@@ -47,26 +47,43 @@ async function ttsElevenLabs(text: string, key: string): Promise<{ bytes: Uint8A
   return { bytes: new Uint8Array(await res.arrayBuffer()), contentType: "audio/mpeg" };
 }
 
-async function ttsLovableGemini(text: string, key: string): Promise<{ bytes: Uint8Array; contentType: string }> {
-  // Lovable AI Gateway con google/gemini-2.5-flash-preview-tts (modalities=audio).
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "google/gemini-2.5-flash-preview-tts",
-      modalities: ["audio"],
-      audio: { voice: "alloy", format: "wav" },
-      messages: [{ role: "user", content: text }],
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`lovable-tts:${res.status}:${err.slice(0, 200)}`);
+async function ttsGoogleFree(text: string): Promise<{ bytes: Uint8Array; contentType: string }> {
+  // Fallback gratuito sin API key: endpoint público translate.google.com TTS.
+  // Limita ~190 chars por request, así que partimos por oraciones y concatenamos
+  // los MP3 (los reproductores HTML5 toleran frames MP3 consecutivos).
+  const sentences = text.replace(/\s+/g, " ").trim().split(/(?<=[.!?])\s+/);
+  const chunks: string[] = [];
+  let buf = "";
+  for (const s of sentences) {
+    if ((buf + " " + s).trim().length > 180) {
+      if (buf) chunks.push(buf.trim());
+      buf = s;
+    } else {
+      buf = (buf + " " + s).trim();
+    }
   }
-  const json = await res.json();
-  const audioB64: string | undefined = json?.choices?.[0]?.message?.audio?.data;
-  if (!audioB64) throw new Error("lovable-tts:no_audio_in_response");
-  return { bytes: base64ToBytes(audioB64), contentType: "audio/wav" };
+  if (buf) chunks.push(buf);
+
+  const parts: Uint8Array[] = [];
+  for (let i = 0; i < chunks.length; i++) {
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunks[i])}&tl=es&total=${chunks.length}&idx=${i}&textlen=${chunks[i].length}&client=tw-ob`;
+    const r = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+        "Referer": "https://translate.google.com/",
+      },
+    });
+    if (!r.ok) throw new Error(`google-tts:${r.status}`);
+    parts.push(new Uint8Array(await r.arrayBuffer()));
+    // Pequeña pausa para no agobiar
+    if (i < chunks.length - 1) await new Promise((res) => setTimeout(res, 120));
+  }
+
+  const total = parts.reduce((acc, p) => acc + p.length, 0);
+  const merged = new Uint8Array(total);
+  let off = 0;
+  for (const p of parts) { merged.set(p, off); off += p.length; }
+  return { bytes: merged, contentType: "audio/mpeg" };
 }
 
 // --- Handler ----------------------------------------------------------------
