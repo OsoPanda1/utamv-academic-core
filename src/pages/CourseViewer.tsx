@@ -32,7 +32,7 @@ interface LessonProgressRow {
 
 export default function CourseViewer() {
   const { slug } = useParams<{ slug: string }>();
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   const localCourse: Course | undefined = useMemo(
@@ -336,6 +336,7 @@ export default function CourseViewer() {
                 audioUrl={activeMedia?.audio_url}
                 transcript={activeMedia?.transcript || activeLesson?.content}
                 title={activeLesson?.title}
+                watermarkText={`${profile?.display_name || user?.email || "UTAMV"} · ${new Date().toISOString().slice(0, 16).replace("T", " ")}`}
                 onComplete={() => {
                   if (activeLessonLocked) return;
                   if (!progress[activeLessonId]?.completed) markComplete(activeLessonId);
