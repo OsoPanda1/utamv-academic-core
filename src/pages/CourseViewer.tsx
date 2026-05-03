@@ -166,6 +166,12 @@ export default function CourseViewer() {
   }
 
   const activeLesson = allLessons.find((l) => l.id === activeLessonId) || allLessons[0];
+  const isLessonLocked = (lesson: Lesson | undefined): boolean => {
+    if (!lesson || enrolled) return false;
+    const parentModule = course.modules.find((m) => m.lessons.some((candidate) => candidate.id === lesson.id));
+    return !lesson.isFreePreview && !parentModule?.isFreePreview;
+  };
+  const activeLessonLocked = isLessonLocked(activeLesson);
   const completedCount = Object.values(progress).filter((p) => p.completed).length;
   const totalLessons = allLessons.length;
   const overallPct = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
@@ -173,6 +179,11 @@ export default function CourseViewer() {
 
   const markComplete = async (lessonId: string) => {
     if (!user) return;
+    const targetLesson = allLessons.find((lesson) => lesson.id === lessonId);
+    if (isLessonLocked(targetLesson)) {
+      toast.error("Necesitas inscripción activa para completar esta lección.");
+      return;
+    }
     const { data: dbCourse } = await supabase
       .from("courses").select("id").eq("slug", course.slug).maybeSingle();
     if (!dbCourse) {
@@ -316,6 +327,7 @@ export default function CourseViewer() {
                 transcript={activeMedia?.transcript || activeLesson?.content}
                 title={activeLesson?.title}
                 onComplete={() => {
+                  if (activeLessonLocked) return;
                   if (!progress[activeLessonId]?.completed) markComplete(activeLessonId);
                 }}
               />
@@ -328,12 +340,16 @@ export default function CourseViewer() {
                   </Badge>
                   <h2 className="font-display text-xl text-platinum">{activeLesson?.title}</h2>
                 </div>
-                {progress[activeLessonId]?.completed ? (
+                {activeLessonLocked ? (
+                  <Badge className="bg-amber-500/15 text-amber-400 border-amber-500/30 gap-1">
+                    <Lock size={12} /> Vista previa
+                  </Badge>
+                ) : progress[activeLessonId]?.completed ? (
                   <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 gap-1">
                     <CheckCircle2 size={12} /> Completada
                   </Badge>
                 ) : (
-                  <Button size="sm" onClick={() => markComplete(activeLessonId)}>
+                  <Button size="sm" disabled={activeLessonLocked} onClick={() => markComplete(activeLessonId)}>
                     Marcar como completada
                   </Button>
                 )}
