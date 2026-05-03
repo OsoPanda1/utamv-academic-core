@@ -157,18 +157,7 @@ export default function CourseViewer() {
         return;
       }
 
-      const secureMedia = (data as DbLessonMedia) ?? null;
-      if (!secureMedia) { setActiveMedia(null); return; }
-
-      const secureUrl = async (rawUrl: string | null | undefined) => {
-        if (!rawUrl) return null;
-        const { data: signedData } = await supabase.functions.invoke("get-secure-media-url", { body: { url: rawUrl, expiresIn: 120 } });
-        return signedData?.url ?? rawUrl;
-      };
-
-      secureMedia.video_url = await secureUrl(secureMedia.video_url);
-      secureMedia.audio_url = await secureUrl(secureMedia.audio_url);
-      setActiveMedia(secureMedia);
+      setActiveMedia((data as DbLessonMedia) ?? null);
     };
     loadMedia();
   }, [activeLessonId, course, allLessons]);
