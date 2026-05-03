@@ -17,10 +17,8 @@ export const IsabellaTelemetryProvider: React.FC<{ children: React.ReactNode }> 
         .from('tamvcrums_logs')
         .insert([
           {
-            user_id: session.session.user.id,
-            action_type,
-            module,
-            payload,
+            federation_id: session.session.user.id,
+            emotional_state: { action_type, module, ...payload },
           },
         ]);
 
