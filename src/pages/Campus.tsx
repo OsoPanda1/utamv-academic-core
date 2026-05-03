@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { COURSES } from '@/data/coursesData';
 import UTAMVHeader from '@/components/UTAMVHeader';
 import utamvLogo from '@/assets/utamv-logo-official.png';
+import { resolveCourseCover } from '@/lib/courseCovers';
 
 const Campus = () => {
   const { user, profile, signOut } = useAuth();
@@ -29,7 +30,7 @@ const Campus = () => {
         category: c.category || '', hours: c.hours || 0,
         priceMXN: Number(c.price_mxn) || 0, priceUSD: Number(c.price_usd) || 0,
         instructorName: c.instructor_name || 'UTAMV', instructorTitle: '',
-        instructorBio: '', thumbnail: c.thumbnail_url || '/src/assets/module-1.jpg',
+        instructorBio: '', thumbnail: resolveCourseCover(c.slug, c.thumbnail_url),
         isFeatured: !!c.is_featured, modules: [], quizzes: [],
         learningOutcomes: [], prerequisites: [],
         obeFramework: { competencies: [], evidences: [], rubrics: [] },
@@ -327,6 +328,9 @@ const CourseCard = ({ course, enrolled }: { course: any; enrolled: boolean }) =>
 
   return (
     <div className="group p-5 rounded-2xl bg-card-premium border border-[hsl(var(--platinum)/0.06)] hover:border-[hsl(var(--platinum)/0.2)] transition-all hover:shadow-platinum flex flex-col">
+      <div className="mb-3 overflow-hidden rounded-xl border border-[hsl(var(--platinum)/0.1)]">
+        <img src={resolveCourseCover(course.slug, course.thumbnail)} alt={course.title} className="h-32 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" loading="lazy" />
+      </div>
       <div className="flex items-start justify-between mb-3">
         <span className="badge-academic text-[8px]">{course.level || 'Programa'}</span>
         {course.isFeatured && <span className="font-ui text-[8px] text-platinum-dim border border-[hsl(var(--platinum)/0.2)] rounded-full px-2 py-0.5">Destacado</span>}

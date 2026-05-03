@@ -14,12 +14,13 @@ interface MediaPlayerProps {
   title?: string;
   onComplete?: () => void;
   onProgress?: (pct: number, position: number) => void;
+  watermarkText?: string;
 }
 
 const SPEEDS = [0.75, 1, 1.25, 1.5, 1.75, 2];
 
 export function MediaPlayer({
-  videoUrl, audioUrl, poster, transcript, title, onComplete, onProgress,
+  videoUrl, audioUrl, poster, transcript, title, onComplete, onProgress, watermarkText,
 }: MediaPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -111,6 +112,12 @@ export function MediaPlayer({
               </div>
               <p className="font-ui text-xs text-platinum-dim">Audio narración · Sarah ElevenLabs</p>
             </div>
+          </div>
+        )}
+
+        {watermarkText && (
+          <div className="pointer-events-none absolute bottom-3 right-3 rounded bg-black/45 px-2 py-1 text-[10px] text-white/85">
+            {watermarkText}
           </div>
         )}
 

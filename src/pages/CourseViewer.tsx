@@ -15,9 +15,12 @@ import {
 } from "lucide-react";
 
 interface DbLessonMedia {
+  lesson_id?: string;
+  title?: string;
   video_url: string | null;
   audio_url: string | null;
   transcript: string | null;
+  is_locked?: boolean;
 }
 
 interface LessonProgressRow {
@@ -29,7 +32,7 @@ interface LessonProgressRow {
 
 export default function CourseViewer() {
   const { slug } = useParams<{ slug: string }>();
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   const localCourse: Course | undefined = useMemo(
@@ -141,13 +144,31 @@ export default function CourseViewer() {
       const { data: dbCourse } = await supabase
         .from("courses").select("id").eq("slug", course.slug).maybeSingle();
       if (!dbCourse) { setActiveMedia(null); return; }
-      const { data } = await supabase
-        .from("lessons")
-        .select("video_url,audio_url,transcript")
-        .eq("course_id", dbCourse.id)
-        .eq("title", lessonTitle)
+      const { data, error } = await supabase
+        .rpc("get_lesson_media_secure", {
+          p_course_slug: course.slug,
+          p_lesson_title: lessonTitle,
+        })
         .maybeSingle();
-      setActiveMedia((data as DbLessonMedia) ?? null);
+
+      if (error) {
+        console.warn("get_lesson_media_secure:", error.message);
+        setActiveMedia(null);
+        return;
+      }
+
+      const secureMedia = (data as DbLessonMedia) ?? null;
+      if (!secureMedia) { setActiveMedia(null); return; }
+
+      const secureUrl = async (rawUrl: string | null | undefined) => {
+        if (!rawUrl) return null;
+        const { data: signedData } = await supabase.functions.invoke("get-secure-media-url", { body: { url: rawUrl, expiresIn: 120 } });
+        return signedData?.url ?? rawUrl;
+      };
+
+      secureMedia.video_url = await secureUrl(secureMedia.video_url);
+      secureMedia.audio_url = await secureUrl(secureMedia.audio_url);
+      setActiveMedia(secureMedia);
     };
     loadMedia();
   }, [activeLessonId, course, allLessons]);
@@ -166,6 +187,12 @@ export default function CourseViewer() {
   }
 
   const activeLesson = allLessons.find((l) => l.id === activeLessonId) || allLessons[0];
+  const isLessonLocked = (lesson: Lesson | undefined): boolean => {
+    if (!lesson || enrolled) return false;
+    const parentModule = course.modules.find((m) => m.lessons.some((candidate) => candidate.id === lesson.id));
+    return !lesson.isFreePreview && !parentModule?.isFreePreview;
+  };
+  const activeLessonLocked = (activeMedia?.is_locked ?? false) || isLessonLocked(activeLesson);
   const completedCount = Object.values(progress).filter((p) => p.completed).length;
   const totalLessons = allLessons.length;
   const overallPct = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
@@ -173,6 +200,11 @@ export default function CourseViewer() {
 
   const markComplete = async (lessonId: string) => {
     if (!user) return;
+    const targetLesson = allLessons.find((lesson) => lesson.id === lessonId);
+    if (isLessonLocked(targetLesson)) {
+      toast.error("Necesitas inscripción activa para completar esta lección.");
+      return;
+    }
     const { data: dbCourse } = await supabase
       .from("courses").select("id").eq("slug", course.slug).maybeSingle();
     if (!dbCourse) {
@@ -315,7 +347,9 @@ export default function CourseViewer() {
                 audioUrl={activeMedia?.audio_url}
                 transcript={activeMedia?.transcript || activeLesson?.content}
                 title={activeLesson?.title}
+                watermarkText={`${profile?.display_name || user?.email || "UTAMV"} · ${new Date().toISOString().slice(0, 16).replace("T", " ")}`}
                 onComplete={() => {
+                  if (activeLessonLocked) return;
                   if (!progress[activeLessonId]?.completed) markComplete(activeLessonId);
                 }}
               />
@@ -328,12 +362,16 @@ export default function CourseViewer() {
                   </Badge>
                   <h2 className="font-display text-xl text-platinum">{activeLesson?.title}</h2>
                 </div>
-                {progress[activeLessonId]?.completed ? (
+                {activeLessonLocked ? (
+                  <Badge className="bg-amber-500/15 text-amber-400 border-amber-500/30 gap-1">
+                    <Lock size={12} /> Vista previa
+                  </Badge>
+                ) : progress[activeLessonId]?.completed ? (
                   <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 gap-1">
                     <CheckCircle2 size={12} /> Completada
                   </Badge>
                 ) : (
-                  <Button size="sm" onClick={() => markComplete(activeLessonId)}>
+                  <Button size="sm" disabled={activeLessonLocked} onClick={() => markComplete(activeLessonId)}>
                     Marcar como completada
                   </Button>
                 )}

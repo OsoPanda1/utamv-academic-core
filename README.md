@@ -1,5 +1,14 @@
 # THE AWAKENING | TAMV ONLINE ECOSYSTEM
 
+
+## Estado funcional actual (mayo 2026)
+
+- Plataforma web UTAMV con campus, catálogo, autenticación, checkout y certificación digital.
+- Control de acceso a lecciones premium con validación backend (RPC segura) + bloqueo UI.
+- Entrega de media con URLs temporales firmadas desde Edge Function para reducir exposición directa de recursos.
+- Reproductor con watermark visible por usuario durante reproducción para trazabilidad anti-fuga.
+- Experiencia de catálogo/campus mejorada con portadas visuales por programa (9 covers).
+
 > **Root Architect:** Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)  
 > **Credentials:** ORCID: 0009-0008-5050-1539 · DOI: 10.5281/zenodo.19436662  
 > **Infrastructure:** MD-X4 Kernel (Heptafederado) · TAMV Online Civilizational Stack
