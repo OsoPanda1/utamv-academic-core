@@ -11,6 +11,7 @@ const Campus = () => {
   const { user, profile, signOut } = useAuth();
   const [enrollments, setEnrollments] = useState<any[]>([]);
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [dbCourses, setDbCourses] = useState<any[]>([]);
 
   useEffect(() => {
     if (user) {
@@ -18,10 +19,29 @@ const Campus = () => {
         if (data) setEnrollments(data);
       });
     }
+    // Cargar cursos publicados desde BD que no estén en el catálogo local
+    supabase.from('courses').select('id,slug,title,subtitle,description,level,category,hours,price_mxn,price_usd,instructor_name,total_lessons,is_featured,thumbnail_url').eq('is_active', true).then(({ data }) => {
+      if (!data) return;
+      const localSlugs = new Set(COURSES.map((c) => c.slug));
+      const onlyDb = data.filter((c) => !localSlugs.has(c.slug)).map((c) => ({
+        id: c.id, slug: c.slug, title: c.title, subtitle: c.subtitle || '',
+        description: c.description || '', level: c.level || 'Diplomado',
+        category: c.category || '', hours: c.hours || 0,
+        priceMXN: Number(c.price_mxn) || 0, priceUSD: Number(c.price_usd) || 0,
+        instructorName: c.instructor_name || 'UTAMV', instructorTitle: '',
+        instructorBio: '', thumbnail: c.thumbnail_url || '/src/assets/module-1.jpg',
+        isFeatured: !!c.is_featured, modules: [], quizzes: [],
+        learningOutcomes: [], prerequisites: [],
+        obeFramework: { competencies: [], evidences: [], rubrics: [] },
+        stripePriceId: '',
+      }));
+      setDbCourses(onlyDb);
+    });
   }, [user]);
 
   const enrolledCourses = enrollments.map((e) => e.courses).filter(Boolean);
-  const featuredCourses = COURSES.filter((c) => c.isFeatured).slice(0, 3);
+  const allCatalog = [...COURSES, ...dbCourses];
+  const featuredCourses = allCatalog.filter((c) => c.isFeatured).slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -205,7 +225,7 @@ const Campus = () => {
           {activeSection === 'explorar' && (
             <div className="space-y-6">
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {COURSES.map((course) => (
+                {allCatalog.map((course) => (
                   <CourseCard key={course.id} course={course} enrolled={enrolledCourses.some((e: any) => e?.slug === course.slug)} />
                 ))}
               </div>

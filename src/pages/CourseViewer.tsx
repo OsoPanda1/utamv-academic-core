@@ -32,10 +32,51 @@ export default function CourseViewer() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
-  const course: Course | undefined = useMemo(
+  const localCourse: Course | undefined = useMemo(
     () => COURSES.find((c) => c.slug === slug),
     [slug],
   );
+
+  const [dbCourseFallback, setDbCourseFallback] = useState<Course | null>(null);
+
+  // Si no hay curso local, intentar cargar curso completo desde BD
+  useEffect(() => {
+    if (localCourse || !slug) return;
+    (async () => {
+      const { data: dbC } = await supabase
+        .from("courses").select("id,slug,title,subtitle,description,level,category,hours,price_mxn,price_usd,instructor_name,instructor_bio,learning_outcomes,prerequisites").eq("slug", slug).maybeSingle();
+      if (!dbC) return;
+      const { data: mods } = await supabase
+        .from("course_modules").select("id,title,description,order_index,is_free_preview").eq("course_id", dbC.id).order("order_index");
+      const { data: lessons } = await supabase
+        .from("lessons").select("id,module_id,title,type,content,duration_minutes,order_index,is_free_preview,video_url,audio_url,transcript").eq("course_id", dbC.id).order("order_index");
+      const builtMods = (mods || []).map((m) => ({
+        id: m.id, title: m.title, description: m.description || "",
+        learningObjectives: [], isFreePreview: m.is_free_preview,
+        lessons: (lessons || []).filter((l) => l.module_id === m.id).map((l) => ({
+          id: l.id, title: l.title,
+          type: (["video","audio","text","quiz","exercise","live"].includes(l.type) ? l.type : "text") as Lesson["type"],
+          duration: l.duration_minutes || 12,
+          isFreePreview: l.is_free_preview, content: l.content || "",
+        })),
+      }));
+      setDbCourseFallback({
+        id: dbC.id, slug: dbC.slug, title: dbC.title,
+        subtitle: dbC.subtitle || "", description: dbC.description || "",
+        level: (dbC.level as Course["level"]) || "Diplomado", category: dbC.category || "",
+        hours: dbC.hours || 0, priceMXN: Number(dbC.price_mxn) || 0, priceUSD: Number(dbC.price_usd) || 0,
+        stripePriceId: "", instructorName: dbC.instructor_name || "UTAMV",
+        instructorTitle: "", instructorBio: dbC.instructor_bio || "", thumbnail: "",
+        isFeatured: true,
+        learningOutcomes: (dbC.learning_outcomes as string[]) || [],
+        prerequisites: (dbC.prerequisites as string[]) || [],
+        modules: builtMods, quizzes: [],
+        obeFramework: { competencies: [], evidences: [], rubrics: [] },
+      });
+    })();
+  }, [slug, localCourse]);
+
+  const course: Course | undefined = localCourse || dbCourseFallback || undefined;
 
   const allLessons: Lesson[] = useMemo(
     () => (course?.modules || []).flatMap((m) => m.lessons),
