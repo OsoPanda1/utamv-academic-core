@@ -7,6 +7,15 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+type CheckoutRequest = {
+  courseId?: string;
+  courseSlug?: string;
+  courseName?: string;
+  priceMXN?: number;
+  stripePriceId?: string;
+  paymentPlan?: "full" | "installment_6" | "installment_12";
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -18,45 +27,81 @@ serve(async (req) => {
     const { data: { user } } = await supabase.auth.getUser(authHeader.replace("Bearer ", ""));
     if (!user?.email) throw new Error("User not authenticated");
 
-    const { courseSlug, courseName, priceMXN, priceUSD, stripePriceId } = await req.json();
+    const body = (await req.json()) as CheckoutRequest;
+    const paymentPlan = body.paymentPlan ?? "full";
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { apiVersion: "2025-08-27.basil" });
+    const serviceClient = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
+
+    const courseLookup = body.courseId
+      ? await serviceClient.from("courses").select("id,slug,title,price_mxn,stripe_price_id,stripe_product_id").eq("id", body.courseId).maybeSingle()
+      : await serviceClient.from("courses").select("id,slug,title,price_mxn,stripe_price_id,stripe_product_id").eq("slug", body.courseSlug ?? "").maybeSingle();
+
+    const course = courseLookup.data;
+    if (!course) throw new Error("Course not found");
 
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId = customers.data.length > 0 ? customers.data[0].id : undefined;
+    const customerId = customers.data.length > 0 ? customers.data[0].id : undefined;
 
-    const lineItems = stripePriceId && !stripePriceId.startsWith('price_') === false && stripePriceId.length > 20 ? [{ price: stripePriceId, quantity: 1 }] : [{
-      price_data: {
-        currency: 'mxn',
-        product_data: { name: courseName, description: `UTAMV Campus Online — ${courseName}` },
-        unit_amount: Math.round(priceMXN * 100),
-      },
-      quantity: 1,
-    }];
+    const successUrl = `${req.headers.get("origin")}/campus?enrolled=${course.slug}&success=true`;
+    const cancelUrl = `${req.headers.get("origin")}/precios?canceled=true`;
 
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      customer_email: customerId ? undefined : user.email,
-      line_items: lineItems,
-      mode: "payment",
-      success_url: `${req.headers.get("origin")}/campus?enrolled=${courseSlug}&success=true`,
-      cancel_url: `${req.headers.get("origin")}/precios?canceled=true`,
-      metadata: { user_id: user.id, course_slug: courseSlug, user_email: user.email },
-      payment_intent_data: { metadata: { user_id: user.id, course_slug: courseSlug } },
-    });
+    let session: Stripe.Checkout.Session;
 
-    // Optimistic enrollment
-    const serviceClient = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
-    const { data: course } = await serviceClient.from('courses').select('id').eq('slug', courseSlug).single();
-    if (course) {
-      await serviceClient.from('enrollments').upsert({
-        user_id: user.id,
-        course_id: course.id,
-        stripe_session_id: session.id,
-        amount_paid_mxn: priceMXN,
-        status: 'active',
-      }, { onConflict: 'user_id,course_id' });
+    if (paymentPlan === "full") {
+      session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        customer_email: customerId ? undefined : user.email,
+        line_items: [{
+          price: course.stripe_price_id ?? body.stripePriceId,
+          quantity: 1,
+        }],
+        mode: "payment",
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        metadata: { user_id: user.id, course_id: course.id, payment_type: "full_payment" },
+      });
+    } else {
+      const installments = paymentPlan === "installment_6" ? 6 : 12;
+      const baseAmount = Math.round((course.price_mxn ?? body.priceMXN ?? 0) * 100);
+      const monthlyAmount = Math.ceil(baseAmount / installments);
+
+      session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        customer_email: customerId ? undefined : user.email,
+        mode: "subscription",
+        line_items: [{
+          price_data: {
+            currency: "mxn",
+            product: course.stripe_product_id,
+            recurring: { interval: "month", interval_count: 1 },
+            unit_amount: monthlyAmount,
+          },
+          quantity: 1,
+        }],
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        subscription_data: {
+          metadata: {
+            user_id: user.id,
+            course_id: course.id,
+            payment_type: "installment_plan",
+            total_installments: String(installments),
+          },
+        },
+      });
     }
+
+    await serviceClient.from("course_purchases").upsert({
+      user_id: user.id,
+      course_id: course.id,
+      purchase_type: paymentPlan === "full" ? "full_payment" : "installment_plan",
+      total_amount: Math.round((course.price_mxn ?? body.priceMXN ?? 0) * 100),
+      total_payments: paymentPlan === "full" ? null : paymentPlan === "installment_6" ? 6 : 12,
+      stripe_payment_intent_id: session.payment_intent?.toString(),
+      stripe_subscription_id: session.subscription?.toString(),
+      status: "active",
+    }, { onConflict: "user_id,course_id" });
 
     return new Response(JSON.stringify({ url: session.url }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
   } catch (error) {
