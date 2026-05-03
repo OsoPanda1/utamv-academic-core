@@ -15,9 +15,12 @@ import {
 } from "lucide-react";
 
 interface DbLessonMedia {
+  lesson_id?: string;
+  title?: string;
   video_url: string | null;
   audio_url: string | null;
   transcript: string | null;
+  is_locked?: boolean;
 }
 
 interface LessonProgressRow {
@@ -141,12 +144,19 @@ export default function CourseViewer() {
       const { data: dbCourse } = await supabase
         .from("courses").select("id").eq("slug", course.slug).maybeSingle();
       if (!dbCourse) { setActiveMedia(null); return; }
-      const { data } = await supabase
-        .from("lessons")
-        .select("video_url,audio_url,transcript")
-        .eq("course_id", dbCourse.id)
-        .eq("title", lessonTitle)
+      const { data, error } = await supabase
+        .rpc("get_lesson_media_secure", {
+          p_course_slug: course.slug,
+          p_lesson_title: lessonTitle,
+        })
         .maybeSingle();
+
+      if (error) {
+        console.warn("get_lesson_media_secure:", error.message);
+        setActiveMedia(null);
+        return;
+      }
+
       setActiveMedia((data as DbLessonMedia) ?? null);
     };
     loadMedia();
@@ -171,7 +181,7 @@ export default function CourseViewer() {
     const parentModule = course.modules.find((m) => m.lessons.some((candidate) => candidate.id === lesson.id));
     return !lesson.isFreePreview && !parentModule?.isFreePreview;
   };
-  const activeLessonLocked = isLessonLocked(activeLesson);
+  const activeLessonLocked = (activeMedia?.is_locked ?? false) || isLessonLocked(activeLesson);
   const completedCount = Object.values(progress).filter((p) => p.completed).length;
   const totalLessons = allLessons.length;
   const overallPct = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
