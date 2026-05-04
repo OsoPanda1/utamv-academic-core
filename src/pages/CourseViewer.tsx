@@ -11,8 +11,9 @@ import { MediaPlayer } from "@/components/MediaPlayer";
 import { toast } from "sonner";
 import {
   ArrowLeft, CheckCircle2, Circle, Lock, FileText,
-  Headphones, Video, ListChecks, Download, Award, ChevronRight, BookOpen,
+  Headphones, Video, ListChecks, Download, Award, ChevronRight, ChevronLeft, BookOpen, Clock, GraduationCap,
 } from "lucide-react";
+import { resolveCourseCover } from "@/lib/courseCovers";
 
 interface DbLessonMedia {
   lesson_id?: string;
