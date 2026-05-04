@@ -145,19 +145,25 @@ export default function CourseViewer() {
         .from("courses").select("id").eq("slug", course.slug).maybeSingle();
       if (!dbCourse) { setActiveMedia(null); return; }
       const { data, error } = await supabase
-        .rpc("get_lesson_media_secure", {
-          p_course_slug: course.slug,
-          p_lesson_title: lessonTitle,
-        })
+        .from("lessons")
+        .select("id,title,video_url,audio_url,transcript")
+        .eq("course_id", dbCourse.id)
+        .eq("title", lessonTitle)
         .maybeSingle();
 
       if (error) {
-        console.warn("get_lesson_media_secure:", error.message);
+        console.warn("lesson media lookup:", error.message);
         setActiveMedia(null);
         return;
       }
 
-      setActiveMedia((data as DbLessonMedia) ?? null);
+      setActiveMedia(data ? {
+        lesson_id: data.id,
+        title: data.title,
+        video_url: data.video_url,
+        audio_url: data.audio_url,
+        transcript: data.transcript,
+      } : null);
     };
     loadMedia();
   }, [activeLessonId, course, allLessons]);
