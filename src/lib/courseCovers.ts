@@ -35,9 +35,12 @@ const FALLBACKS = [
 ];
 
 export function resolveCourseCover(slug?: string | null, thumbnail?: string | null): string {
+  // URLs reales (CDN, Storage) tienen prioridad.
   if (thumbnail && /^https?:\/\//.test(thumbnail)) return thumbnail;
-  if (!slug) return FALLBACKS[0];
-  return COVER_BY_SLUG[slug] ?? FALLBACKS[Math.abs(hashCode(slug)) % FALLBACKS.length];
+  // Marcador `asset:<slug>` o slug directo → mapeo local.
+  const key = thumbnail?.startsWith('asset:') ? thumbnail.slice(6) : slug;
+  if (!key) return FALLBACKS[0];
+  return COVER_BY_SLUG[key] ?? FALLBACKS[Math.abs(hashCode(key)) % FALLBACKS.length];
 }
 
 function hashCode(value: string): number {
