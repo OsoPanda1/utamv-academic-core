@@ -11,8 +11,9 @@ import { MediaPlayer } from "@/components/MediaPlayer";
 import { toast } from "sonner";
 import {
   ArrowLeft, CheckCircle2, Circle, Lock, FileText,
-  Headphones, Video, ListChecks, Download, Award, ChevronRight, BookOpen,
+  Headphones, Video, ListChecks, Download, Award, ChevronRight, ChevronLeft, BookOpen, Clock, GraduationCap,
 } from "lucide-react";
+import { resolveCourseCover } from "@/lib/courseCovers";
 
 interface DbLessonMedia {
   lesson_id?: string;
@@ -145,19 +146,25 @@ export default function CourseViewer() {
         .from("courses").select("id").eq("slug", course.slug).maybeSingle();
       if (!dbCourse) { setActiveMedia(null); return; }
       const { data, error } = await supabase
-        .rpc("get_lesson_media_secure", {
-          p_course_slug: course.slug,
-          p_lesson_title: lessonTitle,
-        })
+        .from("lessons")
+        .select("id,title,video_url,audio_url,transcript")
+        .eq("course_id", dbCourse.id)
+        .eq("title", lessonTitle)
         .maybeSingle();
 
       if (error) {
-        console.warn("get_lesson_media_secure:", error.message);
+        console.warn("lesson media lookup:", error.message);
         setActiveMedia(null);
         return;
       }
 
-      setActiveMedia((data as DbLessonMedia) ?? null);
+      setActiveMedia(data ? {
+        lesson_id: data.id,
+        title: data.title,
+        video_url: data.video_url,
+        audio_url: data.audio_url,
+        transcript: data.transcript,
+      } : null);
     };
     loadMedia();
   }, [activeLessonId, course, allLessons]);
@@ -291,21 +298,54 @@ export default function CourseViewer() {
     }
   };
 
+  // Índice de la lección activa para nav prev/next
+  const activeIdx = allLessons.findIndex((l) => l.id === activeLessonId);
+  const prevLesson = activeIdx > 0 ? allLessons[activeIdx - 1] : null;
+  const nextLesson = activeIdx >= 0 && activeIdx < allLessons.length - 1 ? allLessons[activeIdx + 1] : null;
+  const cover = resolveCourseCover(course.slug, (course as Course & { thumbnail?: string }).thumbnail);
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-[hsl(222_38%_4%)] border-b border-[hsl(var(--platinum)/0.08)]">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link to="/campus" className="flex items-center gap-2 text-platinum-dim hover:text-platinum text-sm font-ui">
-            <ArrowLeft size={16} /> Campus
-          </Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-display text-platinum text-sm md:text-base truncate">{course.title}</h1>
-            <p className="font-ui text-[10px] text-platinum-dim truncate">{course.subtitle}</p>
-          </div>
-          <div className="hidden md:flex items-center gap-3 min-w-[180px]">
-            <Progress value={overallPct} className="h-1.5" />
-            <span className="font-ui text-[11px] text-platinum-dim whitespace-nowrap">{overallPct}%</span>
+      {/* Hero cinematográfico con portada */}
+      <header className="relative overflow-hidden border-b border-[hsl(var(--platinum)/0.08)]">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25"
+          style={{ backgroundImage: `url(${cover})` }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222_38%_4%)/0.85] via-[hsl(222_38%_4%)/0.92] to-[hsl(222_38%_4%)]" aria-hidden="true" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.04]" aria-hidden="true" />
+
+        <div className="container mx-auto px-4 py-5 relative z-10">
+          {/* Breadcrumbs */}
+          <nav className="flex items-center gap-2 text-[11px] font-ui text-platinum-dim mb-3" aria-label="Migas de pan">
+            <Link to="/campus" className="hover:text-platinum transition-colors flex items-center gap-1">
+              <ArrowLeft size={12} /> Campus
+            </Link>
+            <ChevronRight size={11} className="opacity-50" />
+            <span className="text-platinum-dim/70 truncate max-w-[180px] sm:max-w-xs">{course.category || course.level}</span>
+            <ChevronRight size={11} className="opacity-50" />
+            <span className="text-platinum truncate">{course.title}</span>
+          </nav>
+
+          <div className="flex items-end justify-between gap-6 flex-wrap">
+            <div className="min-w-0 flex-1">
+              <Badge variant="outline" className="mb-2 text-[10px] uppercase tracking-[0.18em] border-platinum/25 text-platinum-dim">
+                {course.level}
+              </Badge>
+              <h1 className="font-display text-2xl md:text-3xl text-platinum leading-tight">{course.title}</h1>
+              {course.subtitle && (
+                <p className="font-ui text-xs md:text-sm text-platinum-dim mt-1 max-w-2xl">{course.subtitle}</p>
+              )}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-3 text-[11px] font-ui text-platinum-dim">
+                <span className="flex items-center gap-1.5"><GraduationCap size={12} /> {course.instructorName}</span>
+                <span className="flex items-center gap-1.5"><Clock size={12} /> {course.hours}h</span>
+                <span className="flex items-center gap-1.5"><BookOpen size={12} /> {totalLessons} lecciones</span>
+              </div>
+            </div>
+
+            {/* Progress ring */}
+            <ProgressRing value={overallPct} size={72} />
           </div>
         </div>
       </header>
@@ -394,6 +434,34 @@ export default function CourseViewer() {
               )}
             </CardContent>
           </Card>
+
+          {/* Navegación prev/next entre lecciones */}
+          {(prevLesson || nextLesson) && (
+            <div className="flex items-stretch gap-3">
+              <button
+                disabled={!prevLesson}
+                onClick={() => prevLesson && setActiveLessonId(prevLesson.id)}
+                className="flex-1 flex items-center gap-3 p-3 rounded-xl border border-platinum/10 hover:border-platinum/30 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-left"
+              >
+                <ChevronLeft size={18} className="text-platinum-dim shrink-0" />
+                <div className="min-w-0">
+                  <p className="font-ui text-[10px] uppercase tracking-wider text-platinum-dim">Anterior</p>
+                  <p className="font-ui text-xs text-platinum truncate">{prevLesson?.title || "—"}</p>
+                </div>
+              </button>
+              <button
+                disabled={!nextLesson}
+                onClick={() => nextLesson && setActiveLessonId(nextLesson.id)}
+                className="flex-1 flex items-center gap-3 p-3 rounded-xl border border-platinum/10 hover:border-platinum/30 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-right justify-end"
+              >
+                <div className="min-w-0">
+                  <p className="font-ui text-[10px] uppercase tracking-wider text-platinum-dim">Siguiente</p>
+                  <p className="font-ui text-xs text-platinum truncate">{nextLesson?.title || "—"}</p>
+                </div>
+                <ChevronRight size={18} className="text-platinum-dim shrink-0" />
+              </button>
+            </div>
+          )}
 
           {/* Quiz interactivo */}
           {course.quizzes && course.quizzes.length > 0 && (
@@ -569,4 +637,32 @@ async function stableUuidFromString(input: string): Promise<string> {
   const hash = await crypto.subtle.digest("SHA-256", buf);
   const hex = Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+}
+
+// Anillo de progreso circular
+function ProgressRing({ value, size = 72 }: { value: number; size?: number }) {
+  const stroke = 5;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (Math.max(0, Math.min(100, value)) / 100) * circumference;
+  return (
+    <div className="relative" style={{ width: size, height: size }} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={radius} stroke="hsl(var(--platinum) / 0.12)" strokeWidth={stroke} fill="none" />
+        <circle
+          cx={size / 2} cy={size / 2} r={radius}
+          stroke="hsl(var(--platinum))"
+          strokeWidth={stroke} fill="none"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          style={{ transition: "stroke-dashoffset 600ms ease" }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="font-display text-platinum text-base leading-none">{value}%</span>
+        <span className="font-ui text-[8px] uppercase tracking-wider text-platinum-dim mt-0.5">Avance</span>
+      </div>
+    </div>
+  );
 }
