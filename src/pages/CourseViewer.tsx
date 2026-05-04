@@ -298,21 +298,54 @@ export default function CourseViewer() {
     }
   };
 
+  // Índice de la lección activa para nav prev/next
+  const activeIdx = allLessons.findIndex((l) => l.id === activeLessonId);
+  const prevLesson = activeIdx > 0 ? allLessons[activeIdx - 1] : null;
+  const nextLesson = activeIdx >= 0 && activeIdx < allLessons.length - 1 ? allLessons[activeIdx + 1] : null;
+  const cover = resolveCourseCover(course.slug, (course as Course & { thumbnail?: string }).thumbnail);
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-[hsl(222_38%_4%)] border-b border-[hsl(var(--platinum)/0.08)]">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link to="/campus" className="flex items-center gap-2 text-platinum-dim hover:text-platinum text-sm font-ui">
-            <ArrowLeft size={16} /> Campus
-          </Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-display text-platinum text-sm md:text-base truncate">{course.title}</h1>
-            <p className="font-ui text-[10px] text-platinum-dim truncate">{course.subtitle}</p>
-          </div>
-          <div className="hidden md:flex items-center gap-3 min-w-[180px]">
-            <Progress value={overallPct} className="h-1.5" />
-            <span className="font-ui text-[11px] text-platinum-dim whitespace-nowrap">{overallPct}%</span>
+      {/* Hero cinematográfico con portada */}
+      <header className="relative overflow-hidden border-b border-[hsl(var(--platinum)/0.08)]">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25"
+          style={{ backgroundImage: `url(${cover})` }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222_38%_4%)/0.85] via-[hsl(222_38%_4%)/0.92] to-[hsl(222_38%_4%)]" aria-hidden="true" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.04]" aria-hidden="true" />
+
+        <div className="container mx-auto px-4 py-5 relative z-10">
+          {/* Breadcrumbs */}
+          <nav className="flex items-center gap-2 text-[11px] font-ui text-platinum-dim mb-3" aria-label="Migas de pan">
+            <Link to="/campus" className="hover:text-platinum transition-colors flex items-center gap-1">
+              <ArrowLeft size={12} /> Campus
+            </Link>
+            <ChevronRight size={11} className="opacity-50" />
+            <span className="text-platinum-dim/70 truncate max-w-[180px] sm:max-w-xs">{course.category || course.level}</span>
+            <ChevronRight size={11} className="opacity-50" />
+            <span className="text-platinum truncate">{course.title}</span>
+          </nav>
+
+          <div className="flex items-end justify-between gap-6 flex-wrap">
+            <div className="min-w-0 flex-1">
+              <Badge variant="outline" className="mb-2 text-[10px] uppercase tracking-[0.18em] border-platinum/25 text-platinum-dim">
+                {course.level}
+              </Badge>
+              <h1 className="font-display text-2xl md:text-3xl text-platinum leading-tight">{course.title}</h1>
+              {course.subtitle && (
+                <p className="font-ui text-xs md:text-sm text-platinum-dim mt-1 max-w-2xl">{course.subtitle}</p>
+              )}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-3 text-[11px] font-ui text-platinum-dim">
+                <span className="flex items-center gap-1.5"><GraduationCap size={12} /> {course.instructorName}</span>
+                <span className="flex items-center gap-1.5"><Clock size={12} /> {course.hours}h</span>
+                <span className="flex items-center gap-1.5"><BookOpen size={12} /> {totalLessons} lecciones</span>
+              </div>
+            </div>
+
+            {/* Progress ring */}
+            <ProgressRing value={overallPct} size={72} />
           </div>
         </div>
       </header>
