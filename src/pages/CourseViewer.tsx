@@ -435,6 +435,34 @@ export default function CourseViewer() {
             </CardContent>
           </Card>
 
+          {/* Navegación prev/next entre lecciones */}
+          {(prevLesson || nextLesson) && (
+            <div className="flex items-stretch gap-3">
+              <button
+                disabled={!prevLesson}
+                onClick={() => prevLesson && setActiveLessonId(prevLesson.id)}
+                className="flex-1 flex items-center gap-3 p-3 rounded-xl border border-platinum/10 hover:border-platinum/30 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-left"
+              >
+                <ChevronLeft size={18} className="text-platinum-dim shrink-0" />
+                <div className="min-w-0">
+                  <p className="font-ui text-[10px] uppercase tracking-wider text-platinum-dim">Anterior</p>
+                  <p className="font-ui text-xs text-platinum truncate">{prevLesson?.title || "—"}</p>
+                </div>
+              </button>
+              <button
+                disabled={!nextLesson}
+                onClick={() => nextLesson && setActiveLessonId(nextLesson.id)}
+                className="flex-1 flex items-center gap-3 p-3 rounded-xl border border-platinum/10 hover:border-platinum/30 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-right justify-end"
+              >
+                <div className="min-w-0">
+                  <p className="font-ui text-[10px] uppercase tracking-wider text-platinum-dim">Siguiente</p>
+                  <p className="font-ui text-xs text-platinum truncate">{nextLesson?.title || "—"}</p>
+                </div>
+                <ChevronRight size={18} className="text-platinum-dim shrink-0" />
+              </button>
+            </div>
+          )}
+
           {/* Quiz interactivo */}
           {course.quizzes && course.quizzes.length > 0 && (
             <Card>
