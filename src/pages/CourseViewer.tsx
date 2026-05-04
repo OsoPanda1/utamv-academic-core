@@ -610,3 +610,31 @@ async function stableUuidFromString(input: string): Promise<string> {
   const hex = Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
 }
+
+// Anillo de progreso circular
+function ProgressRing({ value, size = 72 }: { value: number; size?: number }) {
+  const stroke = 5;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (Math.max(0, Math.min(100, value)) / 100) * circumference;
+  return (
+    <div className="relative" style={{ width: size, height: size }} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={radius} stroke="hsl(var(--platinum) / 0.12)" strokeWidth={stroke} fill="none" />
+        <circle
+          cx={size / 2} cy={size / 2} r={radius}
+          stroke="hsl(var(--platinum))"
+          strokeWidth={stroke} fill="none"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          style={{ transition: "stroke-dashoffset 600ms ease" }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="font-display text-platinum text-base leading-none">{value}%</span>
+        <span className="font-ui text-[8px] uppercase tracking-wider text-platinum-dim mt-0.5">Avance</span>
+      </div>
+    </div>
+  );
+}
