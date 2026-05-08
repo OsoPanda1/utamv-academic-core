@@ -1,27 +1,33 @@
 import React from 'react';
-import { Check, Star, Zap, ShieldCheck } from "lucide-react";
+import { Check, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const plans = [
   {
+    tier: "professional" as const,
     name: "Membresía Profesional",
-    price: "29", // 15% más accesible que el promedio de $35 USD en Latam
+    price: "29",
     description: "Acceso total a las 7 federaciones de conocimiento UTAMV.",
     features: [
       "Clases con Edwin Oswaldo Castillo y Renata Jazmín",
       "Guía académica 24/7 con AI Isabella",
-      "Certificación verificada en Blockchain",
+      "Certificación verificada en BlockUTAMV",
       "Acceso a laboratorios de Marketing Digital",
       "Networking exclusivo en Real del Monte (Virtual)",
     ],
     highlight: false,
-    cta: "Comenzar mi Liderazgo"
+    cta: "Suscribirme · $29/mes"
   },
   {
+    tier: "elite" as const,
     name: "Elite Visionary",
-    price: "49", // Valor estratégico por debajo de los planes Premium globales
+    price: "49",
     description: "Para líderes que no aceptan respuestas negativas.",
     features: [
       "Todo lo anterior + Mentoría directa",
@@ -31,11 +37,24 @@ const plans = [
       "Acceso preferente a eventos internacionales",
     ],
     highlight: true,
-    cta: "Vivir el Futuro Ahora"
+    cta: "Activar Elite · $49/mes"
   }
 ];
 
 export default function Pricing() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const subscribe = async (tier: "professional" | "elite") => {
+    if (!user) { navigate("/auth/login"); return; }
+    const { data, error } = await supabase.functions.invoke("create-subscription", { body: { tier } });
+    if (error || !data?.url) {
+      toast.error(error?.message ?? "No se pudo iniciar el checkout. Intenta de nuevo.");
+      return;
+    }
+    window.open(data.url, "_blank");
+  };
+
   return (
     <div className="min-h-screen bg-[#000033] bg-gradient-to-br from-[#000033] via-[#05054d] to-[#00001a] text-white py-20 px-4 overflow-hidden relative">
       {/* Efectos de Destellos Dorados y Plata */}
