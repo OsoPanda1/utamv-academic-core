@@ -103,7 +103,7 @@ export default function Pricing() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className={`w-full py-6 text-lg font-bold transition-all ${plan.highlight ? 'bg-[#D4AF37] hover:bg-[#b8962f] text-black' : 'bg-white/10 hover:bg-white/20 text-[#F0F2F3]'}`}>
+                <Button onClick={() => subscribe(plan.tier)} className={`w-full py-6 text-lg font-bold transition-all ${plan.highlight ? 'bg-[#D4AF37] hover:bg-[#b8962f] text-black' : 'bg-white/10 hover:bg-white/20 text-[#F0F2F3]'}`}>
                   {plan.cta}
                 </Button>
               </CardFooter>
