@@ -26,6 +26,8 @@ import VerifyCertificate from "./pages/VerifyCertificate";
 import ControlEscolar from "./pages/ControlEscolar";
 import TelemetriaIsabella from "./pages/TelemetriaIsabella";
 import TTSAdmin from "./pages/TTSAdmin";
+import StripeEventsAdmin from "./pages/StripeEventsAdmin";
+import ComunidadPage from "./pages/ComunidadPage";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 
@@ -84,6 +86,7 @@ const App = () => (
               <Route path="/certificados" element={<CertificadosPage />} />
               <Route path="/verificar/:certNumber" element={<VerifyCertificate />} />
               <Route path="/precios" element={<Pricing />} />
+              <Route path="/comunidad" element={<ComunidadPage />} />
               <Route path="/ranking" element={<Leaderboard />} />
 
               {/* Auth */}
@@ -97,6 +100,7 @@ const App = () => (
               <Route path="/admin/control-escolar" element={<ProtectedRoute><ControlEscolar /></ProtectedRoute>} />
               <Route path="/admin/telemetria-isabella" element={<ProtectedRoute><TelemetriaIsabella /></ProtectedRoute>} />
               <Route path="/admin/tts-narraciones" element={<ProtectedRoute><TTSAdmin /></ProtectedRoute>} />
+              <Route path="/admin/stripe-events" element={<ProtectedRoute><StripeEventsAdmin /></ProtectedRoute>} />
 
               {/* Fallback */}
               <Route path="*" element={<NotFound />} />

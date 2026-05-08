@@ -2,3 +2,6 @@ project_id = "wjcgihlaauyztgovjeji"
 
 [functions.stripe-webhook]
 verify_jwt = false
+
+[functions.tamv-rss-feed]
+verify_jwt = false
