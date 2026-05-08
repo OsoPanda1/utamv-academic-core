@@ -46,7 +46,7 @@ describe("Stripe webhook idempotency (logical contract)", () => {
     expect(dup.data).toBeNull();
     const course = await supabase.from("courses").select().eq("slug", "x").maybeSingle();
     expect(course.data?.id).toBe("course-uuid");
-    const enr = await supabase.from("enrollments").upsert({ status: "active" });
+    const enr = await supabase.from("enrollments").upsert({ status: "active", user_id: "u", course_id: "c" } as any);
     expect(enr.data).toMatchObject({ status: "active" });
   });
 });
