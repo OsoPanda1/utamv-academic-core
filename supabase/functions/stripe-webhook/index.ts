@@ -112,7 +112,19 @@ serve(async (req) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("[stripe-webhook] error:", (err as Error).message);
-    return new Response(JSON.stringify({ error: (err as Error).message }), { status: 500 });
+    const message = (err as Error).message;
+    console.error("[stripe-webhook] error:", message);
+    // Registrar fallo para alertas en el panel admin
+    try {
+      await supabase.from("stripe_webhook_failures").insert({
+        event_id: event.id,
+        event_type: event.type,
+        error_message: message,
+        payload: event.data.object as unknown as Record<string, unknown>,
+      });
+    } catch (logErr) {
+      console.error("[stripe-webhook] no se pudo registrar fallo:", (logErr as Error).message);
+    }
+    return new Response(JSON.stringify({ error: message }), { status: 500 });
   }
 });

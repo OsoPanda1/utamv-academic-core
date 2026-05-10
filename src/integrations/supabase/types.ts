@@ -735,6 +735,45 @@ export type Database = {
           },
         ]
       }
+      stripe_webhook_failures: {
+        Row: {
+          created_at: string
+          error_message: string
+          event_id: string | null
+          event_type: string | null
+          id: string
+          payload: Json | null
+          resolved: boolean
+          resolved_at: string | null
+          resolved_by: string | null
+          retry_count: number
+        }
+        Insert: {
+          created_at?: string
+          error_message: string
+          event_id?: string | null
+          event_type?: string | null
+          id?: string
+          payload?: Json | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          retry_count?: number
+        }
+        Update: {
+          created_at?: string
+          error_message?: string
+          event_id?: string | null
+          event_type?: string | null
+          id?: string
+          payload?: Json | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          retry_count?: number
+        }
+        Relationships: []
+      }
       tamv_federation_ring: {
         Row: {
           created_at: string
