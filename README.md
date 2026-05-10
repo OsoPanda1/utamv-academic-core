@@ -301,6 +301,9 @@ Es imperativo respetar los siguientes **estatutos** para mantener la integridad 
 - 🧩 **Manual de Federación TAMV**  
   `docs/MANUAL_FEDERACION_TAMV.md`: reglas de interoperabilidad entre UTAMV, MD‑X4 y RDM‑TOS.
 
+- 🛠️ **Plan Integrado TAMV MD‑X4 (Modo Desarrollador)**  
+  `docs/TAMV_MD_X4_DEVELOPER_MODE_PLAN.md`: roadmap ejecutable por capas (L0‑L7), backlog por sprints y criterios de aceptación.
+
 Además del README, la arquitectura y tesis completa se documentan en el canon de Zenodo, enlazando UTAMV con la Arquitectura Anubis y el Modelo de las 7 Federaciones.[web:41]
 
 ---
