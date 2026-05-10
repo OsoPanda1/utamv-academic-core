@@ -60,9 +60,9 @@ export class ProtocolOrchestrator {
     run = transitionExecution(run, "running");
 
     const decision = this.engine.decide(input);
-    const eoctResult = this.eoct.evaluate(decision);
+    const eoctResult = this.eoct.evaluate(decision, input);
 
-    if (!eoctResult.passed) {
+    if (eoctResult.status === "rejected") {
       await this.publish({
         type: "protocol.run.rejected",
         runId: run.runId,
@@ -72,6 +72,19 @@ export class ProtocolOrchestrator {
       run = { ...run, decision };
       run = transitionExecution(run, "rejected");
       return run;
+    }
+
+    if (eoctResult.status === "escalated") {
+      await this.publish({
+        type: "protocol.run.escalated",
+        runId: run.runId,
+        occurredAt: new Date().toISOString(),
+        payload: {
+          reason: eoctResult.reason,
+          requiredActions: eoctResult.requiredActions,
+          severity: eoctResult.severity,
+        },
+      });
     }
 
     run = { ...run, decision, updatedAt: new Date().toISOString() };

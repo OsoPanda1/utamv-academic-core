@@ -31,9 +31,9 @@ function scorePath(
   };
 
   const weightedScore =
-    (input.signals?.ethical || 0) * weights.ethical +
-    (input.signals?.viability || 0) * weights.viability +
-    (input.signals?.stability || 0) * weights.stability;
+    ((input.signals?.ethical ?? input.signals?.trust) || 0) * weights.ethical +
+    ((input.signals?.viability ?? input.signals?.feasibility) || 0) * weights.viability +
+    ((input.signals?.stability ?? input.signals?.clarity) || 0) * weights.stability;
 
   return {
     pathId: `${input.protocolKey}:${label}`,
