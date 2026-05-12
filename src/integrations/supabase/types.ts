@@ -774,6 +774,50 @@ export type Database = {
         }
         Relationships: []
       }
+      stripe_webhook_retry_audit: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_id: string | null
+          event_type: string | null
+          failure_id: string | null
+          id: string
+          notes: string | null
+          result: string
+          retried_by: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string | null
+          event_type?: string | null
+          failure_id?: string | null
+          id?: string
+          notes?: string | null
+          result: string
+          retried_by: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string | null
+          event_type?: string | null
+          failure_id?: string | null
+          id?: string
+          notes?: string | null
+          result?: string
+          retried_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stripe_webhook_retry_audit_failure_id_fkey"
+            columns: ["failure_id"]
+            isOneToOne: false
+            referencedRelation: "stripe_webhook_failures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tamv_federation_ring: {
         Row: {
           created_at: string
