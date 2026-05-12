@@ -31,8 +31,10 @@ import ComunidadPage from "./pages/ComunidadPage";
 import AcreditacionesPage from "./pages/AcreditacionesPage";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
+import { getCampusRoutes } from "@/modules/campus";
 
 const queryClient = new QueryClient();
+const campusRoutes = getCampusRoutes();
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -96,7 +98,9 @@ const App = () => (
               <Route path="/auth/register" element={<Auth />} />
 
               {/* Protected */}
-              <Route path="/campus" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
+              {campusRoutes.map((route) => (
+                <Route key={route.id} path={route.path} element={<ProtectedRoute>{route.element}</ProtectedRoute>} />
+              ))}
               <Route path="/campus/curso/:slug" element={<ProtectedRoute><CourseViewer /></ProtectedRoute>} />
               <Route path="/campus/:slug" element={<ProtectedRoute><Campus /></ProtectedRoute>} />
               <Route path="/admin/control-escolar" element={<ProtectedRoute><ControlEscolar /></ProtectedRoute>} />
