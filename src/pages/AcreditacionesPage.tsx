@@ -21,7 +21,6 @@ export default function AcreditacionesPage() {
   }, []);
   return (
     <div className="min-h-screen bg-background">
-      </Helmet>
       <UTAMVHeader />
       <main className="container mx-auto px-4 py-12 max-w-6xl">
         <header className="mb-12 text-center">
