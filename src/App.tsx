@@ -32,6 +32,7 @@ import AcreditacionesPage from "./pages/AcreditacionesPage";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 import { getCampusRoutes } from "@/modules/campus";
+import { HealthCheck } from "@/app/HealthCheck";
 
 const queryClient = new QueryClient();
 const campusRoutes = getCampusRoutes();
@@ -92,6 +93,7 @@ const App = () => (
               <Route path="/comunidad" element={<ComunidadPage />} />
               <Route path="/acreditaciones" element={<AcreditacionesPage />} />
               <Route path="/ranking" element={<Leaderboard />} />
+              <Route path="/health" element={<HealthCheck />} />
 
               {/* Auth */}
               <Route path="/auth/login" element={<Auth />} />
