@@ -1,3 +1,5 @@
+export type CourseLevel = "beginner" | "intermediate" | "advanced";
+
 export interface CourseSection {
   id: string;
   title: string;
@@ -6,19 +8,21 @@ export interface CourseSection {
   slug: string;
 }
 
+export type CourseResourceKind = "reference" | "code" | "article" | "video";
+
 export interface CourseResourceLink {
   title: string;
   url: string;
-  kind: "reference" | "code" | "article" | "video";
+  kind: CourseResourceKind;
 }
 
 export interface CourseProject {
   id: string;
   title: string;
-  repoUrl?: string;
+  repoUrl: string | null;
   description: string;
   technologies: string[];
-  difficulty: "beginner" | "intermediate" | "advanced";
+  difficulty: CourseLevel;
 }
 
 export interface CourseDefinition {
@@ -26,7 +30,14 @@ export interface CourseDefinition {
   title: string;
   slug: string;
   shortDescription: string;
+  level: CourseLevel;
+  category: string;
+  estimatedHours: number;
   sections: CourseSection[];
   resources: CourseResourceLink[];
-  projects?: CourseProject[];
+  projects: CourseProject[];
+}
+
+export interface UtamvCoursesSeed {
+  courses: CourseDefinition[];
 }
