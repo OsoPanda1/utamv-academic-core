@@ -88,6 +88,7 @@ const App = () => (
               <Route path="/verificar/:certNumber" element={<VerifyCertificate />} />
               <Route path="/precios" element={<Pricing />} />
               <Route path="/comunidad" element={<ComunidadPage />} />
+              <Route path="/acreditaciones" element={<AcreditacionesPage />} />
               <Route path="/ranking" element={<Leaderboard />} />
 
               {/* Auth */}
