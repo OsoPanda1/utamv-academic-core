@@ -11,15 +11,18 @@ import { resolveCourseCover } from '@/lib/courseCovers';
 
 const Campus = () => {
   const { user, profile, signOut } = useAuth();
-  const [enrollments, setEnrollments] = useState<any[]>([]);
+  type EnrollmentCourse = { slug: string } | null;
+  type Enrollment = { courses: EnrollmentCourse };
+
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [activeSection, setActiveSection] = useState('dashboard');
   const [dbCourses, setDbCourses] = useState<any[]>([]);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   useEffect(() => {
     if (user) {
-      supabase.from('enrollments').select('*, courses(*)').eq('user_id', user.id).then(({ data }) => {
-        if (data) setEnrollments(data);
+      supabase.from('enrollments').select('courses(slug)').eq('user_id', user.id).then(({ data }) => {
+        if (data) setEnrollments(data as Enrollment[]);
       });
     }
     // Cargar cursos publicados desde BD que no estén en el catálogo local
@@ -209,8 +212,7 @@ const Campus = () => {
               )}
 
               
-              <div className="p-4 rounded-2xl bg-card-premium border border-[hsl(var(--platinum)/0.06)]
-              >
+              <div className="p-4 rounded-2xl bg-card-premium border border-[hsl(var(--platinum)/0.06)]">
                 <h4 className="font-ui text-sm font-semibold text-platinum mb-2">Auditoría de cursos</h4>
                 <p className="font-ui text-xs text-muted-foreground">Cursos incompletos detectados: {incompleteCourses.length}</p>
                 <ul className="mt-2 space-y-1">
@@ -251,7 +253,7 @@ const Campus = () => {
             <div className="space-y-6">
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {allCatalog.map((course) => (
-                  <CourseCard key={course.id} course={course} enrolled={enrolledCourses.some((e: any) => e?.slug === course.slug)} />
+                  <CourseCard key={course.id} course={course} enrolled={enrolledCourses.some((e) => e?.slug === course.slug)} />
                 ))}
               </div>
             </div>
