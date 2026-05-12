@@ -94,7 +94,6 @@ const App = () => (
               <Route path="/comunidad" element={<ComunidadPage />} />
               <Route path="/acreditaciones" element={<AcreditacionesPage />} />
               <Route path="/ranking" element={<Leaderboard />} />
-              <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
               <Route path="/health" element={<HealthCheck />} />
 
               {/* Auth */}
