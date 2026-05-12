@@ -43,3 +43,16 @@ Incluye siempre:
 - Federación principal afectada.
 - Riesgos de privacidad/seguridad.
 - Plan de rollback (si aplica).
+
+## Normas técnicas de base
+
+- Gestor de paquetes: **npm**. No se aceptan `yarn.lock`, `pnpm-lock.yaml` ni `bun.lock*`.
+- Antes de abrir un PR, debes ejecutar localmente:
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test`
+  - `npm run build`
+- Cualquier componente nuevo de UI que envuelva Radix debe:
+  - Vivir en `src/components/ui`.
+  - Usar `React.forwardRef` tipado con `React.ElementRef` y `React.ComponentPropsWithoutRef`.
+- No se deben renderizar valores `bigint` directamente en JSX. Convierte siempre a string: `String(value)`.
