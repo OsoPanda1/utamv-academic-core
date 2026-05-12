@@ -19,3 +19,6 @@ export interface StudentProgress {
   completedPercentage: number;
   lastAccessedAt: string;
 }
+
+export * from "./courseModel";
+export * from "./components/CampusCourseLibrary";

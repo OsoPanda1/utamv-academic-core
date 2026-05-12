@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import { useAuthSession } from "@/modules/identity/useAuthSession";
+import { logTelemetryEvent } from "@/modules/telemetry";
 import { useStudentProgress } from "../hooks/useStudentProgress";
 
 interface CampusLayoutProps {
@@ -7,7 +9,16 @@ interface CampusLayoutProps {
 }
 
 export function CampusLayout({ initialSection = "home", children }: CampusLayoutProps) {
-  const { data: progress, isLoading } = useStudentProgress({ userId: "placeholder" });
+  const { user } = useAuthSession();
+  const { data: progress, isLoading } = useStudentProgress({ userId: user?.id ?? "placeholder" });
+
+  useEffect(() => {
+    void logTelemetryEvent({
+      eventType: "campus.visit",
+      userId: user?.id,
+      metadata: { section: initialSection },
+    });
+  }, [initialSection, user?.id]);
 
   return (
     <div className="flex min-h-screen bg-background text-foreground" data-section={initialSection}>
