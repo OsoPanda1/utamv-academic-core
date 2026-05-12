@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { checkRateLimit, getClientIp, parseCheckoutPayload, withTimeout } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,20 +23,24 @@ serve(async (req) => {
   const supabase = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_ANON_KEY") ?? "");
 
   try {
+    const ip = getClientIp(req);
+    if (!checkRateLimit(`checkout:${ip}`, 20, 60_000)) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 429 });
+    }
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) throw new Error("No authorization header");
     const { data: { user } } = await supabase.auth.getUser(authHeader.replace("Bearer ", ""));
     if (!user?.email) throw new Error("User not authenticated");
 
-    const body = (await req.json()) as CheckoutRequest;
+    const body = parseCheckoutPayload(await req.json()) as CheckoutRequest;
     const paymentPlan = body.paymentPlan ?? "full";
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { apiVersion: "2025-08-27.basil" });
     const serviceClient = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
 
     const courseLookup = body.courseId
-      ? await serviceClient.from("courses").select("id,slug,title,price_mxn,stripe_price_id,stripe_product_id").eq("id", body.courseId).maybeSingle()
-      : await serviceClient.from("courses").select("id,slug,title,price_mxn,stripe_price_id,stripe_product_id").eq("slug", body.courseSlug ?? "").maybeSingle();
+      ? await withTimeout(serviceClient.from("courses").select("id,slug,title,price_mxn,stripe_price_id,stripe_product_id").eq("id", body.courseId).maybeSingle(), 8000)
+      : await withTimeout(serviceClient.from("courses").select("id,slug,title,price_mxn,stripe_price_id,stripe_product_id").eq("slug", body.courseSlug ?? "").maybeSingle(), 8000);
 
     const course = courseLookup.data;
     if (!course) throw new Error("Course not found");
