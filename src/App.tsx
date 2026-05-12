@@ -28,6 +28,7 @@ import TelemetriaIsabella from "./pages/TelemetriaIsabella";
 import TTSAdmin from "./pages/TTSAdmin";
 import StripeEventsAdmin from "./pages/StripeEventsAdmin";
 import ComunidadPage from "./pages/ComunidadPage";
+import AcreditacionesPage from "./pages/AcreditacionesPage";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 
@@ -87,6 +88,7 @@ const App = () => (
               <Route path="/verificar/:certNumber" element={<VerifyCertificate />} />
               <Route path="/precios" element={<Pricing />} />
               <Route path="/comunidad" element={<ComunidadPage />} />
+              <Route path="/acreditaciones" element={<AcreditacionesPage />} />
               <Route path="/ranking" element={<Leaderboard />} />
 
               {/* Auth */}

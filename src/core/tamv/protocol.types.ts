@@ -89,6 +89,7 @@ export interface ProtocolEvent {
     | "protocol.run.created"
     | "protocol.run.validated"
     | "protocol.decision.selected"
+    | "protocol.run.escalated"
     | "protocol.academic.flagged"
     | "protocol.run.completed"
     | "protocol.run.rejected";

@@ -177,6 +177,42 @@ export default function StripeEventsAdmin() {
     setFailures((prev) => prev.map((x) => (x.id === f.id ? { ...x, resolved: true } : x)));
   };
 
+  const [retrying, setRetrying] = useState(false);
+  const [retryHistory, setRetryHistory] = useState<any[]>([]);
+
+  const loadRetryHistory = async (failureId: string) => {
+    const { data } = await supabase
+      .from("stripe_webhook_retry_audit")
+      .select("*").eq("failure_id", failureId).order("created_at", { ascending: false });
+    setRetryHistory(data ?? []);
+  };
+
+  useEffect(() => {
+    if (selectedFailure) loadRetryHistory(selectedFailure.id);
+    else setRetryHistory([]);
+  }, [selectedFailure]);
+
+  const retryEvent = async (f: FailureRow) => {
+    setRetrying(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("retry-stripe-event", {
+        body: { failure_id: f.id },
+      });
+      if (error) throw error;
+      const result = (data as any)?.result;
+      if (result === "success") toast.success("Evento reprocesado correctamente");
+      else if (result === "skipped") toast.info("Evento ya procesado (idempotencia)");
+      else toast.error(`Reintento falló: ${(data as any)?.error ?? "error desconocido"}`);
+      await load();
+      await loadRetryHistory(f.id);
+    } catch (e: any) {
+      toast.error(`Error: ${e.message}`);
+    } finally {
+      setRetrying(false);
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-4">
@@ -384,9 +420,28 @@ export default function StripeEventsAdmin() {
                         {selectedFailure.error_message}
                       </div>
                       {!selectedFailure.resolved && (
-                        <Button size="sm" onClick={() => markResolved(selectedFailure)}>
-                          <CheckCircle2 className="w-4 h-4 mr-2" /> Marcar como resuelto
-                        </Button>
+                        <div className="flex gap-2 flex-wrap">
+                          <Button size="sm" variant="default" disabled={retrying} onClick={() => retryEvent(selectedFailure)}>
+                            <RefreshCw className={`w-4 h-4 mr-2 ${retrying ? "animate-spin" : ""}`} /> Reintentar evento
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => markResolved(selectedFailure)}>
+                            <CheckCircle2 className="w-4 h-4 mr-2" /> Marcar resuelto
+                          </Button>
+                        </div>
+                      )}
+                      {retryHistory.length > 0 && (
+                        <div className="border rounded-lg p-3 space-y-2">
+                          <div className="text-xs font-semibold uppercase text-muted-foreground">Historial de reintentos</div>
+                          {retryHistory.map((r) => (
+                            <div key={r.id} className="text-xs flex items-center gap-2 border-b last:border-0 pb-2 last:pb-0">
+                              <Badge variant={r.result === "success" ? "default" : r.result === "skipped" ? "secondary" : "destructive"}>
+                                {r.result}
+                              </Badge>
+                              <span className="text-muted-foreground">{new Date(r.created_at).toLocaleString()}</span>
+                              {r.error_message && <span className="text-destructive truncate" title={r.error_message}>{r.error_message}</span>}
+                            </div>
+                          ))}
+                        </div>
                       )}
                       <pre className="text-xs bg-muted/40 p-3 rounded-lg overflow-auto">
 {JSON.stringify(selectedFailure.payload, null, 2)}
