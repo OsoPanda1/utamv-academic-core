@@ -17,6 +17,16 @@ export default {
     },
     extend: {
       colors: {
+        ut: {
+          bg: "#020617",
+          card: "#020617",
+          cardSoft: "#020824",
+          border: "rgba(148,163,184,0.18)",
+          accent: "#6366f1",
+          accentSoft: "rgba(99,102,241,0.18)",
+          success: "#22c55e",
+          telemetry: "#0ea5e9",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
