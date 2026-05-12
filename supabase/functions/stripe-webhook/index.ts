@@ -122,6 +122,33 @@ serve(async (req) => {
         error_message: message,
         payload: event.data.object as unknown as Record<string, unknown>,
       });
+
+      // Alertas automáticas: Slack + Email
+      const adminUrl = `${Deno.env.get("PUBLIC_APP_URL") ?? "https://utamv-campus-online.lovable.app"}/admin/stripe-events`;
+      const slackUrl = Deno.env.get("SLACK_WEBHOOK_URL");
+      if (slackUrl) {
+        await fetch(slackUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: `🚨 *Stripe Webhook Failure* — UTAMV\n• *event_id:* ${event.id}\n• *type:* ${event.type}\n• *error:* ${message}\n• <${adminUrl}|Ver detalle en panel admin>`,
+          }),
+        }).catch((e) => console.error("[stripe-webhook] slack alert err:", e.message));
+      }
+      const resendKey = Deno.env.get("RESEND_API_KEY");
+      const alertEmail = Deno.env.get("ALERT_EMAIL");
+      if (resendKey && alertEmail) {
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendKey}` },
+          body: JSON.stringify({
+            from: "UTAMV Alerts <alerts@utamv.mx>",
+            to: [alertEmail],
+            subject: `🚨 Stripe webhook failed — ${event.type}`,
+            html: `<h2>Webhook Stripe falló</h2><ul><li><b>event_id:</b> ${event.id}</li><li><b>type:</b> ${event.type}</li><li><b>error:</b> ${message}</li></ul><p><a href="${adminUrl}">Abrir panel admin</a></p>`,
+          }),
+        }).catch((e) => console.error("[stripe-webhook] email alert err:", e.message));
+      }
     } catch (logErr) {
       console.error("[stripe-webhook] no se pudo registrar fallo:", (logErr as Error).message);
     }
