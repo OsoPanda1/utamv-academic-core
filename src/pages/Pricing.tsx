@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const plans = [
+  { tier: "starter" as const, name: "Plan Starter", price: "19", description: "Entrada a cursos base y comunidad.", features:["2 cursos activos","Soporte comunitario","Pago mensual"], highlight:false, cta:"Iniciar · $19/mes" },
   {
     tier: "professional" as const,
     name: "Membresía Profesional",
@@ -45,7 +46,7 @@ export default function Pricing() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const subscribe = async (tier: "professional" | "elite") => {
+  const subscribe = async (tier: "starter" | "professional" | "elite") => {
     if (!user) { navigate("/auth/login"); return; }
     const { data, error } = await supabase.functions.invoke("create-subscription", { body: { tier } });
     if (error || !data?.url) {

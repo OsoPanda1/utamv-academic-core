@@ -4,6 +4,7 @@ import { BookOpen, Award, TrendingUp, Clock, Play, ChevronRight, GraduationCap, 
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { COURSES } from '@/data/coursesData';
+import { getCourseCompleteness, listIncompleteCourses } from '@/lib/courseAudit';
 import UTAMVHeader from '@/components/UTAMVHeader';
 import utamvLogo from '@/assets/utamv-logo-official.png';
 import { resolveCourseCover } from '@/lib/courseCovers';
@@ -13,6 +14,7 @@ const Campus = () => {
   const [enrollments, setEnrollments] = useState<any[]>([]);
   const [activeSection, setActiveSection] = useState('dashboard');
   const [dbCourses, setDbCourses] = useState<any[]>([]);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -43,6 +45,17 @@ const Campus = () => {
   const enrolledCourses = enrollments.map((e) => e.courses).filter(Boolean);
   const allCatalog = [...COURSES, ...dbCourses];
   const featuredCourses = allCatalog.filter((c) => c.isFeatured).slice(0, 3);
+  const incompleteCourses = listIncompleteCourses(COURSES);
+
+  const enableNotifications = async () => {
+    if (!("Notification" in window)) return;
+    const permission = await Notification.requestPermission();
+    setNotificationsEnabled(permission === 'granted');
+    if (permission === 'granted') {
+      new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEA').play().catch(() => null);
+      new Notification('UTAMV Campus', { body: 'Notificaciones activadas correctamente.' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -127,8 +140,9 @@ const Campus = () => {
             <p className="font-ui text-xs text-muted-foreground mt-0.5">Campus Online · Modelo NextGen 2026</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="p-2 rounded-xl bg-[hsl(var(--platinum)/0.05)] border border-[hsl(var(--platinum)/0.1)] text-platinum-dim hover:text-platinum transition-colors">
+            <button onClick={enableNotifications} className="p-2 rounded-xl bg-[hsl(var(--platinum)/0.05)] border border-[hsl(var(--platinum)/0.1)] text-platinum-dim hover:text-platinum transition-colors">
               <Bell size={16} />
+              {notificationsEnabled && <span className="sr-only">Notificaciones activas</span>}
             </button>
             <Link to="/" className="font-ui text-xs text-platinum-dim hover:text-platinum transition-colors">← Sitio público</Link>
           </div>
@@ -193,6 +207,16 @@ const Campus = () => {
                   </button>
                 </div>
               )}
+
+              
+              <div className="p-4 rounded-2xl bg-card-premium border border-[hsl(var(--platinum)/0.06)]
+              >
+                <h4 className="font-ui text-sm font-semibold text-platinum mb-2">Auditoría de cursos</h4>
+                <p className="font-ui text-xs text-muted-foreground">Cursos incompletos detectados: {incompleteCourses.length}</p>
+                <ul className="mt-2 space-y-1">
+                  {incompleteCourses.slice(0, 4).map((c) => { const a = getCourseCompleteness(c); return <li key={c.id} className="text-xs text-muted-foreground">{c.title} · {a.status} ({a.moduleCount} módulos / {a.lessonCount} lecciones)</li>; })}
+                </ul>
+              </div>
 
               {/* Featured courses preview */}
               <div>
