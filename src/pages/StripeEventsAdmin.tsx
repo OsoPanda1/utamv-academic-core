@@ -420,9 +420,28 @@ export default function StripeEventsAdmin() {
                         {selectedFailure.error_message}
                       </div>
                       {!selectedFailure.resolved && (
-                        <Button size="sm" onClick={() => markResolved(selectedFailure)}>
-                          <CheckCircle2 className="w-4 h-4 mr-2" /> Marcar como resuelto
-                        </Button>
+                        <div className="flex gap-2 flex-wrap">
+                          <Button size="sm" variant="default" disabled={retrying} onClick={() => retryEvent(selectedFailure)}>
+                            <RefreshCw className={`w-4 h-4 mr-2 ${retrying ? "animate-spin" : ""}`} /> Reintentar evento
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => markResolved(selectedFailure)}>
+                            <CheckCircle2 className="w-4 h-4 mr-2" /> Marcar resuelto
+                          </Button>
+                        </div>
+                      )}
+                      {retryHistory.length > 0 && (
+                        <div className="border rounded-lg p-3 space-y-2">
+                          <div className="text-xs font-semibold uppercase text-muted-foreground">Historial de reintentos</div>
+                          {retryHistory.map((r) => (
+                            <div key={r.id} className="text-xs flex items-center gap-2 border-b last:border-0 pb-2 last:pb-0">
+                              <Badge variant={r.result === "success" ? "default" : r.result === "skipped" ? "secondary" : "destructive"}>
+                                {r.result}
+                              </Badge>
+                              <span className="text-muted-foreground">{new Date(r.created_at).toLocaleString()}</span>
+                              {r.error_message && <span className="text-destructive truncate" title={r.error_message}>{r.error_message}</span>}
+                            </div>
+                          ))}
+                        </div>
                       )}
                       <pre className="text-xs bg-muted/40 p-3 rounded-lg overflow-auto">
 {JSON.stringify(selectedFailure.payload, null, 2)}
