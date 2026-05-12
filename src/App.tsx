@@ -28,6 +28,7 @@ import TelemetriaIsabella from "./pages/TelemetriaIsabella";
 import TTSAdmin from "./pages/TTSAdmin";
 import StripeEventsAdmin from "./pages/StripeEventsAdmin";
 import ComunidadPage from "./pages/ComunidadPage";
+import AcreditacionesPage from "./pages/AcreditacionesPage";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 
