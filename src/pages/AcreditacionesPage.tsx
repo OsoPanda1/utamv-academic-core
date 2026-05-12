@@ -16,12 +16,11 @@ const ORGS = [
 ];
 
 export default function AcreditacionesPage() {
+  useEffect(() => {
+    document.title = "Acreditaciones y Estatus Académico | UTAMV";
+  }, []);
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Acreditaciones y Estatus Académico | UTAMV</title>
-        <meta name="description" content="Estatus académico Pre-RVOE de UTAMV, alcance, requisitos y advertencias legales. Dossier descargable para auditoría institucional." />
-        <link rel="canonical" href="https://utamv-campus-online.lovable.app/acreditaciones" />
       </Helmet>
       <UTAMVHeader />
       <main className="container mx-auto px-4 py-12 max-w-6xl">
