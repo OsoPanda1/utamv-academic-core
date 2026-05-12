@@ -177,6 +177,42 @@ export default function StripeEventsAdmin() {
     setFailures((prev) => prev.map((x) => (x.id === f.id ? { ...x, resolved: true } : x)));
   };
 
+  const [retrying, setRetrying] = useState(false);
+  const [retryHistory, setRetryHistory] = useState<any[]>([]);
+
+  const loadRetryHistory = async (failureId: string) => {
+    const { data } = await supabase
+      .from("stripe_webhook_retry_audit")
+      .select("*").eq("failure_id", failureId).order("created_at", { ascending: false });
+    setRetryHistory(data ?? []);
+  };
+
+  useEffect(() => {
+    if (selectedFailure) loadRetryHistory(selectedFailure.id);
+    else setRetryHistory([]);
+  }, [selectedFailure]);
+
+  const retryEvent = async (f: FailureRow) => {
+    setRetrying(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("retry-stripe-event", {
+        body: { failure_id: f.id },
+      });
+      if (error) throw error;
+      const result = (data as any)?.result;
+      if (result === "success") toast.success("Evento reprocesado correctamente");
+      else if (result === "skipped") toast.info("Evento ya procesado (idempotencia)");
+      else toast.error(`Reintento falló: ${(data as any)?.error ?? "error desconocido"}`);
+      await load();
+      await loadRetryHistory(f.id);
+    } catch (e: any) {
+      toast.error(`Error: ${e.message}`);
+    } finally {
+      setRetrying(false);
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-4">
