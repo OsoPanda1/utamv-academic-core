@@ -31,6 +31,7 @@ import ComunidadPage from "./pages/ComunidadPage";
 import AcreditacionesPage from "./pages/AcreditacionesPage";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
+import AnalyticsPage from "./pages/AnalyticsPage";
 import { getCampusRoutes } from "@/modules/campus";
 import { HealthCheck } from "@/app/HealthCheck";
 
