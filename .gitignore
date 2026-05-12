@@ -22,13 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-build
-.vite
-.env
-.env.local
-.env.*.local
-pnpm-lock.yaml
-yarn.lock
 bun.lock
 bun.lockb
+yarn.lock
