@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async" ;
+import { useEffect } from "react";
 import UTAMVHeader from "@/components/UTAMVHeader";
 import UTAMVFooter from "@/components/UTAMVFooter";
 import { Button } from "@/components/ui/button";
