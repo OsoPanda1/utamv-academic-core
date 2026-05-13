@@ -26,6 +26,7 @@ export function StudentDashboard() {
       <div className="rounded-2xl border border-ut-border/40 bg-black/30 p-4 md:p-5"><p className="text-xs font-medium text-slate-300">Próximas acciones</p></div>
       <TelemetryConsole />
     </section>
+    <CampusMediaShowcase />
   </div>;
 }
 
