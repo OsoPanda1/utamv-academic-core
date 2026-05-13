@@ -2,7 +2,6 @@ import { useCoursesFromDb } from "@/modules/campus/useCoursesFromDb";
 import { useStudentProgress } from "@/modules/campus/hooks/useStudentProgress";
 import { useAuthSession } from "@/modules/identity/useAuthSession";
 import { TelemetryConsole } from "@/modules/telemetry/components/TelemetryConsole";
-import { CampusMediaShowcase } from "./CampusMediaShowcase";
 
 export function StudentDashboard() {
   const { user } = useAuthSession();
