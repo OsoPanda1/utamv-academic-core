@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
 import { UTAMVEducationModel } from '@/components/UTAMVEducationModel';
-import { UTAMV_LEARNWORLDS_CAMPUS_URL } from '@/lib/externalLinks';
 // hero-bg removed — using CSS gradient
 
 const stats = [
