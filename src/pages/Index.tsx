@@ -518,20 +518,6 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="py-16 bg-[hsl(222_32%_7%)] border-y border-[hsl(var(--platinum)/0.08)]">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-8">
-              <h2 className="font-display text-3xl font-bold text-platinum">Campus en imágenes reales</h2>
-              <p className="font-body text-sm text-muted-foreground mt-2">Integración visual de entornos educativos, tecnología y comunidad para toda la plataforma.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[UTAMV_REAL_IMAGE_GALLERY.classroom, UTAMV_REAL_IMAGE_GALLERY.technology, UTAMV_REAL_IMAGE_GALLERY.community].map((src, i) => (
-                <img key={i} src={src} alt={`UTAMV real ${i + 1}`} className="h-56 w-full object-cover rounded-2xl border border-[hsl(var(--platinum)/0.1)]" loading="lazy" />
-              ))}
-            </div>
-          </div>
-        </section>
-
         <UTAMVEducationModel />
 
         {/* ══ MARCO LEGAL PRE-RVOE ════════════════════════════════════════════════ */}
