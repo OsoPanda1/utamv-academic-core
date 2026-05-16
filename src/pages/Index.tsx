@@ -227,12 +227,14 @@ const Index = () => {
                 >
                   Inscríbete Ahora
                 </Link>
-                <Link
-                  to="/campus"
+                <a
+                  href={UTAMV_LEARNWORLDS_CAMPUS_URL}
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide text-platinum-dim border border-[hsl(var(--platinum)/0.2)] hover:border-[hsl(var(--platinum)/0.45)] hover:text-platinum hover:bg-[hsl(var(--platinum)/0.05)] transition-all backdrop-blur-sm"
                 >
                   <Play size={15} /> Acceder al Campus
-                </Link>
+                </a>
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mb-10 animate-fade-in-up delay-500">
