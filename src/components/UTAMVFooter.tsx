@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Globe, Scale } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
+import { UTAMV_CONTACT_EMAIL_PRIMARY, UTAMV_CONTACT_EMAIL_SECONDARY } from '@/lib/contact';
 
 const UTAMVFooter: React.FC = () => {
   const year = new Date().getFullYear();
@@ -74,13 +75,13 @@ const UTAMVFooter: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Mail size={13} className="text-platinum-dim/70" />
                 <span className="font-ui text-xs text-muted-foreground">
-                  contacto@utamv.edu.mx
+                  {UTAMV_CONTACT_EMAIL_PRIMARY}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={13} className="text-platinum-dim/70" />
                 <span className="font-ui text-xs text-muted-foreground">
-                  admisiones@utamv.edu.mx
+                  {UTAMV_CONTACT_EMAIL_SECONDARY}
                 </span>
               </div>
             </div>

@@ -9,6 +9,9 @@ import {
   Star, Microscope, Layers, Play
 } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
+import { UTAMVEducationModel } from '@/components/UTAMVEducationModel';
+import { UTAMV_LEARNWORLDS_CAMPUS_URL } from '@/lib/externalLinks';
+import { UTAMV_REAL_IMAGE_GALLERY } from '@/lib/realImageGallery';
 // hero-bg removed — using CSS gradient
 
 const stats = [
@@ -133,6 +136,7 @@ const Index = () => {
         {/* ══ HERO ELITE NEXT-GEN ══════════════════════════════════════════════════ */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
           <div className="absolute inset-0 bg-gradient-to-br from-[hsl(222,55%,3%)] via-[hsl(205,45%,7%)] to-[hsl(195,40%,5%)]" />
+          <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(${UTAMV_REAL_IMAGE_GALLERY.hero})` }} />
           <div className="absolute inset-0 bg-gradient-to-t from-[hsl(222,55%,3%)] via-transparent to-transparent" />
           <div className="absolute inset-0 bg-grid-pattern opacity-[0.05]" />
 
@@ -226,12 +230,14 @@ const Index = () => {
                 >
                   Inscríbete Ahora
                 </Link>
-                <Link
-                  to="/campus"
+                <a
+                  href={UTAMV_LEARNWORLDS_CAMPUS_URL}
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-ui text-sm font-semibold tracking-wide text-platinum-dim border border-[hsl(var(--platinum)/0.2)] hover:border-[hsl(var(--platinum)/0.45)] hover:text-platinum hover:bg-[hsl(var(--platinum)/0.05)] transition-all backdrop-blur-sm"
                 >
                   <Play size={15} /> Acceder al Campus
-                </Link>
+                </a>
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mb-10 animate-fade-in-up delay-500">
@@ -511,6 +517,22 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        <section className="py-16 bg-[hsl(222_32%_7%)] border-y border-[hsl(var(--platinum)/0.08)]">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <h2 className="font-display text-3xl font-bold text-platinum">Campus en imágenes reales</h2>
+              <p className="font-body text-sm text-muted-foreground mt-2">Integración visual de entornos educativos, tecnología y comunidad para toda la plataforma.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[UTAMV_REAL_IMAGE_GALLERY.classroom, UTAMV_REAL_IMAGE_GALLERY.technology, UTAMV_REAL_IMAGE_GALLERY.community].map((src, i) => (
+                <img key={i} src={src} alt={`UTAMV real ${i + 1}`} className="h-56 w-full object-cover rounded-2xl border border-[hsl(var(--platinum)/0.1)]" loading="lazy" />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <UTAMVEducationModel />
 
         {/* ══ MARCO LEGAL PRE-RVOE ════════════════════════════════════════════════ */}
         <section className="py-20 bg-[hsl(222_32%_7%)] relative">

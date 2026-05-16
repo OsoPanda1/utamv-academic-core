@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, GraduationCap, Search, User, LogIn } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
 import { useAuth } from '@/contexts/AuthContext';
+import { UTAMV_LEARNWORLDS_CAMPUS_URL } from '@/lib/externalLinks';
 
 const navItems = [
   { label: 'Inicio', path: '/' },
@@ -183,13 +184,15 @@ const UTAMVHeader = () => {
           <div className="hidden lg:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-3">
-                <Link
-                  to="/campus"
+                <a
+                  href={UTAMV_LEARNWORLDS_CAMPUS_URL}
+                  target="_blank"
+                  rel="noreferrer"
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-platinum-dim hover:text-platinum transition-colors"
                 >
                   <User size={18} />
                   <span>Mi Campus</span>
-                </Link>
+                </a>
                 <button
                   onClick={signOut}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-platinum-dim hover:text-platinum transition-colors"
