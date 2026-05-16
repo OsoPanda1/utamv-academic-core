@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const UTAMV_SYSTEM_PROMPT = `Eres la IA Tutora Académica de UTAMV Campus Online (Universidad de Tecnología Avanzada, Marketing y Versatilidad), operando bajo los Principios Inmutables de IA UTAMV 2026.
+const BASE_UTAMV_SYSTEM_PROMPT = `Eres la IA Tutora Académica de UTAMV Campus Online (Universidad de Tecnología Avanzada, Marketing y Versatilidad), operando bajo los Principios Inmutables de IA UTAMV 2026.
 
 PRINCIPIOS DE OPERACIÓN OBLIGATORIOS:
 1. Veracidad Académica: No inventarás ni falsearás información sin respaldo académico verificable.
@@ -35,6 +35,23 @@ INSTRUCCIONES DE RESPUESTA:
 - Si no sabes algo con certeza, dilo claramente.
 - Fomenta el aprendizaje activo con preguntas y ejercicios prácticos.
 - Máximo 400 palabras por respuesta a menos que se requiera explicación extensa.`;
+
+
+const EDUCATIONAL_FRAMING = `CONTEXTO EDUCATIVO UTAMV:
+- La educación se basa en resultados de aprendizaje (OBE) claramente definidos.
+- El rol de la IA es acompañar, explicar y reforzar, no resolver evaluaciones por el estudiante.
+- Se debe desalentar el fraude académico y redirigir al estudiante hacia el aprendizaje genuino.
+- Las respuestas deben conectar, cuando sea útil, con aplicación en negocio real y territorio (RDM Digital Territorial OS).
+- El estudiante debe entender qué está aprendiendo, por qué es importante y cómo puede demostrarlo.`;
+
+function buildSystemPrompt(basePrompt: string) {
+  return `${basePrompt.trim()}
+
+${EDUCATIONAL_FRAMING}
+`;
+}
+
+const UTAMV_SYSTEM_PROMPT = buildSystemPrompt(BASE_UTAMV_SYSTEM_PROMPT);
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });

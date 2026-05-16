@@ -9,6 +9,7 @@ import {
   Star, Microscope, Layers, Play
 } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
+import { UTAMVEducationModel } from '@/components/UTAMVEducationModel';
 // hero-bg removed — using CSS gradient
 
 const stats = [
@@ -511,6 +512,8 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        <UTAMVEducationModel />
 
         {/* ══ MARCO LEGAL PRE-RVOE ════════════════════════════════════════════════ */}
         <section className="py-20 bg-[hsl(222_32%_7%)] relative">
