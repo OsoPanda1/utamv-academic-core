@@ -1,6 +1,7 @@
 import UTAMVHeader from '@/components/UTAMVHeader';
 import UTAMVFooter from '@/components/UTAMVFooter';
 import EliteBackground from '@/components/EliteBackground';
+import { UTAMV_CONTACT_EMAIL_PRIMARY, UTAMV_CONTACT_EMAIL_SECONDARY } from '@/lib/contact';
 import { Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, Clock, Mail, Globe, AlertTriangle, BookOpen, Award, Users } from 'lucide-react';
 
@@ -87,11 +88,11 @@ const AdmisionesPage = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex items-center gap-3">
                   <Mail size={15} className="text-platinum-dim" />
-                  <span className="font-ui text-sm text-muted-foreground">admisiones@utamv.edu.mx</span>
+                  <span className="font-ui text-sm text-muted-foreground">{UTAMV_CONTACT_EMAIL_PRIMARY}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail size={15} className="text-platinum-dim" />
-                  <span className="font-ui text-sm text-muted-foreground">contacto@utamv.edu.mx</span>
+                  <span className="font-ui text-sm text-muted-foreground">{UTAMV_CONTACT_EMAIL_SECONDARY}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Globe size={15} className="text-platinum-dim" />

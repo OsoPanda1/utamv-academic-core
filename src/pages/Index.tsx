@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import utamvLogoOfficial from '@/assets/utamv-logo-official.png';
 import { UTAMVEducationModel } from '@/components/UTAMVEducationModel';
+import { UTAMV_LEARNWORLDS_CAMPUS_URL } from '@/lib/externalLinks';
+import { UTAMV_REAL_IMAGE_GALLERY } from '@/lib/realImageGallery';
 // hero-bg removed — using CSS gradient
 
 const stats = [
@@ -134,6 +136,7 @@ const Index = () => {
         {/* ══ HERO ELITE NEXT-GEN ══════════════════════════════════════════════════ */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
           <div className="absolute inset-0 bg-gradient-to-br from-[hsl(222,55%,3%)] via-[hsl(205,45%,7%)] to-[hsl(195,40%,5%)]" />
+          <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(${UTAMV_REAL_IMAGE_GALLERY.hero})` }} />
           <div className="absolute inset-0 bg-gradient-to-t from-[hsl(222,55%,3%)] via-transparent to-transparent" />
           <div className="absolute inset-0 bg-grid-pattern opacity-[0.05]" />
 

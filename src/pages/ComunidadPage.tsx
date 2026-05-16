@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { UTAMV_REAL_IMAGE_GALLERY } from "@/lib/realImageGallery";
 
 type FeedItem = { title: string; link: string; pubDate: string; description: string; author: string };
 
@@ -27,8 +28,9 @@ export default function ComunidadPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <section className="bg-gradient-to-br from-[#000033] via-[#05054d] to-[#00001a] text-white py-16 px-4">
-        <div className="max-w-5xl mx-auto">
+      <section className="relative bg-gradient-to-br from-[#000033] via-[#05054d] to-[#00001a] text-white py-16 px-4 overflow-hidden">
+        <div className="absolute inset-0 opacity-25 bg-cover bg-center" style={{ backgroundImage: `url(${UTAMV_REAL_IMAGE_GALLERY.teamwork})` }} />
+        <div className="relative z-10 max-w-5xl mx-auto">
           <Badge className="bg-[#D4AF37] text-black mb-4">Comunidad TAMV</Badge>
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">
             Ecosistema TAMV Online · LATAM

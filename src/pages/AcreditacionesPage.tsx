@@ -4,6 +4,7 @@ import UTAMVFooter from "@/components/UTAMVFooter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { UTAMV_CONTACT_EMAIL_PRIMARY } from "@/lib/contact";
 import { ShieldAlert, Award, FileCheck2, Globe2, Download, Scale } from "lucide-react";
 
 const ORGS = [
@@ -141,7 +142,7 @@ export default function AcreditacionesPage() {
               </a>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <a href="mailto:rectoria@utamv.mx?subject=Auditoría%20académica%20UTAMV">
+              <a href={`mailto:${UTAMV_CONTACT_EMAIL_PRIMARY}?subject=Auditoría%20académica%20UTAMV`}>
                 Solicitar visita de auditor
               </a>
             </Button>
